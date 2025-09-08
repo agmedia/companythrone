@@ -2,14 +2,17 @@
 
 namespace App\Models\Back\Catalog;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Category extends Model
+class Category extends Model implements HasMedia
 {
 
-    use NodeTrait, Sluggable;
+    use NodeTrait, Sluggable, InteractsWithMedia, HasFactory;
 
     protected $fillable = ['name', 'slug', 'parent_id'];
 
@@ -40,5 +43,14 @@ class Category extends Model
     public function companies()
     {
         return $this->belongsToMany(Company::class, 'category_company');
+    }
+
+
+    public function registerMediaCollections(): void
+    {
+        // možeš koristiti 'image' ili 'icon' – ja sam ostavio oba
+        $this->addMediaCollection('icon')->singleFile();
+        $this->addMediaCollection('image')->singleFile();
+        $this->addMediaCollection('banner')->singleFile();
     }
 }

@@ -36,7 +36,7 @@
         <div class="position-absolute top-50 start-50 translate-middle">
             <div class="d-xxl-none" style="width: 1780px"></div>
             <div class="d-none d-xxl-block" style="width: 2157px"></div>
-            <img src="assets/img/home/contractors/hero.png" alt="Image">
+            <img src="{{ asset('theme1/assets/img/home/contractors/hero.png') }}" alt="Image">
         </div>
     </section>
 
@@ -78,7 +78,7 @@
                                     <article class="hover-effect-scale position-relative text-center">
                                         <div class="bg-body-tertiary rounded-circle overflow-hidden mx-auto" style="width: 132px">
                                             <div class="ratio ratio-1x1 hover-effect-target">
-                                                <img src="assets/img/home/cars/categories/01.jpg" alt="Image">
+                                                <img src="{{ $child->getFirstMediaUrl('icon') }}" alt="Image">
                                             </div>
                                         </div>
                                         <h3 class="h6 pt-3 mb-0">
@@ -92,6 +92,7 @@
                     <!-- Pagination (Bullets) -->
                     <div class="swiper-pagination position-static mt-3"></div>
                 </div>
+            </div>
         </section>
     @endif
 
@@ -112,7 +113,7 @@
                         </div>
                         <a class="d-block position-relative z-1 pb-4 ps-xl-5 ms-lg-n3 ms-xl-0 ms-xxl-3" href="#!">
                             <div class="ratio mb-2" style="width: 324px; --fn-aspect-ratio: calc(221 / 324 * 100%)">
-                                <img src="assets/img/home/contractors/banner.png" alt="Image">
+                                <img src="{{ asset('theme1/assets/img/home/contractors/banner.png') }}" alt="Image">
                             </div>
                         </a>
                         <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded overflow-hidden d-none-dark">
@@ -138,13 +139,13 @@
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 g-4">
 
-                    @foreach($featured as $c)
+                    @foreach($featured->take(8) as $c)
                         <!-- Project -->
                         <div class="col d-flex">
                             <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-2">
                                 <div class="flex-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 112px">
                                     <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(80 / 112 * 100%)">
-                                        <img src="{{ $c->image }}" alt="Image">
+                                        <img src="{{ $c->getFirstMediaUrl('logo') }}" alt="Image">
                                     </div>
                                 </div>
                                 <div class="pt-1 ps-3">
@@ -185,7 +186,7 @@
                     <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
                         <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
                             <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
-                                <img src="assets/img/home/contractors/advice/01.jpg" alt="Image">
+                                <img src="{{ asset('theme1/assets/img/home/contractors/advice/01.jpg') }}" alt="Image">
                             </div>
                         </div>
                         <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">
@@ -204,7 +205,7 @@
                     <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
                         <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
                             <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
-                                <img src="assets/img/home/contractors/advice/02.jpg" alt="Image">
+                                <img src="{{ asset('theme1/assets/img/home/contractors/advice/02.jpg') }}" alt="Image">
                             </div>
                         </div>
                         <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">
@@ -223,7 +224,7 @@
                     <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
                         <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
                             <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
-                                <img src="assets/img/home/contractors/advice/03.jpg" alt="Image">
+                                <img src="{{ asset('theme1/assets/img/home/contractors/advice/03.jpg') }}" alt="Image">
                             </div>
                         </div>
                         <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">
@@ -242,7 +243,7 @@
                     <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
                         <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
                             <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
-                                <img src="assets/img/home/contractors/advice/04.jpg" alt="Image">
+                                <img src="{{ asset('theme1/assets/img/home/contractors/advice/04.jpg') }}" alt="Image">
                             </div>
                         </div>
                         <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">

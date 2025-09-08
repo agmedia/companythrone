@@ -9,25 +9,19 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        // Root kategorije
-        $services = Category::firstOrCreate(['name' => 'Usluge']);
-        $retail   = Category::firstOrCreate(['name' => 'Maloprodaja']);
-        $it       = Category::firstOrCreate(['name' => 'IT']);
+        // jednostavne root kategorije (po potrebi proširi children)
+        $names = ['Građevina','IT usluge','Marketing','Zdravstvo','Prijevoz','Usluge','Trgovina','Ugostiteljstvo'];
 
-        // Djeca (NestedSet)
-        $marketing = Category::firstOrCreate(['name' => 'Marketing']);
-        $marketing->appendToNode($services)->save();
+        foreach ($names as $name) {
+            // s medijem
+            Category::factory()->withMedia()->create(['name' => $name])->saveAsRoot();
 
-        $consulting = Category::firstOrCreate(['name' => 'Konzalting']);
-        $consulting->appendToNode($services)->save();
+            for ($i = 0; $i < 3; $i++) {
+                $root = Category::query()->where('is_active',1)->inRandomOrder()->first();
+                Category::factory()->withMedia()->create(['name'=>'Podkategorija'])->appendToNode($root)->save();
+            }
+            // Ako želiš djecu:
 
-        $ecommerce = Category::firstOrCreate(['name' => 'E-commerce']);
-        $ecommerce->appendToNode($retail)->save();
-
-        $software = Category::firstOrCreate(['name' => 'Softver']);
-        $software->appendToNode($it)->save();
-
-        $hosting = Category::firstOrCreate(['name' => 'Hosting']);
-        $hosting->appendToNode($it)->save();
+        }
     }
 }
