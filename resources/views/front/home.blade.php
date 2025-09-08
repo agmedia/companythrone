@@ -1,71 +1,313 @@
 @extends('layouts.app')
 @section('title', __('home.title'))
 @section('content')
-  <div class="container-xxl py-4">
-    <div class="row g-4 align-items-stretch mb-4">
-      <div class="col-lg-7">
-        <div class="h-100 p-4 p-md-5 bg-white border rounded-3 shadow-sm">
-          <h1 class="display-6 fw-bold mb-0">{{ __('home.headline') }}</h1>
-        </div>
-      </div>
-      <div class="col-lg-5">
-        <div class="h-100 p-3 p-md-4 bg-white border rounded-3 shadow-sm">
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control" placeholder="{{ __('search_placeholder') }}" onfocus="this.blur();" aria-label="Search" />
-          </div>
-          <div class="mt-2">
-            <livewire:front.company-search />
-          </div>
-        </div>
-      </div>
-    </div>
-    <h2 class="h6 text-uppercase text-muted mb-2">{{ __('home.featured') }}</h2>
-    <div class="row g-3 mb-4">
-      @forelse($featured as $c)
-        <div class="col-12 col-md-6 col-xl-4">
-          <a class="card border-0 shadow-sm text-decoration-none h-100" href="{{ localized_route('companies.show', $c) }}">
-            <div class="card-body">
-              <h3 class="h6 fw-semibold mb-1 text-dark">{{ $c->name }}</h3>
-              <div class="text-muted small">
-                @if($c->city) {{ $c->city }}@endif
-                @if($c->state), {{ $c->state }}@endif
-              </div>
-            </div>
-          </a>
-        </div>
-      @empty
-        <div class="col-12">
-          <div class="alert alert-secondary mb-0">—</div>
-        </div>
-      @endforelse
-    </div>
-    @if(isset($cats) && $cats->count())
-      <div class="row g-3">
-        @foreach($cats as $cat)
-          <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
-              <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <a href="{{ localized_route('categories.show', $cat) }}" class="h6 mb-0 text-decoration-none">
-                    {{ $cat->name }}
-                  </a>
-                  <span class="badge text-bg-light">{{ $cat->descendants()->count() }}</span>
+
+    <!-- Hero with search form -->
+    <section class="position-relative bg-info overflow-hidden py-5">
+        <div class="container position-relative z-2 pb-2 py-sm-4 py-md-5 my-xxl-4">
+            <div class="mx-auto py-lg-4 py-xl-5" style="max-width: 630px">
+                <h1 class="display-4 text-white text-center pb-2 pb-md-0 mb-4 mb-md-5">{{ __('home.headline') }}</h1>
+
+                <!-- Search form -->
+                <form class="bg-white border rounded-4 p-2 mb-4 mb-md-5" data-bs-theme="light" novalidate>
+                    <div class="d-flex flex-column flex-md-row gap-3 p-1">
+                        <div class="d-flex flex-column flex-sm-row w-100 gap-2 gap-sm-3">
+                            <div class="position-relative w-100">
+                                <i class="fi-search position-absolute top-50 start-0 translate-middle-y fs-xl text-secondary-emphasis ms-2"></i>
+                                <input type="search" class="form-control form-control-lg form-icon-start border-0 rounded-0 pe-0" placeholder="{{ __('company.search_placeholder') }}" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-primary">{{ __('home.search_companies') }}</button>
+                    </div>
+                </form>
+
+                <!-- Popular searches -->
+                <div class="d-flex flex-wrap justify-content-center gap-2 pt-2 pt-md-0">
+                    @if(isset($cats) && $cats->count())
+                        @foreach($cats->take(7) as $cat)
+                            <a href="{{ localized_route('categories.show', $cat) }}" class="btn btn-outline-light rounded-pill mt-1 me-1">
+                                {{ $cat->name }}
+                            </a>
+                        @endforeach
+                    @endif
                 </div>
-                @php $children = $cat->children->take(6); @endphp
-                @if($children->count())
-                  <div class="d-flex flex-wrap gap-2">
-                    @foreach($children as $child)
-                      <a class="badge rounded-pill text-bg-secondary text-decoration-none"
-                         href="{{ localized_route('categories.show', $child) }}">{{ $child->name }}</a>
-                    @endforeach
-                  </div>
-                @endif
-              </div>
             </div>
-          </div>
-        @endforeach
-      </div>
+        </div>
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <div class="d-xxl-none" style="width: 1780px"></div>
+            <div class="d-none d-xxl-block" style="width: 2157px"></div>
+            <img src="assets/img/home/contractors/hero.png" alt="Image">
+        </div>
+    </section>
+
+    <!-- Popular categories -->
+    @if(isset($cats) && $cats->count())
+        <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
+            <h2 class="text-center pb-2 pb-sm-3 pb-lg-4 mb-xl-4">Currently in demand</h2>
+
+            <!-- Row of items that turns into carousel on screens < 992px wide (lg breakpoint) -->
+            <div class="swiper" data-swiper='{
+          "slidesPerView": 2,
+          "spaceBetween": 24,
+          "pagination": {
+            "el": ".swiper-pagination",
+            "clickable": true
+          },
+          "breakpoints": {
+            "500": {
+              "slidesPerView": 3
+            },
+            "768": {
+              "slidesPerView": 4
+            },
+            "992": {
+              "slidesPerView": 5
+            }
+          }
+        }'>
+                <div class="swiper-wrapper">
+                    @foreach($cats as $cat)
+                        @php $children = $cat->children->take(3); @endphp
+                        @if($children->count())
+                            @foreach($children as $child)
+                                <a class="badge rounded-pill text-bg-secondary text-decoration-none"
+                                   href="{{ localized_route('categories.show', $child) }}">{{ $child->name }}</a>
+
+                                <!-- Category -->
+                                <div class="swiper-slide">
+                                    <article class="hover-effect-scale position-relative text-center">
+                                        <div class="bg-body-tertiary rounded-circle overflow-hidden mx-auto" style="width: 132px">
+                                            <div class="ratio ratio-1x1 hover-effect-target">
+                                                <img src="assets/img/home/cars/categories/01.jpg" alt="Image">
+                                            </div>
+                                        </div>
+                                        <h3 class="h6 pt-3 mb-0">
+                                            <a class="hover-effect-underline stretched-link" href="{{ localized_route('categories.show', $child) }}">{{ $child->name }}</a>
+                                        </h3>
+                                    </article>
+                                </div>
+                            @endforeach
+                        @endif
+                    @endforeach
+                    <!-- Pagination (Bullets) -->
+                    <div class="swiper-pagination position-static mt-3"></div>
+                </div>
+        </section>
     @endif
-  </div>
+
+
+    <!-- Popular projects near you -->
+    <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
+        <div class="row align-items-center">
+
+            <!-- Banner -->
+            <aside class="col-lg-4 d-none d-lg-block">
+                <div>
+                    <div class="position-relative" style="max-width: 306px">
+                        <div class="position-relative h-100 z-1 p-5 mb-3">
+                            <h3 class="mb-2">
+                                <a class="stretched-link" href="#!">Get matched with local pros</a>
+                            </h3>
+                            <p class="fs-sm mb-0">for your next home project.</p>
+                        </div>
+                        <a class="d-block position-relative z-1 pb-4 ps-xl-5 ms-lg-n3 ms-xl-0 ms-xxl-3" href="#!">
+                            <div class="ratio mb-2" style="width: 324px; --fn-aspect-ratio: calc(221 / 324 * 100%)">
+                                <img src="assets/img/home/contractors/banner.png" alt="Image">
+                            </div>
+                        </a>
+                        <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded overflow-hidden d-none-dark">
+                  <span class="position-absolute top-100 start-0 translate-middle-y bg-white bg-opacity-50 rounded-circle mt-n5 ms-n5 ms-xl-4" style="width: 480px; height: 480px"></span>
+                </span>
+                        <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-tertiary rounded overflow-hidden d-none d-block-dark">
+                  <span class="position-absolute top-100 start-0 translate-middle-y bg-white bg-opacity-10 rounded-circle mt-n5 ms-n5 ms-xl-4" style="width: 480px; height: 480px"></span>
+                </span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Projects grid -->
+            <div class="col-lg-8">
+                <div class="d-flex align-items-start justify-content-between gap-4 pb-2 mb-3 mb-lg-4">
+                    <h2 class="mb-0">Popular projects near you</h2>
+                    <div class="nav">
+                        <a class="nav-link position-relative fs-base text-nowrap py-1 px-0" href="#!">
+                            <span class="hover-effect-underline stretched-link me-1">View all</span>
+                            <i class="fi-chevron-right fs-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="row row-cols-1 row-cols-sm-2 g-4">
+
+                    @foreach($featured as $c)
+                        <!-- Project -->
+                        <div class="col d-flex">
+                            <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-2">
+                                <div class="flex-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 112px">
+                                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(80 / 112 * 100%)">
+                                        <img src="{{ $c->image }}" alt="Image">
+                                    </div>
+                                </div>
+                                <div class="pt-1 ps-3">
+                                    <h3 class="h6 mb-1">
+                                        <a class="hover-effect-underline stretched-link" href="{{ localized_route('companies.show', $c) }}">{{ $c->name }}</a>
+                                    </h3>
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <i class="fi-star-filled text-warning"></i>
+                                        <span class="fs-sm text-secondary-emphasis">@if($c->city) {{ $c->city }}@endif</span>
+                                        <span class="fs-xs text-body-secondary align-self-end">@if($c->phone), ({{ $c->phone }})@endif</span>
+                                    </div>
+                                    <div class="fs-sm text-dark-emphasis">Email: @if($c->email), {{ $c->email }}@endif</div>
+                                </div>
+                            </article>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expert advice -->
+    <section class="bg-body-tertiary pt-1 pb-2 py-sm-3 py-md-4 py-lg-5">
+        <div class="container py-5 mb-xxl-3">
+            <div class="d-flex align-items-start justify-content-between gap-4 pb-3 mb-sm-3 mb-lg-4">
+                <h2 class="mb-0">Expert advice</h2>
+                <div class="nav">
+                    <a class="nav-link position-relative fs-base text-nowrap py-1 px-0" href="#!">
+                        <span class="hover-effect-underline stretched-link me-1">View all</span>
+                        <i class="fi-chevron-right fs-lg"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-lg-2 g-4 gy-sm-5">
+
+                <!-- Article -->
+                <div class="col d-flex">
+                    <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
+                        <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
+                            <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
+                                <img src="assets/img/home/contractors/advice/01.jpg" alt="Image">
+                            </div>
+                        </div>
+                        <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">
+                            <span class="badge text-body-emphasis bg-body-secondary">Cleaning</span>
+                            <h3 class="h5 pt-1 my-2">
+                                <a class="hover-effect-underline stretched-link" href="#!">Expert advice from masters of cleanliness</a>
+                            </h3>
+                            <p class="mb-2">Unlock the secrets to a spotless home with tips from cleaning professionals. From tackling stubborn...</p>
+                            <span class="fs-sm text-body-secondary">Oct 19, 2024</span>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Article -->
+                <div class="col d-flex">
+                    <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
+                        <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
+                            <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
+                                <img src="assets/img/home/contractors/advice/02.jpg" alt="Image">
+                            </div>
+                        </div>
+                        <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">
+                            <span class="badge text-body-emphasis bg-body-secondary">Flooring</span>
+                            <h3 class="h5 pt-1 my-2">
+                                <a class="hover-effect-underline stretched-link" href="#!">How to quickly clean laminate flooring</a>
+                            </h3>
+                            <p class="mb-2">Learn the fastest and most effective methods to clean laminate flooring without damaging its surface...</p>
+                            <span class="fs-sm text-body-secondary">Sep 13, 2024</span>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Article -->
+                <div class="col d-flex">
+                    <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
+                        <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
+                            <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
+                                <img src="assets/img/home/contractors/advice/03.jpg" alt="Image">
+                            </div>
+                        </div>
+                        <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">
+                            <span class="badge text-body-emphasis bg-body-secondary">Air Conditioning</span>
+                            <h3 class="h5 pt-1 my-2">
+                                <a class="hover-effect-underline stretched-link" href="#!">Choose air conditioner with air ionization</a>
+                            </h3>
+                            <p class="mb-2">Explore the benefits of air conditioners with air ionization technology. Find out how these units improve air...</p>
+                            <span class="fs-sm text-body-secondary">Sep 05, 2024</span>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Article -->
+                <div class="col d-flex">
+                    <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-3 mt-sm-0">
+                        <div class="flex-sm-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 130px">
+                            <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(150 / 130 * 100%)">
+                                <img src="assets/img/home/contractors/advice/04.jpg" alt="Image">
+                            </div>
+                        </div>
+                        <div class="ps-3 ps-sm-4 pe-lg-4 pe-xxl-5">
+                            <span class="badge text-body-emphasis bg-body-secondary">Landscaping</span>
+                            <h3 class="h5 pt-1 my-2">
+                                <a class="hover-effect-underline stretched-link" href="#!">Landscaping ideas from top local experts</a>
+                            </h3>
+                            <p class="mb-2">Get inspired by creative landscaping ideas from the best local experts. Whether you're revamping your garden...</p>
+                            <span class="fs-sm text-body-secondary">Aug 26, 2024</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="container py-2 py-sm-3 py-md-4 py-lg-5 mb-xxl-3">
+        <h2 class="pt-5">How it works</h2>
+        <p class="fs-lg pb-3">Effortlessly find, connect, and hire the perfect contractor for your job - all in just three easy steps.</p>
+
+        <!-- Row of items that turns into carousel on screens < 800px wide -->
+        <div class="swiper pb-5" data-swiper='{
+          "slidesPerView": 1,
+          "spaceBetween": 24,
+          "pagination": {
+            "el": ".swiper-pagination",
+            "clickable": true
+          },
+          "breakpoints": {
+            "450": {
+              "slidesPerView": 2
+            },
+            "800": {
+              "slidesPerView": 3
+            }
+          }
+        }'>
+            <div class="swiper-wrapper">
+
+                <!-- Item -->
+                <div class="swiper-slide">
+                    <svg class="text-secondary-emphasis" xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"><path d="M41.441 35.281a.95.95 0 0 1-.184-.018.99.99 0 0 1-.175-.054.93.93 0 0 1-.162-.086.91.91 0 0 1-.142-.116c-.043-.043-.082-.091-.117-.142s-.063-.105-.085-.162-.042-.116-.053-.175a.95.95 0 0 1-.019-.184.93.93 0 0 1 .019-.183.88.88 0 0 1 .053-.175c.023-.057.052-.112.085-.162a.93.93 0 0 1 .117-.142c.174-.174.416-.275.663-.275a.94.94 0 0 1 .663.275c.043.043.082.091.116.142a.97.97 0 0 1 .087.162c.024.057.041.115.053.175a.93.93 0 0 1 .019.183.95.95 0 0 1-.019.184c-.012.059-.03.118-.053.175a.94.94 0 0 1-.087.162c-.034.052-.073.099-.116.142s-.091.082-.143.116a.86.86 0 0 1-.162.086.95.95 0 0 1-.175.054.93.93 0 0 1-.183.018zM27.48 37.367c-9.238 0-16.753-7.515-16.753-16.752S18.242 3.862 27.48 3.862s16.754 7.515 16.754 16.752-7.516 16.753-16.754 16.753zm0-31.63c-8.204 0-14.878 6.674-14.878 14.877A14.9 14.9 0 0 0 27.48 35.492a14.9 14.9 0 0 0 14.879-14.878A14.9 14.9 0 0 0 27.48 5.737zm-3.993 17.638a.94.94 0 0 1-.925-.79.94.94 0 0 1 .617-1.033c.162-.489.689-.756 1.18-.596l1.025.334a.94.94 0 0 1 .644.965c-.034.432-.359.784-.787.852l-1.605.256a.94.94 0 0 1-.149.012zm8.37 0a.94.94 0 0 1-.149-.012l-1.605-.256a.94.94 0 0 1-.143-1.817l1.025-.334a.94.94 0 0 1 1.18.596.94.94 0 0 1 .617 1.033.94.94 0 0 1-.925.79zM41.989 6.104A20.38 20.38 0 0 0 27.478.094a20.39 20.39 0 0 0-14.511 6.01 20.38 20.38 0 0 0-6.011 14.51 20.37 20.37 0 0 0 5.363 13.833l-1.308 1.308-1.546-1.546a.94.94 0 0 0-1.326 0l-6.95 6.95C.423 41.925 0 42.945 0 44.03s.423 2.105 1.189 2.871a4.05 4.05 0 0 0 2.872 1.188 4.05 4.05 0 0 0 2.872-1.188l6.95-6.949c.176-.176.275-.414.275-.663s-.099-.487-.275-.663l-1.546-1.546 1.308-1.308c3.018 2.76 6.728 4.53 10.788 5.136 1.029.154 2.057.23 3.08.23a20.38 20.38 0 0 0 9.325-2.256.94.94 0 0 0 .407-1.262.94.94 0 0 0-1.262-.407c-7.226 3.703-15.941 2.332-21.688-3.414a18.52 18.52 0 0 1-5.463-13.186A18.52 18.52 0 0 1 14.293 7.43c7.271-7.27 19.101-7.27 26.371 0 5.964 5.963 7.184 15.221 2.966 22.512a.94.94 0 0 0 .342 1.281.94.94 0 0 0 1.281-.342c4.643-8.025 3.3-18.214-3.263-24.777zM11.895 39.289l-6.287 6.287a2.19 2.19 0 0 1-3.092 0 2.17 2.17 0 0 1 0-3.092l6.287-6.287.883.883-2.639 2.639a.94.94 0 0 0 0 1.326c.183.183.423.275.663.275s.48-.092.663-.275l2.639-2.639.883.883zm23.459-13.825v-2.415c.184-.75 1.136-4.809 1.137-8.386 0-1.47-.33-2.859-.607-3.765l-.418-1.188c-.201-.5-.284-.707-.579-.879a.94.94 0 0 0-1.058.078l-.241.193a6.23 6.23 0 0 1-5.206 1.234c-2.622-.557-5.338.498-6.898 2.64-.835.124-1.604.543-2.164 1.192a3.55 3.55 0 0 0-.824 2.839 1.01 1.01 0 0 0 .024.114l1.46 5.258v3.086c0 1.853.942 3.422 2.725 4.535.703.439 1.511.796 2.408 1.063l-.022 1.583a.94.94 0 0 0 .938.95h3.273a.94.94 0 0 0 .938-.95l-.022-1.581c.9-.266 1.709-.622 2.413-1.061 1.779-1.111 2.72-2.68 2.72-4.539zm-6.222 3.95l-.103.025a.94.94 0 0 0-.693.918l.018 1.363h-1.372l.019-1.363a.94.94 0 0 0-.693-.918l-.097-.024c-1.309-.314-4.352-1.325-4.352-3.952v-6.082c0-.19.155-.345.345-.345h3.445a8.71 8.71 0 0 0 6.002-2.385.94.94 0 0 0 .038-1.325.94.94 0 0 0-1.325-.038c-1.28 1.208-2.955 1.873-4.715 1.873h-3.444c-.601 0-1.148.241-1.548.63l-.309-1.111a1.67 1.67 0 0 1 .395-1.288c.319-.369.781-.58 1.268-.58a.94.94 0 0 0 .799-.447l.015-.024c1.09-1.724 3.168-2.596 5.169-2.171a8.09 8.09 0 0 0 5.992-1.054c.291.869.63 2.176.63 3.547l-.103 2.099a.95.95 0 0 0-.148-.01.94.94 0 0 0-.93.945l.043 5.239v2.528c0 2.636-3.04 3.641-4.347 3.95zm-1.461-1.163a2.41 2.41 0 0 1-2.201-1.433.94.94 0 0 1 .479-1.237.94.94 0 0 1 1.236.478.53.53 0 0 0 .971 0c.209-.474.763-.688 1.236-.478a.94.94 0 0 1 .479 1.237 2.41 2.41 0 0 1-2.201 1.433z"/></svg>
+                    <h3 class="h5 pt-3 pt-md-4 mb-2">Explore</h3>
+                    <p class="mb-0">Browse through our curated list of contractors.</p>
+                </div>
+
+                <!-- Item -->
+                <div class="swiper-slide">
+                    <svg class="text-secondary-emphasis" xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"><path d="M43.313 0H18.938c-2.585 0-4.687 2.103-4.687 4.688v8.438H4.688C2.103 13.125 0 15.228 0 17.813v19.875c0 2.585 2.103 4.688 4.688 4.688h1.875v4.688a.94.94 0 0 0 .938.937.94.94 0 0 0 .663-.275l5.35-5.35h15.549c2.585 0 4.688-2.103 4.688-4.687V29.25h1.875v4.688a.94.94 0 0 0 .938.937.94.94 0 0 0 .663-.275l5.35-5.35h1.487c2.392 0 3.938-1.84 3.938-4.687V4.688A4.7 4.7 0 0 0 43.313 0zM31.875 37.688c0 1.551-1.262 2.813-2.812 2.813H13.125a.94.94 0 0 0-.663.275l-4.025 4.025v-3.362A.94.94 0 0 0 7.5 40.5H4.688c-1.551 0-2.812-1.262-2.812-2.812V17.813C1.875 16.262 3.137 15 4.688 15h24.375c1.551 0 2.813 1.262 2.813 2.813v19.875zm14.25-13.125c0 1.05-.268 2.813-2.062 2.813h-1.875a.94.94 0 0 0-.663.275L37.5 31.674v-3.362a.94.94 0 0 0-.937-.937H33.75v-6.75h5.813a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937H33.75v-.937c0-2.585-2.103-4.687-4.687-4.687H16.125V4.688c0-1.551 1.262-2.812 2.813-2.812h24.375c1.551 0 2.813 1.262 2.813 2.813v19.875zM39.563 7.5H22.688a.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938h16.875a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937zm0 5.625h-3.75a.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938h3.75a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937zM8.438 22.5a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938zm16.875-1.875H12.188a.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938h13.125a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937zm0 5.625h-9.375a.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938h9.375a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937zM8.438 28.125h3.75a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937h-3.75a.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938zm9.375 3.75H8.625a.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938h9.188a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937z"/></svg>
+                    <h3 class="h5 pt-3 pt-md-4 mb-2">Connect</h3>
+                    <p class="mb-0">Connect with them through our platform.</p>
+                </div>
+
+                <!-- Item -->
+                <div class="swiper-slide">
+                    <svg class="text-secondary-emphasis" xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"><path d="M4.519 8.136c.196.471.752.703 1.224.507s.703-.752.507-1.224-.752-.703-1.224-.507-.704.753-.507 1.224zm3.875 0c.153.368.535.607.935.576.391-.03.729-.307.834-.685.222-.798-.673-1.478-1.384-1.054-.393.234-.56.74-.384 1.163zM4.752 44.84h35.053A8.21 8.21 0 0 0 48 36.645a8.21 8.21 0 0 0-7.257-8.141l-.001-20.593A4.76 4.76 0 0 0 35.99 3.16H4.752A4.76 4.76 0 0 0 0 7.912v32.175a4.76 4.76 0 0 0 4.752 4.753zm0-1.875a2.88 2.88 0 0 1-2.877-2.878V12.202h36.993v16.302a8.28 8.28 0 0 0-6.536 4.779H5.76a.94.94 0 0 0-.937.938v4.766a.94.94 0 0 0 .938.938h9.613a.94.94 0 0 0 .938-.937.94.94 0 0 0-.937-.937H6.698V35.16h25.048a8.24 8.24 0 0 0-.135 1.487c0 .47.04.941.12 1.405h-8.109a.94.94 0 0 0-.937.938.94.94 0 0 0 .938.938h8.675a8.28 8.28 0 0 0 2.298 3.04H4.752zm41.373-6.32a6.33 6.33 0 0 1-6.32 6.32 6.39 6.39 0 0 1-6.32-6.32 6.31 6.31 0 0 1 .132-1.285c.595-2.871 3.144-5.035 6.188-5.035a6.33 6.33 0 0 1 6.32 6.319zM4.752 5.035H35.99a2.88 2.88 0 0 1 2.877 2.877v2.415H1.875V7.912a2.88 2.88 0 0 1 2.877-2.877zm2.879 23.769a8.43 8.43 0 0 0 5.579 2.124 8.43 8.43 0 0 0 5.58-2.125 8.4 8.4 0 0 0-5.579-14.654 8.4 8.4 0 0 0-5.579 14.655zm5.293.242a6.54 6.54 0 0 1-3.678-1.339 4.04 4.04 0 0 1 3.954-3.3c1.973.004 3.628 1.419 3.972 3.3-1.208.927-2.728 1.407-4.249 1.34zm-1.021-7.821a1.31 1.31 0 0 1 1.307-1.307 1.31 1.31 0 0 1 1.307 1.307 1.31 1.31 0 0 1-1.301 1.307 1.31 1.31 0 0 1-1.312-1.307zm1.307-5.201c3.593 0 6.515 2.922 6.515 6.514 0 1.287-.383 2.534-1.08 3.589-.563-1.321-1.596-2.39-2.879-3.01.393-.529.626-1.184.626-1.893 0-1.755-1.428-3.182-3.182-3.182s-3.182 1.427-3.182 3.182c0 .708.233 1.363.626 1.892-1.283.62-2.315 1.69-2.878 3.011a6.52 6.52 0 0 1-1.08-3.589c0-3.592 2.922-6.514 6.514-6.514zm25.504 21.598l-1.285-1.285a.94.94 0 0 0-1.326 0 .94.94 0 0 0 0 1.326l1.948 1.948a.94.94 0 0 0 1.326 0l4.368-4.367a.94.94 0 0 0 0-1.326.94.94 0 0 0-1.326 0l-3.704 3.705z"/></svg>
+                    <h3 class="h5 pt-3 pt-md-4 mb-2">Get quotes and hire</h3>
+                    <p class="mb-0">Receive quotes from interested contractors.</p>
+                </div>
+            </div>
+
+            <!-- Pagination (Bullets) -->
+            <div class="swiper-pagination position-static mt-3"></div>
+        </div>
+    </section>
+
 @endsection

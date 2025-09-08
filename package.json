@@ -3,20 +3,27 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "theme1:dev": "vite --config resources/front/Finder/vite.config.js",
+        "theme1:build": "vite build --config resources/front/Finder/vite.config.js",
+        "theme1:preview": "vite preview --config resources/front/Finder/vite.config.js --port 5176"
     },
     "dependencies": {
-        "@tailwindcss/vite": "^4.1.11",
+        "aos": "^2.3.4",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
+        "glightbox": "^3.3.1",
         "laravel-vite-plugin": "^2.0",
-        "tailwindcss": "^4.0.7",
+        "swiper": "^11.2.10",
         "vite": "^7.0.4"
     },
     "optionalDependencies": {
         "@rollup/rollup-linux-x64-gnu": "4.9.5",
         "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
         "lightningcss-linux-x64-gnu": "^1.29.1"
+    },
+    "devDependencies": {
+        "vite-plugin-static-copy": "^3.1.2"
     }
 }
