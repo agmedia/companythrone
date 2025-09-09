@@ -4,6 +4,7 @@ namespace App\Models\Back\Catalog;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kalnoy\Nestedset\NodeTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Spatie\MediaLibrary\HasMedia;
@@ -20,6 +21,22 @@ class Category extends Model implements HasMedia
     public function sluggable(): array
     {
         return ['slug' => ['source' => 'name']];
+    }
+
+
+    public function translations(): HasMany
+    {
+        return $this->hasMany(CategoryTranslation::class);
+    }
+
+
+    public function translation(?string $locale = null): ?CategoryTranslation
+    {
+        $locale   = $locale ?: app()->getLocale();
+        $fallback = config('app.fallback_locale');
+
+        return $this->translations->firstWhere('locale', $locale)
+               ?? $this->translations->firstWhere('locale', $fallback);
     }
 
 
@@ -52,5 +69,23 @@ class Category extends Model implements HasMedia
         $this->addMediaCollection('icon')->singleFile();
         $this->addMediaCollection('image')->singleFile();
         $this->addMediaCollection('banner')->singleFile();
+    }
+
+
+    public function getNameAttribute()
+    {
+        return $this->translations->firstWhere('locale', app()->getLocale())?->name;
+    }
+
+
+    public function getSlugAttribute()
+    {
+        return $this->translations->firstWhere('locale', app()->getLocale())?->slug;
+    }
+
+
+    public function getDescAttribute()
+    {
+        return $this->translations->firstWhere('locale', app()->getLocale())?->description;
     }
 }

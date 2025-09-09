@@ -42,7 +42,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-light">
+<body>
 
 {{-- Header jednom, globalno --}}
 @include('components.layouts.app.header')

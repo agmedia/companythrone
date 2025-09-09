@@ -13,17 +13,33 @@ return new class extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('slug')->unique();
             $table->boolean('is_active')->default(true);
-            $table->nestedSet(); // kalnoy/nestedset adds _lft, _rgt, parent_id
+            $table->unsignedInteger('clicks')->nullable();
+            $table->nestedSet();
             $table->timestamps();
+
+            $table->index(['is_active']);
+        });
+
+        Schema::create('category_translations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+            $table->string('locale', 5);
+            $table->string('name');
+            $table->string('slug');
+            $table->longText('description')->nullable();
+            $table->timestamps();
+
+            $table->unique(['category_id','locale']);
+            $table->unique(['locale','slug']); // VAŽNO umjesto unique('slug')
+            $table->index(['locale']);
         });
 
         Schema::create('category_company', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+
             $table->unique(['category_id', 'company_id']);
         });
     }
@@ -33,5 +49,6 @@ return new class extends Migration {
     {
         Schema::dropIfExists('category_company');
         Schema::dropIfExists('categories');
+        Schema::dropIfExists('category_translations');
     }
 };

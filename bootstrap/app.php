@@ -13,6 +13,36 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        // OVDJE ide custom route-model binding
+        then: function () {
+
+            // Company po lokaliziranom slug-u
+            Route::bind('companyBySlug', function (string $slug) {
+                $locale = app()->getLocale();
+
+                return Company::with(['translations' => fn($q) => $q->where('locale', $locale)])
+                              ->whereHas('translations', fn($q) => $q->where('locale', $locale)->where('slug', $slug))
+                              ->firstOrFail();
+            });
+
+            // Category po lokaliziranom slug-u
+            Route::bind('categoryBySlug', function (string $slug) {
+                $locale = app()->getLocale();
+
+                return Category::with(['translations' => fn($q) => $q->where('locale', $locale)])
+                               ->whereHas('translations', fn($q) => $q->where('locale', $locale)->where('slug', $slug))
+                               ->firstOrFail();
+            });
+
+            // (opcionalno) fallback: ako nema u aktivnom jeziku, probaj hr → en ili obrnuto
+            // Route::bind('companyBySlug', function (string $slug) {
+            //     $locale = app()->getLocale();
+            //     $fallback = $locale === 'hr' ? 'en' : 'hr';
+            //     $q = fn($loc) => Company::with(['translations' => fn($qq) => $qq->where('locale', $loc)])
+            //             ->whereHas('translations', fn($qq) => $qq->where('locale', $loc)->where('slug', $slug));
+            //     return $q($locale)->first() ?: $q($fallback)->firstOrFail();
+            // });
+        }
     )
     ->withMiddleware(function (Middleware $middleware) {
         // ovdje po potrebi globalni middleware

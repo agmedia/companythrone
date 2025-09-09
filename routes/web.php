@@ -23,12 +23,22 @@ Route::group([
 ], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/companies/{company:slug}', [CompanyController::class, 'show'])->name('companies.show');
-    Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
+    Route::get('/companies/{companyBySlug}', [CompanyController::class, 'show'])->name('companies.show');
+    Route::get('/categories/{categoryBySlug}', [CategoryController::class, 'show'])->name('categories.show');
 
     Route::get('/add-company',  [CompanyController::class, 'create'])->name('companies.create');
     Route::post('/add-company', [CompanyController::class, 'store'])->name('companies.store');
 });
+
+/**
+ *
+ */
+Route::get('/plan', function () {
+    return view('plan');
+})->name('plan');
+/**
+ *
+ */
 
 // Signed redirect (izvan LL)
 Route::get('/r/{from}/{to}/{slot}', [ClickRedirectController::class, 'go'])

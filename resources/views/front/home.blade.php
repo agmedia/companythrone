@@ -150,7 +150,7 @@
                                 </div>
                                 <div class="pt-1 ps-3">
                                     <h3 class="h6 mb-1">
-                                        <a class="hover-effect-underline stretched-link" href="{{ localized_route('companies.show', $c) }}">{{ $c->name }}</a>
+                                        <a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->name }}</a>
                                     </h3>
                                     <div class="d-flex align-items-center gap-1 mb-1">
                                         <i class="fi-star-filled text-warning"></i>

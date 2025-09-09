@@ -9,8 +9,11 @@ class LevelSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (range(1,5) as $n) {
-            Level::firstOrCreate(['number' => $n], ['description' => "Level $n"]);
+        foreach (range(1, 5) as $n) {
+            Level::firstOrCreate(
+                ['number' => $n],
+                ['description' => "Nivo {$n}", 'rotated_at' => now()->subDays(6 - $n)]
+            );
         }
     }
 }

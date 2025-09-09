@@ -5,6 +5,7 @@ namespace App\Models\Back\Catalog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -28,6 +29,56 @@ class Company extends Model implements HasMedia
     public function sluggable(): array
     {
         return ['slug' => ['source' => 'name']];
+    }
+
+
+    public function translations(): HasMany
+    {
+        return $this->hasMany(CompanyTranslation::class);
+    }
+
+
+    public function translation(?string $locale = null): ?CompanyTranslation
+    {
+        $locale   = $locale ?: app()->getLocale();
+        $fallback = config('app.fallback_locale');
+
+        return $this->translations->firstWhere('locale', $locale)
+               ?? $this->translations->firstWhere('locale', $fallback);
+    }
+
+
+    public function translated(string $field, ?string $locale = null, $fallback = null)
+    {
+        $loc = $locale ?: app()->getLocale();
+        $t   = $this->relations['translation_' . $loc] ??= $this->translations->firstWhere('locale', $loc);
+
+        return $t?->{$field} ?? $fallback;
+    }
+
+
+    // sugar accessor-i
+    public function getTNameAttribute()
+    {
+        return $this->translated('name', null, '[no name]');
+    }
+
+
+    public function getTSloganAttribute()
+    {
+        return $this->translated('slogan');
+    }
+
+
+    public function getTDescAttribute()
+    {
+        return $this->translated('description');
+    }
+
+
+    public function getTSlugAttribute()
+    {
+        return $this->translated('slug');
     }
 
 
@@ -67,4 +118,5 @@ class Company extends Model implements HasMedia
         $this->addMediaCollection('icon')->singleFile();
         $this->addMediaCollection('banner')->singleFile();
     }
+
 }

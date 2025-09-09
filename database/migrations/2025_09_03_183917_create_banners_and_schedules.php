@@ -13,10 +13,26 @@ return new class extends Migration {
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('url')->nullable();
             $table->enum('status', ['draft', 'active', 'archived'])->default('draft');
+            $table->unsignedInteger('clicks')->nullable();
             $table->timestamps();
+
+            $table->index(['status']);
+        });
+
+        Schema::create('banner_translations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('banner_id')->constrained()->cascadeOnDelete();
+            $table->string('locale', 5);
+            $table->string('title');
+            $table->string('slogan')->nullable();
+            $table->string('url')->nullable();
+            $table->timestamps();
+
+            $table->unique(['banner_id','locale']);
+            // Ako želiš jedinstvene “naslove-slugove” po jeziku, dodaj i slug kolonu ovdje;
+            // ako ne treba slug za bannere, preskoči.
+            $table->index(['locale']);
         });
 
         Schema::create('banner_schedules', function (Blueprint $table) {
@@ -24,9 +40,12 @@ return new class extends Migration {
             $table->foreignId('banner_id')->constrained()->cascadeOnDelete();
             $table->date('start_date');
             $table->date('end_date');
-            $table->unsignedSmallInteger('position')->default(1); // slot na naslovnici
+            $table->unsignedSmallInteger('position')->default(1);
             $table->timestamps();
+
+            $table->index(['start_date','end_date','position']);
         });
+
     }
 
 
@@ -34,5 +53,6 @@ return new class extends Migration {
     {
         Schema::dropIfExists('banner_schedules');
         Schema::dropIfExists('banners');
+        Schema::dropIfExists('banner_translations');
     }
 };
