@@ -4,6 +4,7 @@ use App\Events\DailySessionCompleted;
 use App\Jobs\CloseDayAndActivateLinks;
 use App\Jobs\GenerateDailySessions;
 use App\Jobs\RotateLevels;
+use App\Models\Back\Catalog\Company;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,11 +19,17 @@ return Application::configure(basePath: dirname(__DIR__))
 
             // Company po lokaliziranom slug-u
             Route::bind('companyBySlug', function (string $slug) {
-                $locale = app()->getLocale();
+                $locale = app()->getLocale() ?: config('app.fallback_locale');
 
-                return Company::with(['translations' => fn($q) => $q->where('locale', $locale)])
+                //dd($locale, $slug);
+
+                $c = Company::with(['translations' => fn($q) => $q->where('locale', $locale)])
                               ->whereHas('translations', fn($q) => $q->where('locale', $locale)->where('slug', $slug))
                               ->firstOrFail();
+
+                //dd($c);
+
+                return $c;
             });
 
             // Category po lokaliziranom slug-u

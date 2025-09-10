@@ -27,6 +27,9 @@
                         <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ localized_route('home') }}">{{ __('nav.home') }}</a>
                     </li>
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
+                        <a class="nav-link {{ request()->routeIs('companies.index') ? 'active' : '' }}" href="{{ localized_route('companies.index') }}">{{ __('nav.companies') }}</a>
+                    </li>
+                    <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
                         <a class="nav-link {{ request()->routeIs('companies.create') ? 'active' : '' }}" href="{{ localized_route('companies.create') }}">{{ __('nav.add_company') }}</a>
                     </li>
                     @auth

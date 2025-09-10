@@ -34,7 +34,7 @@ class Company extends Model implements HasMedia
 
     public function translations(): HasMany
     {
-        return $this->hasMany(CompanyTranslation::class);
+        return $this->hasMany(CompanyTranslation::class, 'company_id');
     }
 
 
