@@ -12,8 +12,8 @@
         "start": "gulp",
         "build": "gulp build-prod",
         "format": "prettier --write ./src",
-        "build:public": "cross-env DEST_BASE=../../../../public/admin/theme1 SASS_SILENCE_DEPRECATIONS=legacy-js-api,import,color-functions,global-builtin gulp build-prod",
-        "watch:public": "cross-env DEST_BASE=../../../../public/admin/theme1 SASS_SILENCE_DEPRECATIONS=legacy-js-api,import,color-functions,global-builtin gulp build"
+        "build:public": "cross-env DEST_BASE=../../../public/admin/theme1 SASS_SILENCE_DEPRECATIONS=legacy-js-api,import,color-functions,global-builtin gulp build-prod",
+        "watch:public": "cross-env DEST_BASE=../../../public/admin/theme1 SASS_SILENCE_DEPRECATIONS=legacy-js-api,import,color-functions,global-builtin gulp build"
     },
     "overrides": {
         "graceful-fs": "^4.2.11"

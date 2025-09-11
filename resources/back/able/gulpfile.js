@@ -19,7 +19,7 @@ const nodePath     = require('path');
 // Dart Sass via gulp-sass
 const gulpSass = require('gulp-sass')(require('sass'));
 
-const DEST_BASE = process.env.DEST_BASE || '../../../public/admin/theme1';
+const DEST_BASE = process.env.DEST_BASE || '../../public/admin/theme1';
 
 const paths = {
     src: {

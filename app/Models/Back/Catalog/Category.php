@@ -15,7 +15,11 @@ class Category extends Model implements HasMedia
 
     use NodeTrait, Sluggable, InteractsWithMedia, HasFactory;
 
-    protected $fillable = ['name', 'slug', 'parent_id'];
+    protected $fillable = ['parent_id', 'group', 'is_active', 'is_navbar', 'position', 'sort_order'];
+
+    protected $casts = ['is_active' => 'bool', 'is_navbar' => 'bool'];
+
+    protected $scoped = ['group'];
 
 
     public function sluggable(): array
@@ -60,6 +64,24 @@ class Category extends Model implements HasMedia
     public function companies()
     {
         return $this->belongsToMany(Company::class, 'category_company');
+    }
+
+
+    public function scopeGroup($q, $group)
+    {
+        return $q->where('group', $group);
+    }
+
+
+    public function scopeActive($q)
+    {
+        return $q->where('is_active', true);
+    }
+
+
+    public function scopeNavbar($q)
+    {
+        return $q->where('is_navbar', true);
     }
 
 
