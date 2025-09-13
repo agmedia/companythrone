@@ -32,10 +32,10 @@
                     </div>
                     <div class="collapse pc-user-links" id="pc_sidebar_userlink">
                         <div class="pt-3">
-                            <a href="{{ route('users.profile') }}">
+                            {{--<a href="{{ route('users.profile') }}">
                                 <i class="ti ti-user"></i>
                                 <span>@lang('back/common.roles.administrator')</span>
-                            </a>
+                            </a>--}}
                             <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="ti ti-power"></i>
                                 <span>{{ __('back/nav.user.logout') }}</span>
@@ -68,43 +68,11 @@
                         <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
                     <ul class="pc-submenu">
-                        <li class="pc-item {{ $is('catalog.categories.*') ? 'active' : '' }}">
+                        <li class="pc-item {{ $is('categories.*') ? 'active' : '' }}">
                             <a class="pc-link"
                                href="{{ route('catalog.categories.index', ['group' => $currentGroup]) }}"
                                data-i18n="Categories">
                                 {{ __('back/nav.categories') }}
-                            </a>
-                        </li>
-                        <li class="pc-item {{ $is('catalog.products.*') ? 'active' : '' }}">
-                            <a class="pc-link"
-                               href="{{ route('catalog.products.index') }}"
-                               data-i18n="Products">
-                                {{ __('back/nav.products') }}
-                            </a>
-                        </li>
-                        @if (config('settings.product_options_enabled'))
-                            <li class="pc-item {{ $is('catalog.options.*') ? 'active' : '' }}">
-                                <a class="pc-link"
-                                   href="{{ route('catalog.options.index') }}"
-                                   data-i18n="Products">
-                                    {{ __('back/nav.options') }}
-                                </a>
-                            </li>
-                        @endif
-                        @if (config('settings.product_attributes_enabled'))
-                            <li class="pc-item {{ $is('catalog.attributes.*') ? 'active' : '' }}">
-                                <a class="pc-link"
-                                   href="{{ route('catalog.attributes.index') }}"
-                                   data-i18n="Products">
-                                    {{ __('back/nav.attributes') }}
-                                </a>
-                            </li>
-                        @endif
-                        <li class="pc-item {{ $is('catalog.manufacturers.*') ? 'active' : '' }}">
-                            <a class="pc-link"
-                               href="{{ route('catalog.manufacturers.index') }}"
-                               data-i18n="Manufacturers">
-                                {{ __('back/nav.manufacturers') }}
                             </a>
                         </li>
                     </ul>
@@ -129,12 +97,12 @@
                     </ul>
                 </li>
 
-                <li class="pc-item {{ $is('users.*') ? 'active' : '' }}">
+                {{--<li class="pc-item {{ $is('users.*') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-profile-2user-outline"></use></svg></span>
                         <span class="pc-mtext">{{ __('back/nav.users') }}</span>
                     </a>
-                </li>
+                </li>--}}
 
                 <!-- Settings -->
                 <li class="pc-item pc-caption">
@@ -156,7 +124,7 @@
                     </ul>
                 </li>
 
-                <li class="pc-item pc-hasmenu {{ request()->routeIs('settings.*') ? 'pc-trigger active' : '' }}">
+                {{--<li class="pc-item pc-hasmenu {{ request()->routeIs('settings.*') ? 'pc-trigger active' : '' }}">
                     <a href="#!" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-presentation-chart"></use></svg></span>
                         <span class="pc-mtext">{{ __('back/nav.shop') }}</span>
@@ -170,7 +138,7 @@
                             </a>
                         </li>
 
-                        {{-- Currencies (Settings → Currencies) --}}
+                        --}}{{-- Currencies (Settings → Currencies) --}}{{--
                         <li class="pc-item {{ request()->routeIs('settings.currencies.*') ? 'active' : '' }}">
                             <a class="pc-link" href="{{ route('settings.currencies.index') }}">
                                 {{ __('back/nav.currencies') }}
@@ -208,7 +176,7 @@
                         </li>
 
                     </ul>
-                </li>
+                </li>--}}
 
 
             </ul>

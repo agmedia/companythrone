@@ -1,4 +1,4 @@
-@extends('back.layouts.base-admin')
+@extends('admin.layouts.base-admin')
 
 @section('title', __('back/categories.title'))
 
@@ -18,7 +18,7 @@
                         @if($group)
                             <div class="small text-muted">
                                 {{ __('back/categories.group_label') }}:
-                                <span class="text-uppercase">{{ __('back/categories.tabs.'.($group ?? 'products')) }}</span>
+                                <span class="text-uppercase">{{ __('back/categories.tabs.'.($group ?? 'companies')) }}</span>
                             </div>
                         @endif
                     </div>
@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="card-body border-bottom pb-0">
-                    @php $groups = ['products','blog','pages','footer']; @endphp
+                    @php $groups = ['companies','blog','pages','footer']; @endphp
                     <ul class="nav nav-pills flex-wrap">
                         @foreach($groups as $key)
                             <li class="nav-item me-2 mb-2">
@@ -64,7 +64,7 @@
                             </thead>
                             <tbody>
                             @forelse($tree as $node)
-                                @include('back.catalog.categories.partials.row', ['node' => $node, 'level' => 0, 'group' => $group])
+                                @include('admin.catalog.categories.partials.row', ['node' => $node, 'level' => 0, 'group' => $group])
                             @empty
                                 <tr>
                                     <td colspan="8" class="text-center text-muted py-5">{{ __('back/categories.empty') }}</td>

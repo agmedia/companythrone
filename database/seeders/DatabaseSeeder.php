@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             LevelSeeder::class,
             AdminUserSeeder::class,
-            CategorySeeder::class,
+            CategoriesSeeder::class,
+            //CategorySeeder::class,
             CompanySeeder::class,
             BannersSeeder::class,
         ]);

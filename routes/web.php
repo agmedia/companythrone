@@ -5,6 +5,7 @@ use App\Livewire\Back\CompaniesIndex;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
+use App\Http\Controllers\Admin\{CompanyController as AdminCompanyController, BannerController as AdminBannerController, CategoryController as AdminCategoryController};
 use App\Http\Controllers\Front\{ClickRedirectController, CompanyListController, HomeController, CompanyController, CategoryController};
 
 /**
@@ -16,14 +17,24 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     // Dashboard (Blade wrapper)
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
+    Route::prefix('catalog')->as('catalog.')->group(function () {
+        Route::resource('categories', AdminCategoryController::class)->names('categories');
+    });
+
     // Settings (Blade wrapperi mountaju Livewire komponente)
     Route::view('/settings/profile',    'back.settings.profile')->name('settings.profile');
     Route::view('/settings/password',   'back.settings.password')->name('settings.password');
     Route::view('/settings/appearance', 'back.settings.appearance')->name('settings.appearance');
 
     // Admin Livewire stranice
-    Route::get('/companies',  CompaniesIndex::class)->name('admin.companies');
-    Route::get('/categories', CategoriesTree::class)->name('admin.categories');
+    /*Route::get('/companies',  CompaniesIndex::class)->name('admin.companies');
+    Route::get('/categories', CategoriesTree::class)->name('admin.categories');*/
+
+    Route::resource('companies', AdminCompanyController::class)
+         ->parameters(['companies' => 'company']);
+
+    Route::resource('banners', AdminBannerController::class)
+         ->parameters(['banners' => 'banner']);
 });
 
 /**

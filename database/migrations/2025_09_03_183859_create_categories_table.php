@@ -44,7 +44,6 @@ return new class extends Migration {
 
             $table->unique(['category_id', 'locale']);
             $table->unique(['locale','slug']); // VAŽNO umjesto unique('slug')
-            $table->index(['locale']);
         });
 
         Schema::create('category_company', function (Blueprint $table) {

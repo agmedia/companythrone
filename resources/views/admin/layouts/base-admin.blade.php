@@ -46,9 +46,9 @@
 <!-- [ Pre-loader ] End -->
 
 
-@include('back.layouts.sidebar')
+@include('admin.layouts.sidebar')
 
-@include('back.layouts.header')
+@include('admin.layouts.header')
 
 <!-- [ Main Content ] start -->
 <div class="pc-container">
@@ -58,9 +58,9 @@
 </div>
 <!-- [ Main Content ] end -->
 
-@include('back.layouts.footer')
+@include('admin.layouts.footer')
 
-@include('back.layouts.offcanvas')
+{{--@include('admin.layouts.offcanvas')--}}
 
 @stack('modals')
 

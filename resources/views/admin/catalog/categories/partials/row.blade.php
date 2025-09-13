@@ -17,7 +17,7 @@
         </span>
             @endif
             <div>
-                <div class="fw-semibold">{{ $t?->title ?? '—' }}</div>
+                <div class="fw-semibold">{{ $t?->name ?? '—' }}</div>
                 @if($t?->slug)
                     <div class="text-muted small">{{ $t->slug }}</div>
                 @endif
@@ -25,7 +25,7 @@
         </div>
     </td>
     <td><span class="badge bg-secondary text-uppercase">{{ $node->group }}</span></td>
-    <td>{{ $pt?->title ?? '' }}</td> {{-- blank if no parent --}}
+    <td>{{ $pt?->name ?? '' }}</td> {{-- blank if no parent --}}
     <td>{{ $node->position }}</td>
     <td>
         @if($node->is_active)
@@ -54,6 +54,6 @@
 
 @if($node->children && $node->children->isNotEmpty())
     @foreach($node->children as $child)
-        @include('back.catalog.categories.partials.row', ['node' => $child, 'level' => $level + 1, 'group' => $group])
+        @include('admin.catalog.categories.partials.row', ['node' => $child, 'level' => $level + 1, 'group' => $group])
     @endforeach
 @endif

@@ -1,4 +1,4 @@
-@extends('back.layouts.base-admin')
+@extends('admin.layouts.base-admin')
 
 @section('title', __('back/categories.title_edit'))
 
@@ -12,11 +12,11 @@
                     <h5 class="mb-0">
                         {{ __('back/categories.title_edit') }}: {{ $t?->title ?? '—' }}
                     </h5>
-                    <a href="{{ route('catalog.categories.index', ['group'=>request('group','products')]) }}"
+                    <a href="{{ route('catalog.categories.index', ['group'=>request('group','companies')]) }}"
                        class="btn btn-light">{{ __('back/common.actions.back') }}</a>
                 </div>
                 <div class="card-body">
-                    @include('back.catalog.categories.partials.form', ['mode' => 'edit'])
+                    @include('admin.catalog.categories.partials.form', ['mode' => 'edit'])
                 </div>
                 <div class="card-footer d-flex gap-2">
                     <button class="btn btn-primary">{{ __('back/common.actions.update') }}</button>

@@ -8,7 +8,7 @@
             <div class="col-auto my-1">
                 <ul class="list-inline footer-link mb-0">
                     <li class="list-inline-item"><a href="{{ route('dashboard') }}">@lang('back/nav.dashboard')</a></li>
-                    <li class="list-inline-item"><a href="{{ route('users.profile') }}">@lang('back/common.roles.administrator')</a></li>
+                    <li class="list-inline-item"><a href="{{ route('settings.profile') }}">@lang('back/common.roles.administrator')</a></li>
                 </ul>
             </div>
         </div>

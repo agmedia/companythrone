@@ -52,7 +52,7 @@
                     </div>
                 </li>
                 <li class="dropdown pc-h-item">
-                    <form id="locale-form" class="d-none" method="POST" action="{{ route('locale.switch') }}">
+                    <form id="locale-form" class="d-none" method="POST" action="{{--{{ route('locale.switch') }}--}}">
                         @csrf
                         <input type="hidden" name="locale" id="locale-input">
                     </form>
@@ -94,7 +94,7 @@
                                 </div>
                                 <hr class="border-secondary border-opacity-50" />
                                 <p class="text-span">Manage</p>
-                                <a href="{{ route('users.profile') }}" class="dropdown-item">
+                                <a href="{{ route('settings.profile') }}" class="dropdown-item">
                                         <span>
                                             <svg class="pc-icon text-muted me-2">
                                                 <use xlink:href="#custom-user"></use>
