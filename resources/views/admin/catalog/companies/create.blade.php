@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Create company</h1>
 
-        <form action="{{ route('admin.companies.store') }}" method="post">
+        <form action="{{ route('catalog.companies.store') }}" method="post">
             @csrf
             <div class="mb-3">
                 <label>Title</label>

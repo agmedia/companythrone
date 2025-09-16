@@ -5,7 +5,7 @@ return [
     
     'catalog'    => 'Catalog',
     'categories' => 'Categories',
-    'products'   => 'Products',
+    'companies'   => 'Companies',
     'options' => 'Options',
     'attributes' => 'Attributes',
     'manufacturers' => 'Manufacturers',

@@ -1,45 +1,93 @@
 @extends('admin.layouts.base-admin')
 
 @section('content')
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>Companies</h1>
-            <a href="{{ route('companies.create') }}" class="btn btn-primary">Add company</a>
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header align-items-center justify-content-between d-flex">
+                    <h5 class="mb-1">{{ __('back/companies.title') }}</h5>
+                    <a href="{{ route('catalog.companies.create') }}" class="btn btn-primary">
+                        <i class="ti ti-plus"></i> {{ __('back/common.actions.new') }}
+                    </a>
+                </div>
+
+                {{--<div class="card-body border-bottom pb-0">
+                    @php $groups = ['companies','blog','pages','footer']; @endphp
+                    <ul class="nav nav-pills flex-wrap">
+                        @foreach($groups as $key)
+                            <li class="nav-item me-2 mb-2">
+                                <a class="nav-link {{ ($group ?? 'products') === $key ? 'active' : '' }}"
+                                   href="{{ route('catalog.categories.index', ['group'=>$key]) }}">
+                                    {{ __('back/categories.tabs.'.$key) }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>--}}
+
+                @if(session('success'))
+                    <div class="alert alert-success m-3 mb-0">{{ session('success') }}</div>
+                @endif
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th style="width:56px;">{{ __('back/companies.table.id') }}</th>
+                                <th>Title</th>
+                                <th>Level</th>
+                                <th>City</th>
+                                <th>Clicks</th>
+                                <th>Active</th>
+                                <th class="text-end" style="width:120px;">{{ __('back/companies.table.actions') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($companies as $com)
+                                <tr>
+                                    <td>{{ $com->id }}</td>
+                                    <td>{{ $com?->t_name ?? '' }}</td> {{-- blank if no parent --}}
+                                    <td>{{ $com->level->number }}</td>
+                                    <td>{{ $com->city }}</td>
+                                    <td>{{ $com->clicks }}</td>
+                                    <td>
+                                        @if($com->is_publiched)
+                                            <span class="badge bg-success">{{ __('back/common.status.active') }}</span>
+                                        @else
+                                            <span class="badge bg-outline-secondary">{{ __('back/common.status.hidden') }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-inline-flex gap-2">
+                                            <a href="{{ route('catalog.companies.edit', $com) }}"
+                                               class="btn btn-sm btn-outline-primary rounded-circle" title="{{ __('back/common.actions.edit') }}">
+                                                <i class="ti ti-edit"></i>
+                                            </a>
+                                            <form action="{{ route('catalog.companies.destroy', $com) }}" method="POST"
+                                                  onsubmit="return confirm('{{ __('back/companies.confirm_delete') }}')" class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button class="btn btn-sm btn-outline-danger rounded-circle" title="{{ __('back/common.actions.delete') }}">
+                                                    <i class="ti ti-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="7">No companies yet.</td></tr>
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if(method_exists($companies, 'links'))
+                    <div class="card-footer">
+                        {{ $companies->withQueryString()->links() }}
+                    </div>
+                @endif
+            </div>
         </div>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Title</th>
-                <th>Slug</th>
-                <th>Group</th>
-                <th>Clicks</th>
-                <th>Active</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @forelse($companies as $c)
-                <tr>
-                    <td>{{ $c->title }}</td>
-                    <td>{{ $c->slug }}</td>
-                    <td>{{ $c->group }}</td>
-                    <td>{{ $c->clicks }}</td>
-                    <td>{{ $c->active ? 'Yes' : 'No' }}</td>
-                    <td class="text-end">
-                        <a href="{{ route('companies.edit', $c) }}">Edit</a>
-                        <form action="{{ route('companies.destroy', $c) }}" method="post" class="d-inline">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-link text-danger p-0" onclick="return confirm('Delete?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="6">No companies yet.</td></tr>
-            @endforelse
-            </tbody>
-        </table>
-
-        {{ $companies->links() }}
     </div>
 @endsection

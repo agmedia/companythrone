@@ -19,6 +19,7 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
 
     Route::prefix('catalog')->as('catalog.')->group(function () {
         Route::resource('categories', AdminCategoryController::class)->names('categories');
+        Route::resource('companies', AdminCompanyController::class)->names('companies');
     });
 
     // Settings (Blade wrapperi mountaju Livewire komponente)
@@ -30,8 +31,8 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     /*Route::get('/companies',  CompaniesIndex::class)->name('admin.companies');
     Route::get('/categories', CategoriesTree::class)->name('admin.categories');*/
 
-    Route::resource('companies', AdminCompanyController::class)
-         ->parameters(['companies' => 'company']);
+    /*Route::resource('companies', AdminCompanyController::class)
+         ->parameters(['companies' => 'company']);*/
 
     Route::resource('banners', AdminBannerController::class)
          ->parameters(['banners' => 'banner']);

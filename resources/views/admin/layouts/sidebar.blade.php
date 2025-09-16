@@ -2,7 +2,7 @@
 @php
     $is = fn($pattern) => request()->routeIs($pattern);
     $catalogOpen = $is('catalog.*');              // open Catalog when on any catalog.* route
-    $currentGroup = request('group', 'products'); // default group for categories link
+    $currentGroup = request('group', 'companies'); // default group for categories link
 @endphp
 
 <nav class="pc-sidebar">
@@ -73,6 +73,13 @@
                                href="{{ route('catalog.categories.index', ['group' => $currentGroup]) }}"
                                data-i18n="Categories">
                                 {{ __('back/nav.categories') }}
+                            </a>
+                        </li>
+                        <li class="pc-item {{ $is('companies.*') ? 'active' : '' }}">
+                            <a class="pc-link"
+                               href="{{ route('catalog.companies.index') }}"
+                               data-i18n="Categories">
+                                {{ __('back/nav.companies') }}
                             </a>
                         </li>
                     </ul>

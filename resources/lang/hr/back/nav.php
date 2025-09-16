@@ -5,7 +5,7 @@ return [
     
     'catalog'    => 'Katalog',
     'categories' => 'Kategorije',
-    'products'   => 'Artikli',
+    'companies'   => 'Tvrtke',
     'options' => 'Opcije',
     'attributes' => 'Atributi',
     'manufacturers' => 'Proizvođači',
