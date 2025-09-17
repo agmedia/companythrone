@@ -40,6 +40,6 @@ Route::middleware('auth')->group(function () {
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return redirect()->to(localized_route('home'));
+        return redirect()->to(localized_route('home', [], 'hr'));
     })->name('logout');
 });

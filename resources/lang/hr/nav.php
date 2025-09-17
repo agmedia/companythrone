@@ -4,5 +4,5 @@ return [
     'home' => 'Naslovnica',
     'company' => 'Tvrtka',
     'companies' => 'Tvrtke',
-    'add_company' => 'Dodaj svoju tvrtku',
+    'add_company' => 'Dodaj tvrtku',
 ];

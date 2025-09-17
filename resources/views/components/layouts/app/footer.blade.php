@@ -2,28 +2,7 @@
 <footer class="footer bg-body border-top" data-bs-theme="dark">
     <div class="container pb-md-2">
 
-        <!-- Subscribe CTA + Contact link -->
-        <div class="d-md-flex align-items-center justify-content-between border-bottom pt-5 pb-4 pb-md-5">
-            <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 gap-sm-4 mb-4 mb-md-0">
-                <div class="d-flex align-items-center">
-                    <i class="fi-mail fs-4 lh-0 text-body d-none d-sm-block me-2"></i>
-                    <i class="fi-mail text-body d-sm-none me-2"></i>
-                    <h6 class="ps-sm-1 mb-0">
-                        <span class="h5 d-none d-sm-block mb-0">Subscribe to our newsletter</span>
-                        <span class="d-sm-none">Subscribe to our newsletter</span>
-                    </h6>
-                </div>
-                <button type="button" class="btn btn-primary">Subscribe</button>
-            </div>
-            <div class="h5 d-none d-sm-block text-center mb-0">
-                <span class="text-body-secondary fw-normal me-3">Need help?</span>
-                <a class="text-white text-decoration-none hover-effect-underline" href="#!">Contact us</a>
-            </div>
-            <div class="h6 d-sm-none text-center mb-0">
-                <span class="text-body-secondary fw-normal me-2">Need help?</span>
-                <a class="text-white text-decoration-none hover-effect-underline" href="#!">Contact us</a>
-            </div>
-        </div>
+
 
         <!-- Logo + Social buttons + Links  -->
         <div class="accordion row pt-4 pt-sm-5 mt-3 mt-sm-0" id="footerLinks">
@@ -141,45 +120,7 @@
             </div>
         </div>
 
-        <!-- Top cities pills -->
-        <div class="d-md-flex gap-4 pt-4 pt-sm-5">
-            <h6 class="mt-1 mb-md-0">
-                <span class="h5 text-nowrap d-none d-sm-block mb-0">Top cities</span>
-                <span class="text-nowrap d-sm-none">Top cities</span>
-            </h6>
-            <ul class="nav nav-pills gap-2 gap-md-3">
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">New York</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Chicago</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Indianapolis</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Boston</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Atlanta</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Cincinnati</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Los Angeles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Dallas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Pittsburgh</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#!">Tampa</a>
-                </li>
-            </ul>
-        </div>
+
 
         <!-- Copyright + Payment methods -->
         <div class="d-md-flex align-items-center py-4 pt-sm-5 mt-3 mt-sm-0">

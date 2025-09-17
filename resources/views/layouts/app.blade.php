@@ -21,8 +21,7 @@
     <link rel="icon" type="image/png" href="{{ asset('theme1/assets/app-icons/icon-32x32.png') }}" sizes="32x32">
     <link rel="apple-touch-icon" href="{{ asset('theme1/assets/app-icons/icon-180x180.png') }}">
 
-    <!-- Theme switcher (color modes) -->
-    <script src="{{ asset('theme1/assets/js/theme-switcher.js') }}"></script>
+
 
     <!-- Preloaded local web font (Inter) -->
     <link rel="preload" href="{{ asset('theme1/assets/fonts/inter-variable-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
