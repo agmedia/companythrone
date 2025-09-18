@@ -107,39 +107,62 @@
             <!-- Projects grid -->
             <div class="col-lg-12">
                 <div class="d-flex align-items-start justify-content-between gap-4 pb-2 mb-3 mb-lg-4">
-                    <h2 class="mb-0">Popular projects near you</h2>
+                    <h2 class="mb-0">Nove objave</h2>
                     <div class="nav">
                         <a class="nav-link position-relative fs-base text-nowrap py-1 px-0" href="#!">
-                            <span class="hover-effect-underline stretched-link me-1">View all</span>
+                            <span class="hover-effect-underline stretched-link me-1">Pogledajte sve</span>
                             <i class="fi-chevron-right fs-lg"></i>
                         </a>
                     </div>
                 </div>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3  g-4">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-2  g-4">
 
-                    @foreach($featured->take(12) as $c)
+
+                    @foreach($featured->take(6) as $c)
+
+
 
 
                         <!-- Project -->
-                        <div class="col d-flex">
-                            <article class="hover-effect-scale position-relative d-inline-flex align-items-start mt-2">
-                                <div class="flex-shrink-0 bg-body-tertiary rounded overflow-hidden" style="width: 112px">
-                                    <div class=" hover-effect-target" style="--fn-aspect-ratio: calc(80 / 112 * 100%)">
-                                        <img src="{{ $c->getFirstMediaUrl('logo') }}" alt="Image">
+                        <div class="col ">
+
+
+                            <article class="card h-100 hover-effect-scale hover-effect-opacity bg-body-tertiary borde">
+
+                                <div class="row ">
+                                    <div class="col-sm-5 col-md-5 order-sm-2">
+                                        <div class="position-relative h-100 bg-body-secondary rounded overflow-hidden">
+
+                                            <img src="{{ $c->getFirstMediaUrl('logo') }}" class="hover-effect-target  top-0 start-0 w-100 h-100 " style="object-position: center top" alt="Image">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="pt-1 ps-3">
-                                    <h3 class="h6 mb-1">
-                                        <a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->name }}</a>
-                                    </h3>
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <i class="fi-star-filled text-warning"></i>
-                                        <span class="fs-sm text-secondary-emphasis">@if($c->city) {{ $c->city }}@endif</span>
-                                        <span class="fs-xs text-body-secondary align-self-end">@if($c->phone), ({{ $c->phone }})@endif</span>
+                                    <div class="col-sm-7 col-md-7 d-flex flex-column order-md-1">
+                                        <div class="card-body pe-sm-0 pe-lg-4">
+                                            <ul class="list-unstyled flex-row flex-wrap align-items-center gap-2 fs-sm mb-2">
+                                                <li class="d-flex align-items-center">
+                                                    <i class="fi-calendar me-1"></i>
+                                                    {{ $c->published_at }}
+                                                </li>
+
+                                            </ul>
+                                            <h3 class="h5 pt-1 mb-2">
+                                                <a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->t_name }}</a>
+                                            </h3>
+                                            <div class="d-flex align-items-center fs-sm">
+                                                <i class="fi-map-pin me-1"></i>
+                                                @if($c->city) {{ $c->city }}@endif
+                                            </div>
+                                        </div>
+
+                                        <div class="card-footer d-flex align-items-center justify-content-between gap-3 bg-transparent border-0 pt-0 pt-sm-4 p-4 pe-sm-0">
+                                            <a href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}" class="btn btn-outline-dark position-relative z-2"> Opširnije </a>
+                                        </div>
+
                                     </div>
-                                    <div class="fs-sm text-dark-emphasis">Email: @if($c->email), {{ $c->email }}@endif</div>
                                 </div>
                             </article>
+
+
                         </div>
                     @endforeach
                 </div>
@@ -150,7 +173,8 @@
 
 
     <!-- How it works -->
-    <section class="container py-2 py-sm-3 py-md-4 py-lg-5 mb-xxl-3">
+    <section class= "bg-body-tertiary py-2 py-sm-3 py-md-4 py-lg-5 mb-0">
+        <div class="container">
         <h2 class="h3 pt-5">Kako Companythrone donosi više posjetitelja i klijenata</h2>
         <p class="fs-lg pb-3">
             Companythrone vam olakšava da vašu tvrtku pronađu baš oni koji vas traže. Dodajte svoj profil, optimizirajte prisutnost i povećajte vidljivost u tražilicama. U nekoliko jednostavnih koraka do više posjetitelja, boljeg SEO-a i novih klijenata.
@@ -210,8 +234,33 @@
 
         <hr class="mb-4">
 
-        <small>* Ne objavljujemo logotope za alkohol , pornografiju, nasilni sadržaj , politiku, vojsku , proizvodnju oružja niti bilo koji drugi neprimjereni sadržaj.
-        Objava tvrtke ( logotipa) ne mora biti prihvaćena i ne obavezujemo se za to dati objašnjenje.</small>
+       <p class="pb-5"> <small >*Ne objavljujemo logotipe za alkohol, pornografiju, nasilni sadržaj, politiku, vojsku, proizvodnju oružja niti bilo koji drugi neprimjereni sadržaj.
+        Objava tvrtke ( logotipa) ne mora biti prihvaćena i ne obavezujemo se za to dati objašnjenje.</small></p>
+        </div>
+    </section>
+
+
+    <!-- Become a Pro CTA -->
+    <section class="position-relative  py-3 px-sm-5 px-md-0" style="background-color: #30536b;">
+        <div class="container position-relative z-2 py-lg-5">
+            <div class="row py-2 py-sm-3 py-lg-3">
+                <div class="col-12 py-lg-2 py-xl-4 py-xxl-5 mb-md-3">
+                    <h2 class="text-white text-center  pb-2 pb-sm-3">Povećajte promet svoje web stranice.</h2>
+                    <div class="d-flex flex-column flex-sm-row flex-md-column flex-lg-row justify-content-center  gap-3">
+                        <a class="btn btn-lg btn-primary animate-scale" href="add-contractor-location.html">
+                            <i class="fi-plus fs-lg animate-target ms-n2 me-2"></i>
+                            Dodaj tvrtku
+                        </a>
+                        <a class="btn btn-lg btn-outline-light animate-slide-end" href="#!">
+                            Saznajte više
+                            <i class="fi-chevron-right fs-lg animate-target ms-2 me-n2"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </section>
 
 

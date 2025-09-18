@@ -12,7 +12,7 @@
           <span class=" d-flex flex-shrink-0 text-primary rtl-flip me-2">
           <img src="{{ asset('theme1/assets/companythrone-round.svg') }}" alt="Companythrone">
           </span>
-            <span class="d-none d-sm-flex ">
+            <span class="d-none d-sm-flex fs-4 ">
             {{ config('app.name','Companythrone') }}
             </span>
         </a>
@@ -30,6 +30,18 @@
                     </li>
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
                         <a class="nav-link {{ request()->routeIs('companies.index') ? 'active' : '' }}" href="{{ localized_route('companies.index') }}">{{ __('nav.companies') }}</a>
+                    </li>
+
+
+                    <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
+                        <a class="nav-link" href="#">{{ __('nav.about_us') }}</a>
+                    </li>
+
+                    <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
+                        <a class="nav-link" href="#">{{ __('nav.faq') }}</a>
+                    </li>
+                    <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
+                        <a class="nav-link" href="#">{{ __('nav.contact_us') }}</a>
                     </li>
                    {{--  <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
                         <a class="nav-link {{ request()->routeIs('companies.create') ? 'active' : '' }}" href="{{ localized_route('companies.create') }}">{{ __('nav.add_company') }}</a>
@@ -67,7 +79,7 @@
 
 
             <!-- Language switcher (hr/en/...) -->
-            @php
+             {{--     @php
                 $supported = Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales();
                 $current = app()->getLocale();
             @endphp
@@ -85,7 +97,7 @@
                     @endforeach
                 </ul>
             </div>
-
+            --}}
             <!-- User (login/profile/logout/...) -->
             @auth
                 <div class="dropdown">
@@ -106,14 +118,19 @@
                     </ul>
                 </div>
             @else
-                <a class="btn btn-icon btn-outline-secondary fs-lg border-0 animate-shake me-2" href="{{ route('login') }}" aria-label="{{ __('auth.login') }}">
-                    <i class="fi-user animate-target"></i>
+
+                <!-- Log in button -->
+                <a class="btn btn-outline-secondary animate-slide-end me-2" href="{{ route('login') }}" aria-label="{{ __('auth.login') }}">
+                    <i class="fi-user animate-target mx-n2 me-xl-2"></i>
+                    <span class="d-none d-xl-inline">{{ __('auth.login') }}</span>
                 </a>
+
+
             @endauth
 
             <!-- Join button  -->
             <a class="btn btn-primary animate-scale" href="{{ localized_route('companies.create') }}">
-                <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i> {{ __('nav.add_company') }} </span>
+                <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i>  {{ __('nav.add_company') }}
             </a>
         </div>
     </div>
