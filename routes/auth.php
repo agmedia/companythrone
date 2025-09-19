@@ -9,6 +9,10 @@ use App\Livewire\Auth\{
     Login, Register, ForgotPassword, ResetPassword, VerifyEmail, ConfirmPassword
 };
 
+Livewire::setUpdateRoute(function ($handle) {
+    return Route::post('/livewire/update', $handle);
+});
+
 // Gost
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
