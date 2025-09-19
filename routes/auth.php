@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
-// Tvoje Livewire Auth komponente
+// Livewire Auth komponente
 use App\Livewire\Auth\{
     Login, Register, ForgotPassword, ResetPassword, VerifyEmail, ConfirmPassword
 };

@@ -1,5 +1,17 @@
+
+
 <div>
-    <h1 class="h4 mb-3">{{ __('auth.login_title') }}</h1>
+
+
+
+    <h1 class="h2 mt-auto">{{ __('auth.login_title') }}</h1>
+
+
+    <div class="nav fs-sm mb-4">
+        {{ __('auth.no_account') }}
+        <a class="nav-link text-decoration-underline p-0 ms-2" href="{{ route('register') }}">{{ __('auth.register') }}</a>
+    </div>
+
 
     <form wire:submit.prevent="login" class="vstack gap-3">
         <div>
