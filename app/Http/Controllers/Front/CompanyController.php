@@ -20,6 +20,11 @@ class CompanyController extends Controller
         return view('front.company-create');
     }
 
+    public function payment()
+    {
+        return view('front.company-payment');
+    }
+
 
     public function store(Request $request)
     {
@@ -34,6 +39,8 @@ class CompanyController extends Controller
         }
 
 // TODO: kreiraj ponudu 25€/god i poslati e-mail
-        return redirect()->route('companies.show', $company)->with('success', __('company.created'));
+      //  return redirect()->route('companies.show', $company)->with('success', __('company.created'));
+
+        return redirect()->route('companies.payment', $company);
     }
 }

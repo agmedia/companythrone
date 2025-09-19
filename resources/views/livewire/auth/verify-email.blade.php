@@ -1,5 +1,5 @@
 <div>
-    <h1 class="h5 mb-3">{{ __('auth.verify_email_title') }}</h1>
+    <h1 class="h2 mt-auto">{{ __('auth.verify_email_title') }}</h1>
 
     @if (session('status'))
         <div class="alert alert-success">{{ session('status') }}</div>
@@ -12,7 +12,7 @@
     </form>
 
     <form wire:submit.prevent="logout" class="vstack">
-        <button class="btn btn-outline-secondary w-100" type="submit">{{ __('Log out') }}</button>
+        <button class="btn btn-lg btn-outline-secondary w-100" type="submit">{{ __('Log out') }}</button>
     </form>
 
 </div>

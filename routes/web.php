@@ -17,6 +17,7 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     // Dashboard (Blade wrapper)
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
+
     Route::prefix('catalog')->as('catalog.')->group(function () {
         Route::resource('categories', AdminCategoryController::class)->names('categories');
         Route::resource('companies', AdminCompanyController::class)->names('companies');
@@ -64,6 +65,9 @@ Route::group([
 
     Route::get('/add-company',  [CompanyController::class, 'create'])->name('companies.create');
     Route::post('/add-company', [CompanyController::class, 'store'])->name('companies.store');
+
+
+    Route::get('/add-payment',  [CompanyController::class, 'payment'])->name('companies.payment');
 });
 
 /**

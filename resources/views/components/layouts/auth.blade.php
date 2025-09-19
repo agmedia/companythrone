@@ -86,9 +86,11 @@
             <div class="offcanvas-body position-relative z-2 d-lg-flex flex-column align-items-center justify-content-center h-100 pt-2 px-3 p-lg-0">
                 <span class="position-absolute top-0 start-0 w-100 h-100 bg-info-subtle rounded-5 d-none d-lg-block"></span>
                 <div class="position-relative z-2 w-100 text-center px-md-2 p-lg-5">
-                    <h2 class="h4 pb-3">Finder account benefits</h2>
+                    <h2 class="h4 pb-3">Prednosti registracije</h2>
                     <div class="mx-auto" style="max-width: 790px">
                         <div class="row row-cols-1 row-cols-sm-2 g-3 g-md-4 g-lg-3 g-xl-4">
+
+                            <!-- Pretplate -->
                             <div class="col">
                                 <div class="card h-100 bg-transparent border-0">
                                     <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
@@ -99,10 +101,13 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-mail position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Subscribe to your favorite listings</h3>
+                                        <h3 class="h6 pt-2 my-2">Pretplati se na poslovne objave</h3>
+                                        <p class="fs-sm mb-0">Prati nove tvrtke i ekskluzivne ponude u svojoj branši – odmah kad se pojave.</p>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Upravljanje profilom -->
                             <div class="col">
                                 <div class="card h-100 bg-transparent border-0">
                                     <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
@@ -113,10 +118,13 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-settings position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Manage your bookings and wishlist</h3>
+                                        <h3 class="h6 pt-2 my-2">Upravljaj profilom svoje tvrtke</h3>
+                                        <p class="fs-sm mb-0">Dodaj logotip, opis i ključne riječi za bolje rangiranje na tražilicama.</p>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- SEO nagrade -->
                             <div class="col">
                                 <div class="card h-100 bg-transparent border-0">
                                     <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
@@ -127,10 +135,13 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-gift position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Earn rewards for future purchases</h3>
+                                        <h3 class="h6 pt-2 my-2">SEO nagrade i rast prometa</h3>
+                                        <p class="fs-sm mb-0">Aktivne tvrtke svakodnevno dobivaju posjete (do 780 klikova dnevno) i jačaju online autoritet.</p>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Ekskluzivne promocije -->
                             <div class="col">
                                 <div class="card h-100 bg-transparent border-0">
                                     <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
@@ -141,10 +152,13 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-percent position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Receive exclusive offers and discounts</h3>
+                                        <h3 class="h6 pt-2 my-2">Ekskluzivne promocije i popusti</h3>
+                                        <p class="fs-sm mb-0">Iskoristi posebne cijene za SEO pakete i dodatne promotivne usluge.</p>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Preporuke -->
                             <div class="col">
                                 <div class="card h-100 bg-transparent border-0">
                                     <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
@@ -155,10 +169,13 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-heart position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Create multiple wishlists</h3>
+                                        <h3 class="h6 pt-2 my-2">Preporuči i umreži svoju tvrtku</h3>
+                                        <p class="fs-sm mb-0">Pozovi barem 5 partnera i osiguraj maksimalnu dnevnu vidljivost u sustavu.</p>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Fleksibilno oglašavanje -->
                             <div class="col">
                                 <div class="card h-100 bg-transparent border-0">
                                     <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
@@ -169,13 +186,16 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-pie-chart position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Pay for purchases by installments</h3>
+                                        <h3 class="h6 pt-2 my-2">Fleksibilno oglašavanje i trajni linkovi</h3>
+                                        <p class="fs-sm mb-0">Osiguraj stalne aktivne linkove i dugoročno pozicioniranje u rezultatima pretrage.</p>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

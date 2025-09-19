@@ -1,6 +1,7 @@
 <?php
 return [
     'login_title' => 'Prijava',
+    'name' => 'Korisničko ime',
     'register_title' => 'Registracija',
     'forgot_password_title' => 'Zaboravljena lozinka',
     'forgot_password_hint' => 'Unesite e-mail adresu i poslat ćemo vam poveznicu za resetiranje lozinke.',
