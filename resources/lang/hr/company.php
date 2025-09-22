@@ -17,6 +17,9 @@ return [
     'optional' => 'neobavezno',
     'submit' => 'Nastavak na plaćanje',
     'back' => 'Natrag',
+    'payment' => 'Odabir plaćanja',
+    'review' => 'Provjera podataka',
+    'success' => 'Hvala na prijavi',
 
     'visit_site' => 'Posjeti web stranicu',
     'link_inactive' => 'Link je neaktivan dok ne odradite svih 25 dnevnih posjeta.',

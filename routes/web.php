@@ -68,6 +68,9 @@ Route::group([
 
 
     Route::get('/add-payment',  [CompanyController::class, 'payment'])->name('companies.payment');
+    Route::post('/review',  [CompanyController::class, 'review'])->name('companies.review');
+
+    Route::post('/success',  [CompanyController::class, 'success'])->name('companies.success');
 });
 
 /**
