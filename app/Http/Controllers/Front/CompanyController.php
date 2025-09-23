@@ -11,7 +11,10 @@ class CompanyController extends Controller
 
     public function show(Company $company)
     {
-        return view('front.company-show', compact('company'));
+
+        $featured = Company::query()->where('is_published', true)->latest()->take(12)->get();
+
+        return view('front.company-show', compact('company','featured'));
     }
 
 

@@ -7,6 +7,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 use App\Http\Controllers\Admin\{CompanyController as AdminCompanyController, BannerController as AdminBannerController, CategoryController as AdminCategoryController};
 use App\Http\Controllers\Front\{ClickRedirectController, CompanyListController, HomeController, CompanyController, CategoryController};
+use Illuminate\Support\Facades\Crypt;
 
 /**
  *
@@ -62,6 +63,12 @@ Route::group([
     // /{locale}/companies/{slug} (detalj po lokaliziranom slug-u)
     Route::get('/companies/{companyBySlug}', [CompanyListController::class, 'show'])->name('companies.show');
     Route::get('/categories/{categoryBySlug}', [CategoryController::class, 'show'])->name('categories.show');
+
+    Route::get('/decrypt-email', function (Illuminate\Http\Request $request) {
+        return response()->json([
+            'email' => Crypt::decryptString($request->get('data'))
+        ]);
+    });
 
     Route::get('/add-company',  [CompanyController::class, 'create'])->name('companies.create');
     Route::post('/add-company', [CompanyController::class, 'store'])->name('companies.store');
