@@ -136,7 +136,7 @@
                                             <input id="logo" type="file" name="logo" class="form-control  form-control-lg">
                                         </div>
                                         <div class="d-flex  mt-3 gap-2">
-                                            <button type="submit" class="btn btn-lg btn-primary ">{{ __('Snimi') }}  <i class="fi-chevron-right fs-lg ms-1 me-n2"></i></button>
+                                            <button type="submit" class="btn btn-lg btn-primary ">{{ __('settings.save') }} </button>
 
                                         </div>
                                     </form>
