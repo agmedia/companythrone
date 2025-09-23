@@ -39,6 +39,7 @@
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body">
                                     <h2 class="h5 mb-1">{{ __('company.edit') }}</h2>
+                                    <p class="text-muted small mb-3">{{ __('Ažurirajte podatke tvrtke') }}</p>
                                     <form method="post" enctype="multipart/form-data" action="{{ localized_route('companies.store') }}" class="vstack gap-3">
                                         @csrf
                                         <div class="row g-3">
