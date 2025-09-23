@@ -6,7 +6,7 @@
 @section('head')
     <link rel="stylesheet" href="/theme1/assets/vendor/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="/theme1/assets/vendor/choices.js/public/assets/styles/choices.min.css">
-    <link rel="stylesheet" href="/theme1/assets/vendor/simplebar/dist/simplebar.min.css">
+
 @endsection
 
 @section('content')
@@ -126,7 +126,7 @@
                                 <option value="newest" @selected($sort==='newest')>{{ __('company.sort_newest') }}</option>
                                 <option value="name_asc" @selected($sort==='name_asc')>{{ __('company.sort_name_asc') }}</option>
                                 <option value="name_desc" @selected($sort==='name_desc')>{{ __('company.sort_name_desc') }}</option>
-                                <option value="random" @selected($sort==='random')>{{ __('company.sort_random') }}</option>
+
                             </select>
                         </form>
                     </div>
@@ -252,7 +252,7 @@
 
                     {{-- Paginacija --}}
                     <nav class="pt-3 mt-3" aria-label="Listings pagination">
-                        {{ $companies->links() }}
+                        {{ $companies->links('pagination::bootstrap-5') }}
                     </nav>
                 </div>
             </div>
@@ -271,6 +271,6 @@
     {{-- Vendor za ovu stranicu, ako nisu globalno u layoutu --}}
     <script src="/theme1/assets/vendor/swiper/swiper-bundle.min.js"></script>
     <script src="/theme1/assets/vendor/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="/theme1/assets/vendor/simplebar/dist/simplebar.min.js"></script>
+
     <script src="/theme1/assets/js/theme.min.js"></script>
 @endpush

@@ -37,7 +37,7 @@
     <link rel="preload" href="{{ asset('theme1/assets/theme.min.css') }}" as="style">
     <link rel="preload" href="{{ asset('theme1/assets/theme.rtl.min.css') }}" as="style">
     <link rel="stylesheet" href="{{ asset('theme1/assets/css/theme.min.css') }}" id="theme-styles">
-
+    @yield('head')
     @livewireStyles
 </head>
 
@@ -69,11 +69,16 @@
 
 <!-- Vendor scripts -->
 <script src="{{ asset('theme1/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-
+@stack('scripts')
 <!-- Bootstrap + Theme scripts -->
 <script src="{{ asset('theme1/assets/theme.js') }}"></script>
 
+
+
 @livewireScripts
+
+<!-- Mogućnost dodavanja skripti iz child view-a -->
+
 
 </body>
 </html>
