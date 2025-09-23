@@ -20,8 +20,9 @@ return [
     'payment' => 'Odabir plaćanja',
     'review' => 'Provjera podataka',
     'success' => 'Hvala na prijavi',
+    'empty_results' =>'Nema rezultata pretrage',
 
-    'search_label' => 'Pretragai',
+    'search_label' => 'Pretraga',
     'category' => 'Katagorija',
     'apply_filters' => 'Filtriraj',
     'reset' => 'Očisti filtere',

@@ -95,16 +95,7 @@ Route::get('/r/{from}/{to}/{slot}', [ClickRedirectController::class, 'go'])
      ->name('click.redirect')->middleware('signed');
 
 
-Route::group([
-    'prefix' => LaravelLocalization::setLocale(),
-    'middleware' => [
-        \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
-        \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
-        \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
-        \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
-        \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
-    ],
-], function () {
+
     require __DIR__.'/auth.php';
-});
+
 

@@ -186,59 +186,34 @@
                                     <div class="col-sm-8 d-flex p-3 p-sm-4" style="min-height: 255px">
                                         <div class="row flex-lg-nowrap g-0 position-relative pt-1 pt-sm-0">
 
-                                            {{-- Bookmark (dummy) --}}
-                                            <button type="button" class="btn btn-icon btn-outline-secondary rounded-circle position-absolute top-0 end-0 z-2" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-sm" title="Bookmark" aria-label="Bookmark">
-                                                <i class="fi-bookmark fs-base"></i>
-                                            </button>
+
 
                                             {{-- Naziv, avatar, kratko --}}
-                                            <div class="col-lg-8 pe-lg-4">
-                                                <div class="d-flex align-items-center pe-5 pe-lg-0 pb-2 mb-1">
-                                                    <div class="ratio ratio-1x1 me-3" style="width: 48px">
-                                                        <img src="{{ method_exists($c,'hasMedia') && $c->hasMedia('logo') ? $c->getFirstMediaUrl('logo') : '/theme1/assets/img/default_image.jpg' }}"
-                                                             class="bg-body-secondary rounded-circle object-fit-cover" alt="Avatar">
-                                                    </div>
+                                            <div class="col-lg-12 pe-lg-4 d-flex flex-column">
+                                                <div class=" align-items-center pe-5 pe-lg-0 pb-2 mb-1">
+
                                                     <h3 class="h6 mb-0">
                                                         {{-- TODO: zamijeni # s lokaliziranom rutom kad završimo binding (npr. localized_route('companies.show', ['locale'=>app()->getLocale(),'slug'=>$c->t_slug])) --}}
                                                         <a class="hover-effect-underline stretched-link" href="#">{{ $c->t_name ?? $c->name ?? 'Company' }}</a>
                                                     </h3>
                                                 </div>
 
-                                                @if(!empty($c->slogan))
-                                                    <div class="fs-sm mb-2 mb-lg-3">
-                                                        <span class="fw-medium text-dark-emphasis">{{ $c->slogan }}</span>
-                                                    </div>
-                                                @endif
+                                                <p class="fs-sm mb-2 text-body">
+                                                    <i class="fi-map-pin fs-sm me-1" ></i> {{ trim(($c->street ?? '').' '.($c->street_no ?? '')) }} {{ trim(($c->city ?? '').($c->city && $c->state ? ', ' : '').($c->state ?? '')) }}
+                                                </p>
 
                                                 @php $desc = $c->description ?? null; @endphp
                                                 @if($desc)
-                                                    <p class="fs-sm mb-0 text-body">{{ \Illuminate\Support\Str::limit(strip_tags($desc), 180) }}</p>
-                                                @else
-                                                    <p class="fs-sm mb-0 text-body">
-                                                        {{ trim($c->city.' '.$c->state) }}
-                                                    </p>
+                                                    <p class="fs-sm mb-3 text-body">{{ \Illuminate\Support\Str::limit(strip_tags($desc), 180) }}</p>
+
+
                                                 @endif
-                                            </div>
 
-                                            <hr class="vr flex-shrink-0 d-none d-lg-block m-0">
 
-                                            {{-- Desni stupac: značke / akcija --}}
-                                            <div class="col-lg-4 d-flex flex-column pt-3 pt-lg-5 ps-lg-4">
-                                                <ul class="list-unstyled pb-2 pb-lg-4 mb-3">
-                                                    @if($c->is_link_active)
-                                                        <li class="d-flex align-items-center gap-1 fs-sm">
-                                                            <i class="fi-thumbs-up"></i> {{ __('company.link_active') ?? 'Link active' }}
-                                                        </li>
-                                                    @else
-                                                        <li class="d-flex align-items-center gap-1 fs-sm">
-                                                            <i class="fi-clock"></i> {{ __('company.link_inactive') }}
-                                                        </li>
-                                                    @endif
-                                                </ul>
 
                                                 {{-- “Connect” je placeholder – može kasnije otvoriti modal ili ići na kontakt --}}
-                                                <a href="#" class="btn btn-outline-dark position-relative z-2 mt-auto">
-                                                    <i class="fi-mail me-2"></i> Connect
+                                                <a href="{{ localized_route('companies.show', ['companyBySlug' => $c->t_slug]) }}" style="width: auto;" class="btn btn-outline-dark position-relative z-2 w-auto mt-auto align-self-start">
+                                                    Opširnije
                                                 </a>
                                             </div>
                                         </div>
@@ -252,7 +227,7 @@
 
                     {{-- Paginacija --}}
                     <nav class="pt-3 mt-3" aria-label="Listings pagination">
-                        {{ $companies->links('pagination::bootstrap-5') }}
+                        {{ $companies->links('pagination::custom') }}
                     </nav>
                 </div>
             </div>
