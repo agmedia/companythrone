@@ -134,7 +134,7 @@
                     {{-- LISTA – Finder stil, dinamički --}}
                     <div class="vstack gap-4">
                         @forelse($companies as $c)
-                            <article class="card hover-effect-opacity overflow-hidden">
+                            <article class="card hover-effect-opacity overflow-hidden  bg-body-tertiary border">
                                 <div class="row g-0">
 
                                     {{-- Lijevo: slika/slider (Swiper) --}}
@@ -162,7 +162,7 @@
                                                                  : '/theme1/assets/img/default_image.jpg';
                                                     @endphp
                                                     <img src="{{ $cover }}" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" alt="{{ $c->t_name ?? $c->name ?? 'Company' }}">
-                                                    <span class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0, 0) 0%, rgba(0,0,0, .16) 100%)"></span>
+
                                                 </div>
                                             </a>
 

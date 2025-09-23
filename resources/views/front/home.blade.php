@@ -127,7 +127,7 @@
                         <div class="col ">
 
 
-                            <article class="card h-100 hover-effect-scale hover-effect-opacity bg-body-tertiary borde">
+                            <article class="card h-100 hover-effect-scale hover-effect-opacity bg-body-tertiary border">
 
                                 <div class="row ">
                                     <div class="col-sm-5 col-md-5 order-sm-2">
