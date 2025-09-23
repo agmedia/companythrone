@@ -29,6 +29,8 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     Route::view('/settings/password',   'back.settings.password')->name('settings.password');
     Route::view('/settings/appearance', 'back.settings.appearance')->name('settings.appearance');
 
+    Route::view('/settings/company', 'back.settings.company')->name('settings.company');
+
     // Admin Livewire stranice
     /*Route::get('/companies',  CompaniesIndex::class)->name('admin.companies');
     Route::get('/categories', CategoriesTree::class)->name('admin.categories');*/

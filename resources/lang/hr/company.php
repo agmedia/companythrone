@@ -2,6 +2,7 @@
 
 return [
     'add' => 'Dodaj tvrtku',
+    'edit' => 'Izmjenite podatke',
     'name' => 'Naziv tvrtke',
     'oib' => 'OIB',
     'street' => 'Ulica',

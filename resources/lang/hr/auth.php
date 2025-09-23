@@ -14,6 +14,7 @@ return [
     'remember' => 'Zapamti me',
 
     'login' => 'Prijava',
+    'logout' => 'Odjava',
     'register' => 'Registracija',
     'create_account' => 'Kreiraj račun',
     'forgot_password' => 'Zaboravljena lozinka?',

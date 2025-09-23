@@ -11,23 +11,23 @@
             <form wire:submit.prevent="updateProfileInformation" class="vstack gap-3">
                 <div>
                     <label class="form-label" for="name">{{ __('auth.name') }}</label>
-                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
+                    <input id="name" type="text" class="form-control form-control-lg @error('name') is-invalid @enderror"
                            wire:model.defer="name" autocomplete="name" autofocus>
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div>
                     <label class="form-label" for="email">{{ __('auth.email') }}</label>
-                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                    <input id="email" type="email" class="form-control form-control-lg @error('email') is-invalid @enderror"
                            wire:model.defer="email" autocomplete="email">
                     @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="d-flex gap-2">
-                    <button class="btn btn-primary" type="submit">{{ __('settings.save') }}</button>
+                    <button class="btn btn-lg btn-primary" type="submit">{{ __('settings.save') }}</button>
 
                     @if (auth()->user()?->hasVerifiedEmail() === false)
-                        <button class="btn btn-outline-secondary" type="button" wire:click="resendVerificationNotification">
+                        <button class="btn btn-lg btn-outline-secondary" type="button" wire:click="resendVerificationNotification">
                             {{ __('settings.resend_verification') }}
                         </button>
                     @endif
