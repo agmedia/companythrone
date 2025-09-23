@@ -2,41 +2,76 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="h4 mb-0">Dobrodošao, {{ auth()->user()->name ?? 'korisniče' }}</h1>
-        <a class="btn btn-primary" href="{{ localized_route('companies.create') }}">
-            <i class="bi bi-building-add me-1"></i> {{ __('nav.add_company') }}
-        </a>
+
+    <div class="container pt-4 pt-sm-5 pb-5 mb-xxl-3">
+        <div class="row pt-2 pt-sm-0 pt-lg-2 pb-2 pb-sm-3 pb-md-4 pb-lg-5">
+
+
+            <!-- Sidebar navigation that turns into offcanvas on screens < 992px wide (lg breakpoint) -->
+            <aside class="col-lg-3" style="margin-top: -105px">
+                <div class="offcanvas-lg offcanvas-start sticky-lg-top pe-lg-3 pe-xl-4" id="accountSidebar">
+                    <div class="d-none d-lg-block" style="height: 105px"></div>
+
+                    <!-- Header -->
+                    <div class="offcanvas-header d-lg-block py-3 p-lg-0">
+                        <div class="d-flex flex-row flex-lg-column align-items-center align-items-lg-start">
+
+                            <div class="pt-lg-3 ps-3 ps-lg-0">
+                                <h6 class="mb-1">{{ auth()->user()->name  }}</h6>
+                                <p class="fs-sm mb-0">{{ auth()->user()->email }}</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#accountSidebar" aria-label="Close"></button>
+                    </div>
+
+
+                    @include('components.layouts.app.usernav')
+
+                    <!-- Body (Navigation) -->
+
+                </div>
+            </aside>
+
+
+            <!-- Account profile content -->
+            <div class="col-lg-9">
+                <h1 class="h4 pb-1">Dobrodošao, {{ auth()->user()->name ?? 'korisniče' }}</h1>
+                <p>Link vaše tvrtke postaje aktivan tek nakon što klikne svih 25 linkova.</p>
+                <!-- Wallet + Account progress -->
+                <section class="row g-3 g-xl-4 pb-5 mb-md-3">
+                    <div class="col-12 ">
+                        <div class="card bg-info-subtle border-0 h-100">
+                            <div class="card-body">
+                                <a href="" target="_blank" class="btn btn-success animate-slide-end">
+                                   Link 1
+                                    <i class="fi-send animate-target fs-base ms-2 me-n1"></i>
+                                </a>
+                                <!-- visited link -->
+                                <a class="btn btn-success animate-slide-end disabled">
+                                    Link 2
+                                    <i class="fi-send animate-target fs-base ms-2 me-n1"></i>
+                                </a>
+                                <!-- end visited link -->
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
     </div>
 
-    <div class="row g-3">
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0"><div class="card-body">
-                    <div class="text-muted small">Tvrtke</div>
-                    <div class="display-6 fw-semibold">{{ \App\Models\Back\Catalog\Company::count() }}</div>
-                </div></div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0"><div class="card-body">
-                    <div class="text-muted small">Kategorije</div>
-                    <div class="display-6 fw-semibold">{{ \App\Models\Back\Catalog\Category::count() }}</div>
-                </div></div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0"><div class="card-body">
-                    <div class="text-muted small">Aktivni linkovi</div>
-                    <div class="display-6 fw-semibold">
-                        {{ \App\Models\Back\Catalog\Company::where('is_link_active',true)->count() }}
-                    </div>
-                </div></div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0"><div class="card-body">
-                    <div class="text-muted small">Današnji klikovi</div>
-                    <div class="display-6 fw-semibold">
-                        {{ \App\Models\Shared\Click::whereDate('created_at', today())->count() }}
-                    </div>
-                </div></div>
-        </div>
-    </div>
+
+
 @endsection
