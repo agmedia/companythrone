@@ -59,6 +59,10 @@ Route::group([
 ], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
+    Route::get('/kontakt', [HomeController::class, 'contact'])->name('kontakt');
+    Route::post('/kontakt/posalji', [HomeController::class, 'sendContactMessage'])->name('poruka');
+  Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
+
     // /{locale}/companies (lista)
     Route::get('/companies', [CompanyListController::class, 'index'])->name('companies.index');
 

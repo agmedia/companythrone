@@ -30,7 +30,7 @@
                     <li>
                         <div class="position-relative d-flex align-items-center">
                             <i class="fi-phone-call fs-lg text-body me-2"></i>
-                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:+15053753082">+385&nbsp;99&nbsp;537&nbsp;53&nbsp;082</a>
+                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:+38512383733">+385 1 23 83 733</a>
                         </div>
                     </li>
                 </ul>

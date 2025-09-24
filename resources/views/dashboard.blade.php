@@ -38,21 +38,21 @@
                 <h2 class="h5 mb-1">Dobrodošao, {{ auth()->user()->name ?? 'korisniče' }}</h2>
                 <p>Link vaše tvrtke postaje aktivan tek nakon što klikne svih 25 linkova.</p>
                 <!-- Wallet + Account progress -->
-                <section class="row g-3 g-xl-4 pb-5 mb-md-3">
-                    <div class="col-12 ">
+                <section class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3 g-xl-4 pb-5 mb-md-3">
+                    <div class="col">
                         <div class="card bg-info-subtle border-0 h-100">
-                            <div class="card-body">
-                                <a href="" target="_blank" class="btn btn-success animate-slide-end">
-                                   Link 1
-                                    <i class="fi-send animate-target fs-base ms-2 me-n1"></i>
-                                </a>
-                                <!-- visited link -->
-                                <a class="btn btn-success animate-slide-end disabled">
-                                    Link 2
-                                    <i class="fi-send animate-target fs-base ms-2 me-n1"></i>
-                                </a>
-                                <!-- end visited link -->
+
+                            <div class="card">
+                                <!-- Wrap the image with a "ratio" element to avoid content shifts on page load. Formula: imageHeight / imageWidth * 100% -->
+                                <div >
+                                    <img src="{{ asset('theme1/images/default_image.jpg') }}" class="card-img-top" alt="Card image">
+                                </div>
+                                <div class="card-body">
+                                    <a href="#" class="btn btn-primary w-100"><i class="fi-link me-2"></i> Web stranica</a>
+                                </div>
                             </div>
+
+
 
                         </div>
                     </div>

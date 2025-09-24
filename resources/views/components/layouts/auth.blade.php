@@ -90,39 +90,7 @@
                     <div class="mx-auto" style="max-width: 790px">
                         <div class="row row-cols-1 row-cols-sm-2 g-3 g-md-4 g-lg-3 g-xl-4">
 
-                            <!-- Pretplate -->
-                            <div class="col">
-                                <div class="card h-100 bg-transparent border-0">
-                                    <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
-                                    <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--fn-bg-opacity: .05"></span>
-                                    <div class="card-body position-relative z-2">
-                                        <div class="d-inline-flex position-relative text-info p-3">
-                                            <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
-                                            <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
-                                            <i class="fi-mail position-relative z-2 fs-4 m-1"></i>
-                                        </div>
-                                        <h3 class="h6 pt-2 my-2">Pretplati se na poslovne objave</h3>
-                                        <p class="fs-sm mb-0">Prati nove tvrtke i ekskluzivne ponude u svojoj branši – odmah kad se pojave.</p>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- Upravljanje profilom -->
-                            <div class="col">
-                                <div class="card h-100 bg-transparent border-0">
-                                    <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border border-white border-opacity-75 rounded-4 d-none-dark" style="--fn-bg-opacity: .3"></span>
-                                    <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--fn-bg-opacity: .05"></span>
-                                    <div class="card-body position-relative z-2">
-                                        <div class="d-inline-flex position-relative text-info p-3">
-                                            <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
-                                            <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
-                                            <i class="fi-settings position-relative z-2 fs-4 m-1"></i>
-                                        </div>
-                                        <h3 class="h6 pt-2 my-2">Upravljaj profilom svoje tvrtke</h3>
-                                        <p class="fs-sm mb-0">Dodaj logotip, opis i ključne riječi za bolje rangiranje na tražilicama.</p>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- SEO nagrade -->
                             <div class="col">
