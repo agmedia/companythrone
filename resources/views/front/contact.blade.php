@@ -36,7 +36,7 @@
 
             <!-- Contact form -->
             <div class="col-md-7 col-lg-6">
-                <form class="needs-validation position-relative bg-body rounded-5" style="padding: 5px" novalidate>
+                <form action="{{ route('poruka') }}" method="POST" class="needs-validation position-relative bg-body rounded-5" style="padding: 5px" novalidate>
                     <div class="position-relative z-1 my-2 mx-sm-2 m-lg-0 p-4 p-lg-5">
                         <h2 class="h4 mb-4">Kontakt obrazac!</h2>
                         <div class="mb-3">
@@ -64,3 +64,6 @@
     </div>
 
 @endsection
+@push('js_after')
+    @include('components.layouts.app.recaptcha-js')
+@endpush

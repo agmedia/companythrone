@@ -22,7 +22,7 @@
                 </form>
 
                 <!-- Popular searches -->
-                <div class="d-flex flex-wrap justify-content-center gap-2 pt-2 pt-md-0">
+              {{--   <div class="d-flex flex-wrap justify-content-center gap-2 pt-2 pt-md-0">
                     @if(isset($cats) && $cats->count())
                         @foreach($cats->take(6) as $cat)
                             <a href="{{ localized_route('categories.show', $cat) }}" class="btn btn-outline-light rounded-pill mt-1 me-1">
@@ -30,7 +30,8 @@
                             </a>
                         @endforeach
                     @endif
-                </div>
+
+                </div> --}}
             </div>
         </div>
         <div class="position-absolute top-50 start-50 translate-middle">

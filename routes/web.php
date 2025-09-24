@@ -60,7 +60,7 @@ Route::group([
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/kontakt', [HomeController::class, 'contact'])->name('kontakt');
-    Route::post('/kontakt/posalji', [HomeController::class, 'sendContactMessage'])->name('poruka');
+
   Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
     // /{locale}/companies (lista)
@@ -86,7 +86,11 @@ Route::group([
     Route::post('/success',  [CompanyController::class, 'success'])->name('companies.success');
 });
 
+Route::post('/kontakt/posalji', [HomeController::class, 'sendContactMessage'])->name('poruka');
+
 /**
+ *
+ *
  *
  */
 Route::get('/plan', function () {
