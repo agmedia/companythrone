@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Company extends Model implements HasMedia
 {
@@ -114,9 +116,19 @@ class Company extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('logo')->singleFile();
-        $this->addMediaCollection('icon')->singleFile();
-        $this->addMediaCollection('banner')->singleFile();
+        $this->addMediaCollection('logo')->singleFile();   // 1 logo
+        $this->addMediaCollection('banner')->singleFile(); // 1 banner
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+             ->fit(Fit::Crop, 128, 128)
+             ->nonQueued();
+
+        $this->addMediaConversion('wide') // za banner pregleda
+             ->fit(Fit::Crop, 1200, 300)
+             ->nonQueued();
     }
 
 }

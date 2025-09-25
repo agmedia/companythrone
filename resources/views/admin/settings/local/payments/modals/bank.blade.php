@@ -9,7 +9,7 @@
                 <div class="row">
                     <div class="col-lg-10 mx-auto">
 
-                        @include('back.settings.partials.lang-title', ['code'  => 'bank', 'label' => __('back/shop/payments/bank.title')])
+                        @include('admin.settings.partials.lang-title', ['code'  => 'bank', 'label' => __('back/shop/payments/bank.title')])
 
                         <div class="row g-3">
                             <div class="col-md-6">

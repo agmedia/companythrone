@@ -8,6 +8,7 @@ use App\Models\Back\Catalog\Company;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\PreventRequestsDuringMaintenance as AppPrevent;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -53,6 +54,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // ovdje po potrebi globalni middleware
+        // Zamijeni globalni maintenance middleware našom verzijom s whitelistom:
+        $middleware->replace(
+            \Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
+            AppPrevent::class
+        );
         //
         //
         $middleware->alias([

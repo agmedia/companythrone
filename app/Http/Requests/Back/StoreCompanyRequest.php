@@ -1,0 +1,148 @@
+<?php
+// app/Http/Requests/Admin/Company/StoreCompanyRequest.php
+
+namespace App\Http\Requests\Back;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+
+class StoreCompanyRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true; // po potrebi gate-aj preko policy/role
+    }
+
+    public function rules(): array
+    {
+        $locales = array_keys(config('app.locales', ['hr' => 'Hrvatski', 'en' => 'English']));
+
+        $rules = [
+            // Core (companies)
+            'level_id'        => ['required', 'integer', 'exists:levels,id'],
+            'oib'             => ['required', 'string', 'max:20', 'unique:companies,oib'],
+            'street'          => ['nullable', 'string', 'max:255'],
+            'street_no'       => ['nullable', 'string', 'max:50'],
+            'city'            => ['nullable', 'string', 'max:120'],
+            'state'           => ['nullable', 'string', 'max:120'],
+            'email'           => ['required', 'email', 'max:255', 'unique:companies,email'],
+            'phone'           => ['nullable', 'string', 'max:80'],
+            'is_published'    => ['boolean'],
+            'is_link_active'  => ['boolean'],
+            'referrals_count' => ['nullable', 'integer', 'min:0'],
+            'clicks'          => ['nullable', 'integer', 'min:0'],
+            'published_at'    => ['nullable', 'date'],
+
+            // Arrays exist
+            'name'        => ['required', 'array'],
+            'slug'        => ['required', 'array'],
+            'slogan'      => ['nullable', 'array'],
+            'description' => ['nullable', 'array'],
+
+            // Files
+            'logo_file'   => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:5120'],
+            'banner_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:8192'],
+            'remove_logo'   => ['sometimes', 'boolean'],
+            'remove_banner' => ['sometimes', 'boolean'],
+        ];
+
+        // Per-locale rules
+        foreach ($locales as $code) {
+            $rules["name.$code"] = ['required', 'string', 'max:255'];
+            $rules["slug.$code"] = [
+                'required', 'string', 'max:255',
+                // unique per (locale, slug)
+                Rule::unique('company_translations', 'slug')->where('locale', $code),
+            ];
+            $rules["slogan.$code"]      = ['nullable', 'string', 'max:255'];
+            $rules["description.$code"] = ['nullable', 'string'];
+        }
+
+        return $rules;
+    }
+
+    public function prepareForValidation(): void
+    {
+        // Normalize booleans
+        $this->merge([
+            'is_published'   => (bool) $this->boolean('is_published'),
+            'is_link_active' => (bool) $this->boolean('is_link_active'),
+            'remove_logo'   => (bool) $this->boolean('remove_logo'),
+            'remove_banner' => (bool) $this->boolean('remove_banner'),
+        ]);
+
+        // Ensure arrays exist
+        $name = (array) $this->input('name', []);
+        $slug = (array) $this->input('slug', []);
+        $locales = array_keys(config('app.locales', []));
+
+        // Auto-slug per locale if empty
+        foreach ($locales as $code) {
+            if (!empty($name[$code]) && empty($slug[$code])) {
+                $slug[$code] = Str::slug($name[$code], '-', $code);
+            }
+        }
+
+        $this->merge([
+            'name' => $name,
+            'slug' => $slug,
+        ]);
+    }
+
+    public function attributes(): array
+    {
+        $attrs = [
+            'level_id' => 'level',
+            'oib' => 'OIB',
+            'street' => 'street',
+            'street_no' => 'street number',
+            'city' => 'city',
+            'state' => 'state',
+            'email' => 'email',
+            'phone' => 'phone',
+            'is_published' => 'published',
+            'is_link_active' => 'link active',
+            'referrals_count' => 'referrals count',
+            'clicks' => 'clicks',
+            'published_at' => 'published at',
+        ];
+
+        foreach (array_keys(config('app.locales', [])) as $code) {
+            $up = strtoupper($code);
+            $attrs["name.$code"] = "name ($up)";
+            $attrs["slug.$code"] = "slug ($up)";
+            $attrs["slogan.$code"] = "slogan ($up)";
+            $attrs["description.$code"] = "description ($up)";
+        }
+
+        return $attrs;
+    }
+
+    // Helperi za controller (opcionalno)
+    public function baseData(): array
+    {
+        return Arr::only($this->validated(), [
+            'level_id','oib','street','street_no','city','state','email','phone',
+            'is_published','is_link_active','referrals_count','clicks','published_at',
+        ]);
+    }
+
+    public function translationsData(): array
+    {
+        $v = $this->validated();
+        $locales = array_keys(config('app.locales', []));
+        $out = [];
+        foreach ($locales as $code) {
+            $out[$code] = [
+                'locale'      => $code,
+                'name'        => $v['name'][$code] ?? null,
+                'slug'        => $v['slug'][$code] ?? null,
+                'slogan'      => $v['slogan'][$code] ?? null,
+                'description' => $v['description'][$code] ?? null,
+            ];
+        }
+        return $out;
+    }
+}

@@ -12,7 +12,7 @@
                     <div class="col-lg-10 mx-auto">
 
                         {{-- Title + language pills (identical to Bank/COD) --}}
-                        @include('back.settings.partials.lang-title', ['code'  => 'wspay', 'label' => __('back/shop/payments/wspay.input_title')])
+                        @include('admin.settings.partials.lang-title', ['code'  => 'wspay', 'label' => __('back/shop/payments/wspay.input_title')])
 
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -36,7 +36,7 @@
                         </div>
 
                         {{-- Short description (localized) --}}
-                        @include('back.settings.partials.lang-description', ['code'  => 'wspay', 'label' => __('back/shop/payments/wspay.short_desc')])
+                        @include('admin.settings.partials.lang-description', ['code'  => 'wspay', 'label' => __('back/shop/payments/wspay.short_desc')])
 
                         {{-- Provider config --}}
                         <div class="border rounded p-3 mt-3">

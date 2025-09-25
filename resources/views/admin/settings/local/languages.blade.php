@@ -1,5 +1,5 @@
 {{-- resources/views/back/settings/shop/languages.blade.php --}}
-@extends('back.layouts.base-admin')
+@extends('admin.layouts.base-admin')
 
 @section('title', __('back/shop/languages.title'))
 
@@ -52,17 +52,17 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td class="text-primary">
-                                        @include('back.settings.partials.lang-list-title', ['item' => $item])
+                                        @include('admin.settings.partials.lang-list-title', ['item' => $item])
                                         @if (!empty($item->main))
                                             <span class="badge bg-primary ms-2">{{ __('back/shop/languages.default_lang') }}</span>
                                         @endif
                                     </td>
                                     <td class="text-center">{{ $item->code }}</td>
                                     <td class="text-center">
-                                        @include('back.settings.partials.list-status', ['item' => $item])
+                                        @include('admin.settings.partials.list-status', ['item' => $item])
                                     </td>
                                     <td class="text-end">
-                                        @include('back.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openLangModal', 'deleteHandler' => 'deleteLanguage'])
+                                        @include('admin.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openLangModal', 'deleteHandler' => 'deleteLanguage'])
                                     </td>
                                 </tr>
                             @empty

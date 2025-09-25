@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
             //CategorySeeder::class,
             CompanySeeder::class,
             BannersSeeder::class,
+            SettingsSeeder::class,
+            //
+            SubscriptionSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

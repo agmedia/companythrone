@@ -86,13 +86,13 @@
                 </li>
 
                 <li class="pc-item">
-                    <a href="#{{--{{ route('apartments.index') }}--}}" class="pc-link">
+                    <a href="{{ route('subscriptions.index') }}" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-fatrows"></use></svg></span>
                         <span class="pc-mtext">{{ __('back/nav.orders') }}</span>
                     </a>
                 </li>
 
-                <li class="pc-item pc-hasmenu">
+                {{--<li class="pc-item pc-hasmenu">
                     <a href="#!" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-status-up"></use></svg></span>
                         <span class="pc-mtext" data-i18n="Dashboard">{{ __('back/nav.marketing') }}</span>
@@ -102,7 +102,7 @@
                         <li class="pc-item"><a class="pc-link" href="../dashboard/index.html" data-i18n="Default">{{ __('back/nav.actions') }}</a></li>
                         <li class="pc-item"><a class="pc-link" href="../dashboard/index.html" data-i18n="Default">{{ __('back/nav.actions') }}</a></li>
                     </ul>
-                </li>
+                </li>--}}
 
                 {{--<li class="pc-item {{ $is('users.*') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}" class="pc-link">
@@ -119,19 +119,20 @@
                     </svg>
                 </li>
 
-                <li class="pc-item pc-hasmenu">
+                <li class="pc-item pc-hasmenu {{ request()->routeIs('app.settings.*') ? 'pc-trigger active' : '' }}">
                     <a href="#!" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-setting-2"></use></svg></span>
                         <span class="pc-mtext" data-i18n="Dashboard">{{ __('back/nav.settings') }}</span>
                         <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
                     <ul class="pc-submenu">
-                        <li class="pc-item"><a class="pc-link" href="../dashboard/index.html" data-i18n="Default">{{ __('back/nav.actions') }}</a></li>
-                        <li class="pc-item"><a class="pc-link" href="../dashboard/index.html" data-i18n="Default">{{ __('back/nav.actions') }}</a></li>
+                        <li class="pc-item {{ request()->routeIs('app.settings.*') ? 'active' : '' }}">
+                            <a class="pc-link" href="{{ route('app.settings.index') }}" data-i18n="Default">{{ __('back/nav.application') }}</a>
+                        </li>
                     </ul>
                 </li>
 
-                {{--<li class="pc-item pc-hasmenu {{ request()->routeIs('settings.*') ? 'pc-trigger active' : '' }}">
+                <li class="pc-item pc-hasmenu {{ request()->routeIs('settings.*') ? 'pc-trigger active' : '' }}">
                     <a href="#!" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-presentation-chart"></use></svg></span>
                         <span class="pc-mtext">{{ __('back/nav.shop') }}</span>
@@ -145,7 +146,6 @@
                             </a>
                         </li>
 
-                        --}}{{-- Currencies (Settings → Currencies) --}}{{--
                         <li class="pc-item {{ request()->routeIs('settings.currencies.*') ? 'active' : '' }}">
                             <a class="pc-link" href="{{ route('settings.currencies.index') }}">
                                 {{ __('back/nav.currencies') }}
@@ -176,14 +176,8 @@
                             </a>
                         </li>
 
-                        <li class="pc-item {{ request()->routeIs('settings.shipping.*') ? 'active' : '' }}">
-                            <a class="pc-link" href="{{ route('settings.shipping.index') }}">
-                                {{ __('back/nav.shipping') }}
-                            </a>
-                        </li>
-
                     </ul>
-                </li>--}}
+                </li>
 
 
             </ul>

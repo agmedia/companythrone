@@ -51,14 +51,14 @@
                         </a>
                     </div>
                 </li>
-                <li class="dropdown pc-h-item">
-                    <form id="locale-form" class="d-none" method="POST" action="{{--{{ route('locale.switch') }}--}}">
+                {{--<li class="dropdown pc-h-item">
+                    <form id="locale-form" class="d-none" method="POST" action="--}}{{--{{ route('locale.switch') }}--}}{{--">
                         @csrf
                         <input type="hidden" name="locale" id="locale-input">
                     </form>
                     <a class="pc-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        {{--<i class="ti ti-language"></i>
-                        <span class="d-none d-sm-inline">{{ strtoupper(shop()->getLocale()) }}</span>--}}
+                        --}}{{--<i class="ti ti-language"></i>
+                        <span class="d-none d-sm-inline">{{ strtoupper(shop()->getLocale()) }}</span>--}}{{--
                         <svg class="pc-icon">
                             <use xlink:href="#custom-language"></use>
                         </svg>
@@ -71,7 +71,7 @@
                             <span class="me-2">🇭🇷</span> @lang('back/common.language.croatian')
                         </a>
                     </div>
-                </li>
+                </li>--}}
 
                 <li class="dropdown pc-h-item header-user-profile">
                     <a class="pc-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" data-bs-auto-close="outside" aria-expanded="false">
@@ -102,6 +102,64 @@
                                             <span>@lang('back/common.roles.administrator')</span>
                                         </span>
                                 </a>
+                                {{-- Link na front --}}
+                                <a href="{{ url('/') }}" target="_blank" rel="noopener" class="dropdown-item">
+                                    <span>
+                                        <svg class="pc-icon text-muted me-2"><use xlink:href="#custom-external-link"></use></svg>
+                                        <span>Visit front</span>
+                                    </span>
+                                </a>
+
+                                {{-- Clear cache --}}
+                                <a href="#" class="dropdown-item"
+                                   onclick="event.preventDefault(); document.getElementById('clear-cache-form').submit();">
+                                        <span>
+                                            <svg class="pc-icon text-muted me-2"><use xlink:href="#custom-reload"></use></svg>
+                                            <span>Clear caches</span>
+                                        </span>
+                                </a>
+                                <form id="clear-cache-form" action="{{ route('tools.cache.clear') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+
+                                {{-- Maintenance ON/OFF --}}
+                                @php $isDown = app()->isDownForMaintenance(); @endphp
+
+                                @if(!$isDown)
+                                    <a href="#" class="dropdown-item text-warning"
+                                       onclick="event.preventDefault(); if(confirm('Enable maintenance mode?')) document.getElementById('maintenance-on-form').submit();">
+                                            <span>
+                                                <svg class="pc-icon text-muted me-2"><use xlink:href="#custom-alert-triangle"></use></svg>
+                                                <span>Maintenance ON</span>
+                                            </span>
+                                    </a>
+                                    <form id="maintenance-on-form" action="{{ route('tools.maintenance.on') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                @else
+                                    <a href="#" class="dropdown-item text-success"
+                                       onclick="event.preventDefault(); document.getElementById('maintenance-off-form').submit();">
+                                            <span>
+                                                <svg class="pc-icon text-muted me-2"><use xlink:href="#custom-shield-check"></use></svg>
+                                                <span>Maintenance OFF</span>
+                                            </span>
+                                    </a>
+                                    <form id="maintenance-off-form" action="{{ route('tools.maintenance.off') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+
+                                    @if(\Illuminate\Support\Facades\Cache::has('maintenance:secret'))
+                                        <div class="px-3 py-2">
+                                            <small class="text-muted">Bypass:</small>
+                                            <div class="small">
+                                                <a href="{{ url(Cache::get('maintenance:secret')) }}" target="_blank" rel="noopener">
+                                                    {{ url(Cache::get('maintenance:secret')) }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
+
                                 <hr class="border-secondary border-opacity-50" />
                                 <div class="d-grid">
                                     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-primary">

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Back\StoreCompanyRequest;
+use App\Http\Requests\Back\UpdateCompanyRequest;
 use App\Models\Back\Catalog\Company;
+use App\Models\Back\Catalog\CompanyTranslation;
+use App\Models\Back\Catalog\Level;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -24,45 +28,70 @@ class CompanyController extends Controller
 
     public function create()
     {
-        return view('admin.catalog.companies.create');
+        $levels = $this->levelsForSelect();
+
+        return view('admin.catalog.companies.edit', compact('levels'));
     }
 
 
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
-        $data = $request->validate([
-            'title'  => ['required', 'string', 'max:255'],
-            'slug'   => ['required', 'string', 'max:255', 'unique:companies,slug'],
-            'group'  => ['nullable', 'string', 'max:100'],
-            'clicks' => ['nullable', 'integer'],
-            'active' => ['boolean'],
-        ]);
+        $company = Company::create($request->baseData());
 
-        Company::create($data);
+        // Spremi prijevode
+        foreach ($request->translationsData() as $tr) {
+            CompanyTranslation::updateOrCreate(
+                ['company_id' => $company->id, 'locale' => $tr['locale']],
+                Arr::except($tr, ['locale']) + ['company_id' => $company->id]
+            );
+        }
 
-        return redirect()->route('companies.index')->with('success', 'Company created.');
+        if ($request->hasFile('logo_file')) {
+            $company->addMediaFromRequest('logo_file')->toMediaCollection('logo');
+        }
+        if ($request->hasFile('banner_file')) {
+            $company->addMediaFromRequest('banner_file')->toMediaCollection('banner');
+        }
+
+        return redirect()->route('catalog.companies.index')->with('success', 'Company created.');
     }
 
 
     public function edit(Company $company)
     {
-        return view('admin.catalog.companies.edit', compact('company'));
+        $company->load('translations');
+        $levels = $this->levelsForSelect();
+
+        return view('admin.catalog.companies.edit', compact('company', 'levels'));
     }
 
 
-    public function update(Request $request, Company $company)
+    public function update(UpdateCompanyRequest $request, Company $company)
     {
-        $data = $request->validate([
-            'title'  => ['required', 'string', 'max:255'],
-            'slug'   => ['required', 'string', 'max:255', 'unique:companies,slug,' . $company->id],
-            'group'  => ['nullable', 'string', 'max:100'],
-            'clicks' => ['nullable', 'integer'],
-            'active' => ['boolean'],
-        ]);
+        $company->update($request->baseData());
 
-        $company->update($data);
+        foreach ($request->translationsData() as $tr) {
+            CompanyTranslation::updateOrCreate(
+                ['company_id' => $company->id, 'locale' => $tr['locale']],
+                Arr::except($tr, ['locale']) + ['company_id' => $company->id]
+            );
+        }
 
-        return redirect()->route('companies.index')->with('success', 'Company updated.');
+        // LOGO
+        if ($request->boolean('remove_logo')) {
+            $company->clearMediaCollection('logo');
+        } elseif ($request->hasFile('logo_file')) {
+            $company->addMediaFromRequest('logo_file')->toMediaCollection('logo'); // singleFile => auto-replace
+        }
+
+        // BANNER
+        if ($request->boolean('remove_banner')) {
+            $company->clearMediaCollection('banner');
+        } elseif ($request->hasFile('banner_file')) {
+            $company->addMediaFromRequest('banner_file')->toMediaCollection('banner');
+        }
+
+        return redirect()->route('catalog.companies.index')->with('success', 'Company updated.');
     }
 
 
@@ -71,5 +100,15 @@ class CompanyController extends Controller
         $company->delete();
 
         return back()->with('success', 'Company deleted.');
+    }
+
+
+    private function levelsForSelect(): array
+    {
+        return Level::query()
+                    ->orderBy('id') // ili position ako postoji
+                    ->get()
+                    ->mapWithKeys(fn($l) => [$l->id => $l->label])
+                    ->all();
     }
 }

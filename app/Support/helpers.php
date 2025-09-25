@@ -53,3 +53,25 @@ if (! function_exists('uniqueLocalizedSlug')) {
         return $try;
     }
 }
+
+
+/**
+ *
+ */
+if ( ! function_exists('current_locale')) {
+    /**
+     * @param bool $native
+     *
+     * @return string
+     */
+    function current_locale(bool $native = false): string
+    {
+        $current = app()->getLocale();
+
+        if ($native) {
+            return config('laravellocalization.supportedLocales.' . $current . '.regional');
+        }
+
+        return $current;
+    }
+}

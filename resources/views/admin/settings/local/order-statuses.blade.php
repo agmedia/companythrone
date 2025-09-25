@@ -1,5 +1,5 @@
 {{-- resources/views/back/settings/shop/order-statuses.blade.php --}}
-@extends('back.layouts.base-admin')
+@extends('admin.layouts.base-admin')
 
 @section('title', __('back/shop/statuses.title'))
 
@@ -46,7 +46,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>
-                                        @include('back.settings.partials.lang-list-title', ['item' => $item])
+                                        @include('admin.settings.partials.lang-list-title', ['item' => $item])
                                     </td>
                                     <td class="text-center">
                                         @php $c = $item->color ?: 'light'; @endphp
@@ -56,7 +56,7 @@
                                     </td>
                                     <td class="text-center">{{ $item->sort_order }}</td>
                                     <td class="text-end">
-                                        @include('back.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openStatusModal', 'deleteHandler' => 'deleteStatus'])
+                                        @include('admin.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openStatusModal', 'deleteHandler' => 'deleteStatus'])
                                     </td>
                                 </tr>
                             @empty

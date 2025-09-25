@@ -10,7 +10,7 @@ return [
     'attributes' => 'Atributi',
     'manufacturers' => 'Proizvođači',
     
-    'orders'   => 'Narudžbe',
+    'orders'   => 'Pretplate',
     'marketing'=> 'Marketing',
     'actions'  => 'Akcije',
     'blog'     => 'Blog',
@@ -28,8 +28,9 @@ return [
     'settings_caption' => 'Postavke',
     'my_profile'       => 'Moj profil',
     'settings'         => 'Postavke',
+    'application'      => 'Aplikacija',
     
-    'shop' => 'Trgovina',
+    'shop' => 'Lokalne Postvke',
     
     'user' => [
         'my_account' => 'Moj račun',

@@ -5,7 +5,27 @@ use App\Livewire\Back\CompaniesIndex;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
-use App\Http\Controllers\Admin\{CompanyController as AdminCompanyController, BannerController as AdminBannerController, CategoryController as AdminCategoryController};
+use App\Http\Controllers\Admin\Settings\Local\CurrencyPageController;
+use App\Http\Controllers\Api\V1\Settings\CurrencyController as ApiCurrencyController;
+use App\Http\Controllers\Admin\Settings\Local\GeozonePageController;
+use App\Http\Controllers\Api\V1\Settings\GeozoneController as ApiGeozoneController;
+use App\Http\Controllers\Admin\Settings\Local\LanguagePageController;
+use App\Http\Controllers\Api\V1\Settings\LanguageController as ApiLanguageController;
+use App\Http\Controllers\Admin\Settings\Local\PaymentsPageController;
+use App\Http\Controllers\Api\V1\Settings\PaymentsController as ApiPaymentsController;
+use App\Http\Controllers\Admin\Settings\Local\ShippingPageController;
+use App\Http\Controllers\Api\V1\Settings\ShippingController as ApiShippingController;
+use App\Http\Controllers\Admin\Settings\Local\TaxPageController;
+use App\Http\Controllers\Api\V1\Settings\TaxController as ApiTaxController;
+use App\Http\Controllers\Admin\Settings\Local\OrderStatusPageController;
+use App\Http\Controllers\Api\V1\Settings\OrderStatusController as ApiOrderStatusController;
+
+use App\Http\Controllers\Admin\{CompanyController as AdminCompanyController,
+    BannerController as AdminBannerController,
+    CategoryController as AdminCategoryController,
+    DashboardController,
+    Settings\SettingsController,
+    SubscriptionController as AdminSubscriptionController};
 use App\Http\Controllers\Front\{ClickRedirectController, CompanyListController, HomeController, CompanyController, CategoryController};
 use Illuminate\Support\Facades\Crypt;
 
@@ -16,12 +36,41 @@ use Illuminate\Support\Facades\Crypt;
  */
 Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function () {
     // Dashboard (Blade wrapper)
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    //Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Tools (header dropdown actions)
+    Route::post('/tools/maintenance/on',  [DashboardController::class, 'maintenanceOn'])->name('tools.maintenance.on');
+    Route::post('/tools/maintenance/off', [DashboardController::class, 'maintenanceOff'])->name('tools.maintenance.off');
+    Route::post('/tools/cache/clear',     [DashboardController::class, 'clearCache'])->name('tools.cache.clear');
 
 
     Route::prefix('catalog')->as('catalog.')->group(function () {
         Route::resource('categories', AdminCategoryController::class)->names('categories');
         Route::resource('companies', AdminCompanyController::class)->names('companies');
+    });
+
+    Route::resource('subscriptions', AdminSubscriptionController::class)->only(['index','show','edit','update'])->names('subscriptions');
+    Route::patch('subscriptions/{subscription}/activate', [AdminSubscriptionController::class, 'activate'])->name('subscriptions.activate');
+    Route::patch('subscriptions/{subscription}/pause',    [AdminSubscriptionController::class, 'pause'])->name('subscriptions.pause');
+    Route::patch('subscriptions/{subscription}/resume',   [AdminSubscriptionController::class, 'resume'])->name('subscriptions.resume');
+    Route::patch('subscriptions/{subscription}/cancel',   [AdminSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+
+    Route::get('app/settings',  [SettingsController::class, 'index'])->name('app.settings.index');
+    Route::post('app/settings', [SettingsController::class, 'update'])->name('app.settings.update');
+
+    //
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('currencies', [CurrencyPageController::class, 'index'])->name('currencies.index');
+        Route::get('languages', [LanguagePageController::class, 'index'])->name('languages.index');
+        Route::get('taxes', [TaxPageController::class, 'index'])->name('taxes.index');
+        Route::get('statuses', [OrderStatusPageController::class, 'index'])->name('statuses.index');
+
+        Route::get('payments', [PaymentsPageController::class, 'index'])->name('payments.index');
+        Route::get('shipping', [ShippingPageController::class, 'index'])->name('shipping.index');
+
+        Route::get('geozones',            [GeozonePageController::class, 'index'])->name('geozones.index');
+        Route::get('geozones/edit/{id?}', [GeozonePageController::class, 'edit'])->name('geozones.edit');
+
     });
 
     // Settings (Blade wrapperi mountaju Livewire komponente)
@@ -40,6 +89,33 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
 
     Route::resource('banners', AdminBannerController::class)
          ->parameters(['banners' => 'banner']);
+});
+
+/**
+ *
+ */
+Route::middleware(['web', 'auth'])->prefix('api/v1/settings')->name('api.v1.settings.')->group(function () {
+    Route::post('currencies',       [ApiCurrencyController::class, 'store'])->name('currencies.store');
+    Route::post('currencies/main',  [ApiCurrencyController::class, 'storeMain'])->name('currencies.storeMain');
+    Route::delete('currencies',     [ApiCurrencyController::class, 'destroy'])->name('currencies.destroy');
+
+    Route::post('languages',   [ApiLanguageController::class, 'store'])->name('languages.store');
+    Route::delete('languages', [ApiLanguageController::class, 'destroy'])->name('languages.destroy');
+
+    Route::post('taxes',   [ApiTaxController::class, 'store'])->name('taxes.store');
+    Route::delete('taxes', [ApiTaxController::class, 'destroy'])->name('taxes.destroy');
+
+    Route::post('statuses',   [ApiOrderStatusController::class, 'store'])->name('statuses.store');
+    Route::delete('statuses', [ApiOrderStatusController::class, 'destroy'])->name('statuses.destroy');
+
+    Route::post('payments',   [ApiPaymentsController::class, 'store'])->name('payments.store');
+    Route::delete('payments', [ApiPaymentsController::class, 'destroy'])->name('payments.destroy');
+
+    Route::post('shipping',   [ApiShippingController::class, 'store'])->name('shipping.store');
+    Route::delete('shipping', [ApiShippingController::class, 'destroy'])->name('shipping.destroy');
+
+    Route::post('geozones',   [ApiGeozoneController::class, 'store'])->name('geozones.store');
+    Route::delete('geozones', [ApiGeozoneController::class, 'destroy'])->name('geozones.destroy');
 });
 
 /**

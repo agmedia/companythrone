@@ -1,5 +1,5 @@
 {{-- resources/views/back/settings/shop/taxes.blade.php --}}
-@extends('back.layouts.base-admin')
+@extends('admin.layouts.base-admin')
 
 @section('title', __('back/shop/tax.title'))
 
@@ -47,15 +47,15 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>
-                                        @include('back.settings.partials.lang-list-title', ['item' => $item])
+                                        @include('admin.settings.partials.lang-list-title', ['item' => $item])
                                     </td>
                                     <td class="text-center">{{ $item->rate }}</td>
                                     <td class="text-center">{{ $item->sort_order }}</td>
                                     <td class="text-center">
-                                        @include('back.settings.partials.list-status', ['item' => $item])
+                                        @include('admin.settings.partials.list-status', ['item' => $item])
                                     </td>
                                     <td class="text-end">
-                                        @include('back.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openTaxModal', 'deleteHandler' => 'deleteTax'])
+                                        @include('admin.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openTaxModal', 'deleteHandler' => 'deleteTax'])
                                     </td>
                                 </tr>
                             @empty

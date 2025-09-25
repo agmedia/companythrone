@@ -10,7 +10,7 @@ return [
     'attributes' => 'Attributes',
     'manufacturers' => 'Manufacturers',
 
-    'orders'   => 'Orders',
+    'orders'   => 'Subscriptions',
     'marketing'=> 'Marketing',
     'actions'  => 'Actions',
     'blog'     => 'Blog',
@@ -28,8 +28,9 @@ return [
     'settings_caption' => 'Settings',
     'my_profile'       => 'My Profile',
     'settings'         => 'Settings',
+    'application'      => 'Application',
     
-    'shop' => 'Shop',
+    'shop' => 'Local Settings',
     
     'user' => [
         'my_account' => 'My Account',

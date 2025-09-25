@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-lg-10 mx-auto">
-                        @include('back.settings.partials.lang-title', ['code'  => 'cod', 'label' => __('back/shop/payments/cod.title')])
+                        @include('admin.settings.partials.lang-title', ['code'  => 'cod', 'label' => __('back/shop/payments/cod.title')])
 
                         <div class="row g-3">
                             <div class="col-md-6">

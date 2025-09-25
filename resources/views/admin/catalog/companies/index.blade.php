@@ -11,20 +11,6 @@
                     </a>
                 </div>
 
-                {{--<div class="card-body border-bottom pb-0">
-                    @php $groups = ['companies','blog','pages','footer']; @endphp
-                    <ul class="nav nav-pills flex-wrap">
-                        @foreach($groups as $key)
-                            <li class="nav-item me-2 mb-2">
-                                <a class="nav-link {{ ($group ?? 'products') === $key ? 'active' : '' }}"
-                                   href="{{ route('catalog.categories.index', ['group'=>$key]) }}">
-                                    {{ __('back/categories.tabs.'.$key) }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>--}}
-
                 @if(session('success'))
                     <div class="alert alert-success m-3 mb-0">{{ session('success') }}</div>
                 @endif

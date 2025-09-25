@@ -1,4 +1,4 @@
-@extends('back.layouts.base-admin')
+@extends('admin.layouts.base-admin')
 
 @section('title', __('back/shop/payments.title'))
 
@@ -31,14 +31,14 @@
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>
-                                        @include('back.settings.partials.lang-list-title', ['item' => $item])
+                                        @include('admin.settings.partials.lang-list-title', ['item' => $item])
                                     </td>
                                     <td class="text-center">
-                                        @include('back.settings.partials.list-status', ['item' => $item])
+                                        @include('admin.settings.partials.list-status', ['item' => $item])
                                     </td>
                                     <td class="text-center">{{ $item->sort_order ?? 0 }}</td>
                                     <td class="text-end">
-                                        @include('back.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openPaymentModal', 'deleteHandler' => 'deletePayment'])
+                                        @include('admin.settings.partials.list-action-buttons', ['item' => $item, 'editHandler' => 'openPaymentModal', 'deleteHandler' => 'deletePayment'])
                                     </td>
                                 </tr>
                             @endforeach
@@ -53,7 +53,7 @@
 
     {{-- Provider modals --}}
     @foreach($providers as $code => $def)
-        @includeIf('back.settings.shop.payments.modals.' . $code, ['locales' => $locales, 'geozones' => $geo_zones])
+        @includeIf('admin.settings.shop.payments.modals.' . $code, ['locales' => $locales, 'geozones' => $geo_zones])
     @endforeach
 @endsection
 
