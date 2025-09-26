@@ -1,112 +1,114 @@
 @extends('admin.layouts.base-admin')
 
-@section('title', 'Dashboard')
+@section('title', 'Nadzorna ploča')
 
 @section('content')
-    <div class="row g-3">
-        {{-- TOP CARDS --}}
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
+    <div class="row g-2">
+        {{-- GORNJE KARTICE --}}
+        <div class="col-sm-6 col-xl-4">
+            <div class="card mb-2">
                 <div class="card-body">
-                    <div class="text-muted small">Companies</div>
+                    <div class="text-muted small">Tvrtke</div>
                     <div class="h4 mb-0">{{ number_format($companiesTotal) }}</div>
                     <div class="text-success small mt-1">
-                        Active: {{ number_format($companiesActive) }}
+                        Aktivne: {{ number_format($companiesActive) }}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
+        <div class="col-sm-6 col-xl-4">
+            <div class="card mb-2">
                 <div class="card-body">
-                    <div class="text-muted small">Active subscriptions</div>
+                    <div class="text-muted small">Aktivne pretplate</div>
                     <div class="h4 mb-0">{{ number_format($subsActive) }}</div>
-                    <div class="text-muted small mt-1">Next 7d renewals: {{ number_format($upcomingRenewals) }}</div>
+                    <div class="text-muted small mt-1">Obnove u idućih 7 dana: {{ number_format($upcomingRenewals) }}</div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
+        <div class="col-sm-6 col-xl-4">
+            <div class="card mb-2">
                 <div class="card-body">
-                    <div class="text-muted small">MRR (approx.)</div>
+                    <div class="text-muted small">MRR (približno)</div>
                     <div class="h4 mb-0">{{ number_format($mrr, 2) }} EUR</div>
-                    <div class="text-muted small mt-1">Monthly run-rate</div>
+                    <div class="text-muted small mt-1">Mjesečna stopa prihoda</div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
+        <div class="col-sm-6 col-xl-4">
+            <div class="card mb-2">
                 <div class="card-body">
-                    <div class="text-muted small">Revenue (this month)</div>
+                    <div class="text-muted small">Prihod (ovaj mjesec)</div>
                     <div class="h4 mb-0">{{ number_format($revenueThisMonth, 2) }} EUR</div>
-                    <div class="text-muted small mt-1">Paid invoices</div>
+                    <div class="text-muted small mt-1">Plaćeni računi</div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
+        <div class="col-sm-6 col-xl-4">
+            <div class="card mb-2">
                 <div class="card-body">
-                    <div class="text-muted small">Pending payments</div>
+                    <div class="text-muted small">Nepodmirena plaćanja</div>
                     <div class="h4 mb-0">{{ number_format($paymentsPending) }}</div>
-                    <div class="text-warning small mt-1">Action required</div>
+                    <div class="text-warning small mt-1">Potrebna akcija</div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
-                <div class="card-body">
-                    @php $isDown = app()->isDownForMaintenance(); @endphp
-                    <div class="text-muted small">System</div>
-                    <div class="h4 mb-0">{{ $isDown ? 'Maintenance' : 'Online' }}</div>
-                    <div class="d-flex gap-2 mt-2">
-                        @if(!$isDown)
-                            <form action="{{ route('tools.cache.clear') }}" method="POST">@csrf
-                                <button class="btn btn-sm btn-outline-secondary">Clear cache</button>
-                            </form>
-                        @endif
+        <div class="col-sm-6 col-xl-4">
+            <div class="card mb-2">
+                <div class="card-body d-flex justify-content-between align-items-start">
+                    <div>
+                        @php $isDown = app()->isDownForMaintenance(); @endphp
+                        <div class="text-muted small">Sustav</div>
+                        <div class="h4 mb-0">{{ $isDown ? 'Održavanje' : 'Online' }}</div>
+                        <div class="text-warning small mt-1">{{ $isDown ? 'Stranica je nedostupna' : 'Stranica je Online' }}</div>
                     </div>
+
+                    @if(!$isDown)
+                        <form action="{{ route('tools.cache.clear') }}" method="POST" class="ms-auto">@csrf
+                            <button class="btn btn-sm btn-outline-secondary">Očisti cache</button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
 
-        {{-- CHARTS --}}
+        {{-- GRAFIČKI PRIKAZI --}}
         <div class="col-12 col-xl-8">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">Payments (14 days)</h6>
+                    <h6 class="mb-0">Plaćanja (14 dana)</h6>
                 </div>
                 <div class="card-body">
-                    <canvas id="paymentsChart" height="110"></canvas>
+                    <canvas id="paymentsChart" height="220"></canvas>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-xl-4">
-            <div class="card">
-                <div class="card-header"><h6 class="mb-0">Subscriptions by status</h6></div>
+            <div class="card h-100">
+                <div class="card-header"><h6 class="mb-0">Pretplate po statusu</h6></div>
                 <div class="card-body">
                     <canvas id="subsDonut" height="220"></canvas>
                 </div>
             </div>
         </div>
 
-        {{-- LATEST PAYMENTS TABLE --}}
+        {{-- TABLICA NAJNOVIJIH PLAĆANJA --}}
         <div class="col-12">
             <div class="card">
-                <div class="card-header"><h6 class="mb-0">Latest payments</h6></div>
+                <div class="card-header"><h6 class="mb-0">Najnovija plaćanja</h6></div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                             <tr>
                                 <th style="width:72px;">#</th>
-                                <th>Company</th>
+                                <th>Tvrtka</th>
                                 <th>Status</th>
-                                <th>Amount</th>
-                                <th>Period</th>
-                                <th>Issued</th>
-                                <th>Paid</th>
-                                <th>Provider</th>
+                                <th>Iznos</th>
+                                <th>Razdoblje</th>
+                                <th>Izdano</th>
+                                <th>Plaćeno</th>
+                                <th>Pružatelj usluge</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -132,7 +134,7 @@
                                     <td class="text-break">{{ $p->provider ?? '—' }}</td>
                                 </tr>
                             @empty
-                                <tr><td colspan="8">No payments yet.</td></tr>
+                                <tr><td colspan="8">Još nema plaćanja.</td></tr>
                             @endforelse
                             </tbody>
                         </table>
@@ -143,12 +145,27 @@
     </div>
 @endsection
 
+@push('styles')
+    <style>
+        .card.h-100 {
+            height: 100%;
+        }
+
+        /* Oba grafa imaju maksimalnu visinu */
+        #paymentsChart,
+        #subsDonut {
+            max-height: 220px;
+        }
+    </style>
+@endpush
+
 @push('scripts')
+
     {{-- Chart.js (CDN) --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-pjYf+JH5Oqj8m1H4LT1mTzqQG6G9x6vD0Cw8J0Q6JzZ9uQpG4t5xQ8k8v5jN8YQJ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Line chart: payments count + revenue
+            // Linijski graf: broj plaćanja + prihod
             const ctx = document.getElementById('paymentsChart');
             new Chart(ctx, {
                 type: 'line',
@@ -156,7 +173,7 @@
                     labels: @json($labels),
                     datasets: [
                         {
-                            label: 'Payments count',
+                            label: 'Broj plaćanja',
                             data: @json($paymentsCount),
                             tension: 0.3,
                             borderWidth: 2,
@@ -164,7 +181,7 @@
                             yAxisID: 'y',
                         },
                         {
-                            label: 'Revenue (paid, EUR)',
+                            label: 'Prihod (plaćeno, EUR)',
                             data: @json($paymentsSum),
                             tension: 0.3,
                             borderWidth: 2,
@@ -177,13 +194,13 @@
                     responsive: true,
                     interaction: { mode: 'index', intersect: false },
                     scales: {
-                        y:  { beginAtZero: true, title: { display: true, text: 'Payments' } },
+                        y:  { beginAtZero: true, title: { display: true, text: 'Plaćanja' } },
                         y1: { beginAtZero: true, position: 'right', title: { display: true, text: 'EUR' }, grid: { drawOnChartArea: false } }
                     }
                 }
             });
 
-            // Donut: subscription statuses
+            // Kružni graf: statusi pretplata
             const ctx2 = document.getElementById('subsDonut');
             new Chart(ctx2, {
                 type: 'doughnut',
@@ -195,4 +212,6 @@
             });
         });
     </script>
+
+
 @endpush

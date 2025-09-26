@@ -29,6 +29,13 @@
     <link rel="stylesheet" href="{{ asset('admin/theme1/assets/css/style-preset.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/theme1/assets/css/plugins/sweetalert2.css') }}" />
 
+
+
+
+
+
+
+
     @livewireStyles
 
     <!-- Additional CSS -->
@@ -65,6 +72,8 @@
 @stack('modals')
 
 <!-- Required Js -->
+
+
 <script src="{{ asset('admin/theme1/assets/js/plugins/popper.min.js') }}"></script>
 <script src="{{ asset('admin/theme1/assets/js/plugins/simplebar.min.js') }}"></script>
 <script src="{{ asset('admin/theme1/assets/js/plugins/bootstrap.min.js') }}"></script>
@@ -76,39 +85,63 @@
 <script src="{{ asset('admin/theme1/assets/js/plugins/sweetalert2.js') }}"></script>
 <script src="{{ asset('admin/theme1/assets/js/plugins/axios.js') }}"></script>
 
-<!-- Additional Scripts -->
-@stack('scripts')
+
+{{-- SweetAlert2 (preporuka: CDN) – UČITAJ PRIJE nego što ga koristiš --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @livewireScripts
 
 <script>
-    const confirmPopUp = Swal.mixin({
-        buttonsStyling: false,
-        customClass: {
-            confirmButton: 'btn btn-success m-5',
-            cancelButton: 'btn btn-danger m-5',
-            input: 'form-control'
-        }
-    })
+    // Inicijalizacija SweetAlert mixina – pokreće se kad je Swal dostupan
+    function initSwalMixins() {
+        if (!window.Swal) return; // zaštita ako još nije učitan
 
-    const successToast = Swal.mixin({
-        position: 'top-end',
-        icon: 'success',
-        width: 270,
-        showConfirmButton: false,
-        timer: 1500
-    })
+        // učini globalnim za sve (i injected skripte)
+        window.Swal = window.Swal || Swal;
 
-    const errorToast = Swal.mixin({
-        type: 'error',
-        timer: 3000,
-        position: 'top-end',
-        showConfirmButton:false,
-        toast: true,
-    })
+        // napravi/obnovi mixin-e kao globalne reference
+        window.confirmPopUp = Swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-success m-5',
+                cancelButton: 'btn btn-danger m-5',
+                input: 'form-control'
+            }
+        });
 
+        window.successToast = Swal.mixin({
+            position: 'top-end',
+            icon: 'success',
+            width: 270,
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true
+        });
+
+        window.errorToast = Swal.mixin({
+            icon: 'error',            // ⚠️ v11: koristi 'icon', ne 'type'
+            timer: 3000,
+            position: 'top-end',
+            showConfirmButton: false,
+            toast: true
+        });
+    }
+
+    // Pokreni nakon inicijalnog load-a
+    document.addEventListener('DOMContentLoaded', initSwalMixins);
+
+    // Livewire hook kad je sve registrirano
+    document.addEventListener('livewire:load', function () {
+        window.Swal = window.Swal || Swal;
+        initSwalMixins();
+    });
+
+    // Vrlo bitno: nakon Livewire navigacije/partial zamjena DOM-a,
+    // injected skripte ponekad odmah pozivaju Swal – zato opet inicijaliziraj.
+    document.addEventListener('livewire:navigated', initSwalMixins);
 </script>
 
-</body>
-</html>
-
+{{-- Ostale tvoje skripte koje KORISTE Swal smjesti IZA ovoga
+     ili provjeri postojanje: window.Swal && Swal.fire({...})
+--}}
+@stack('scripts')
