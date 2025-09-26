@@ -27,6 +27,7 @@ class StoreCompanyRequest extends FormRequest
             'city'            => ['nullable', 'string', 'max:120'],
             'state'           => ['nullable', 'string', 'max:120'],
             'email'           => ['required', 'email', 'max:255', 'unique:companies,email'],
+            'weburl'          => ['nullable', 'string', 'max:255', 'url', 'unique:companies,weburl'],
             'phone'           => ['nullable', 'string', 'max:80'],
             'is_published'    => ['boolean'],
             'is_link_active'  => ['boolean'],
@@ -94,11 +95,40 @@ class StoreCompanyRequest extends FormRequest
             }
         }
 
+        // ---- NOVO: weburl normalizacija ----
+        $weburl = trim((string) $this->input('weburl', ''));
+        if ($weburl !== '') {
+            // Ako nema shemu (http/https) → dodaj http://
+            if (!Str::startsWith(Str::lower($weburl), ['http://', 'https://'])) {
+                $weburl = preg_replace('#^/*#', '', $weburl) ?? $weburl;
+                $weburl = 'http://' . $weburl;
+            }
+
+            // Uredi host u lowercase i ukloni duple kose crte u pathu
+            try {
+                $parts = parse_url($weburl);
+                if ($parts !== false) {
+                    $scheme = $parts['scheme'] ?? 'http';
+                    $host   = $parts['host'] ?? '';
+                    $path   = $parts['path'] ?? '';
+                    $path   = '/' . ltrim($path, '/');
+                    if ($path === '/') { $path = ''; }
+                    $query  = isset($parts['query']) ? '?' . $parts['query'] : '';
+                    $frag   = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
+                    $weburl = $scheme . '://' . Str::lower($host) . $path . $query . $frag;
+                }
+            } catch (\Throwable $e) {
+                // Ako parse padne, ostavi kakvo jest; validacija će uhvatiti krivi unos.
+            }
+        }
+        // -------------------------------
+
         $this->merge([
             'name'        => $name,
             'slug'        => $slug,
             'slogan'      => $slogan,
             'description' => $description,
+            'weburl'      => $weburl,
         ]);
     }
 
@@ -119,6 +149,7 @@ class StoreCompanyRequest extends FormRequest
             'city'            => 'city',
             'state'           => 'state',
             'email'           => 'email',
+            'weburl'          => 'web address',
             'phone'           => 'phone',
             'is_published'    => 'published',
             'is_link_active'  => 'link active',
@@ -142,7 +173,7 @@ class StoreCompanyRequest extends FormRequest
     public function baseData(): array
     {
         return Arr::only($this->validated(), [
-            'level_id','oib','street','street_no','city','state','email','phone',
+            'level_id','oib','street','street_no','city','state','email','weburl','phone',
             'is_published','is_link_active','referrals_count','clicks','published_at',
         ]);
     }

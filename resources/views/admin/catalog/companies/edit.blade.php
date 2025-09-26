@@ -50,7 +50,7 @@
                     {{-- ===== CORE (non-translatable) ===== --}}
                     <div class="row g-3">
                         {{-- level_id --}}
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Level</label>
                             <select name="level_id" class="form-select @error('level_id') is-invalid @enderror">
                                 <option value="">{{ __('back/common.none') }}</option>
@@ -65,7 +65,7 @@
                         </div>
 
                         {{-- OIB --}}
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">OIB</label>
                             <input type="text" name="oib"
                                    value="{{ old('oib', $company->oib ?? '') }}"
@@ -74,8 +74,18 @@
                             @error('oib') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
+                        {{--Weburl --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Web url</label>
+                            <input type="text" name="weburl"
+                                   value="{{ old('weburl', $company->weburl ?? '') }}"  placeholder="https://www.imewebstranice.hr"
+                                   class="form-control @error('weburl') is-invalid @enderror"
+                                   autocomplete="off">
+                            @error('weburl') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
                         {{-- Email --}}
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Email</label>
                             <input type="email" name="email"
                                    value="{{ old('email', $company->email ?? '') }}"

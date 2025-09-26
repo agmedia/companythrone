@@ -21,11 +21,11 @@
                             <thead class="table-light">
                             <tr>
                                 <th style="width:56px;">{{ __('back/companies.table.id') }}</th>
-                                <th>Title</th>
+                                <th>Naziv</th>
                                 <th>Level</th>
-                                <th>City</th>
-                                <th>Clicks</th>
-                                <th>Active</th>
+                                <th>Grad</th>
+                                <th>Klikova</th>
+                                <th>Aktivirano</th>
                                 <th class="text-end" style="width:120px;">{{ __('back/companies.table.actions') }}</th>
                             </tr>
                             </thead>
@@ -39,9 +39,9 @@
                                     <td>{{ $com->clicks }}</td>
                                     <td>
                                         @if($com->is_publiched)
-                                            <span class="badge bg-success">{{ __('back/common.status.active') }}</span>
+                                            <span class="badge text-bg-success">{{ __('back/common.status.active') }}</span>
                                         @else
-                                            <span class="badge bg-outline-secondary">{{ __('back/common.status.hidden') }}</span>
+                                            <span class="badge text-bg-danger">{{ __('back/common.status.hidden') }}</span>
                                         @endif
                                     </td>
                                     <td class="text-end">
@@ -70,7 +70,7 @@
 
                 @if(method_exists($companies, 'links'))
                     <div class="card-footer">
-                        {{ $companies->withQueryString()->links() }}
+                        {{ $companies->withQueryString()->links('pagination::bootstrap-5') }}
                     </div>
                 @endif
             </div>

@@ -4,21 +4,21 @@ return [
     'admin'        => 'Admin',
     'admin_panel'  => 'Administratorska ploča',
     'dashboard'    => 'Nadzorna ploča',
-    
+
     'group'        => 'Grupa',
     'parent'       => 'Roditelj',
     'none'         => '— Bez —',
     'sort_order'   => 'Redoslijed',
     'updated'      => 'Ažurirano',
     'no_results'   => 'Nema rezultata.',
-    
+
     'status' => [
         'active' => 'Aktivno',
         'hidden' => 'Skriveno',
     ],
-    
+
     'actions' => [
-        'new'     => 'Nova',
+        'new'     => 'Dodaj novu',
         'create'  => 'Kreiraj',
         'edit'    => 'Uredi',
         'update'  => 'Ažuriraj',
@@ -33,7 +33,7 @@ return [
         'remove_icon'   => 'Ukloni ikonu',
         'remove_banner' => 'Ukloni baner',
     ],
-    
+
     'roles' => [
         'administrator' => 'Administrator',
     ],
