@@ -255,6 +255,8 @@
                         $bannerUrl  = \Schema::hasTable('media') ? ($company?->getFirstMediaUrl('banner', 'wide') ?? $company?->getFirstMediaUrl('banner')) : null;
                     @endphp
 
+
+
                     <hr class="my-4">
 
                     <div class="row g-3">
@@ -273,7 +275,7 @@
                             @error('logo_file') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
 
-                        <div class="col-md-8">
+                      {{--   <div class="col-md-8">
                             <label class="form-label">Banner</label>
                             <input type="file" name="banner_file" id="banner_file" class="filepond" accept="image/*">
                             @if($bannerUrl)
@@ -287,6 +289,7 @@
                             @endif
                             @error('banner_file') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
+                        --}}
                     </div>
 
 
@@ -326,6 +329,7 @@
                         credits: false,
                         imagePreviewHeight: 120,
                         instantUpload: false, // submitom ide kroz formu
+                        storeAsFile: true
                     });
                 });
             }
