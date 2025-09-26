@@ -250,10 +250,12 @@
                     </div>
 
 
-                    @php
-                        $logoThumb  = \Schema::hasTable('media') ? ($company?->getFirstMediaUrl('logo', 'thumb') ?? null) : null;
-                        $bannerUrl  = \Schema::hasTable('media') ? ($company?->getFirstMediaUrl('banner', 'wide') ?? $company?->getFirstMediaUrl('banner')) : null;
-                    @endphp
+
+                        @php
+                              $logoThumb  = isset($company) && \Schema::hasTable('media') ? ($company->getFirstMediaUrl('logo', 'thumb') ?? null) : null;
+                              $bannerUrl  = isset($company) && \Schema::hasTable('media') ? ($company->getFirstMediaUrl('banner', 'wide') ?? $company->getFirstMediaUrl('banner')) : null;
+                       @endphp
+
 
 
 

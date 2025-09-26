@@ -9,7 +9,7 @@ use App\Models\Back\Catalog\Company;
 use App\Models\Back\Catalog\CompanyTranslation;
 use App\Models\Back\Catalog\Level;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Arr;
 class CompanyController extends Controller
 {
 
@@ -36,7 +36,12 @@ class CompanyController extends Controller
 
     public function store(StoreCompanyRequest $request)
     {
+
+
         $company = Company::create($request->baseData());
+
+
+
 
         // Spremi prijevode
         foreach ($request->translationsData() as $tr) {
@@ -68,6 +73,8 @@ class CompanyController extends Controller
 
     public function update(UpdateCompanyRequest $request, Company $company)
     {
+
+       // dd($request->validated()['name'] ?? null);
         $company->update($request->baseData());
 
         foreach ($request->translationsData() as $tr) {

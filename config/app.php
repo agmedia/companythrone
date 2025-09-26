@@ -84,6 +84,11 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'hr_HR'),
 
+    'locales' => [
+        'hr' => 'Hrvatski',
+        'en' => 'English',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

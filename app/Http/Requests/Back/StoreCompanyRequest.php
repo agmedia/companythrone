@@ -1,5 +1,4 @@
 <?php
-// app/Http/Requests/Admin/Company/StoreCompanyRequest.php
 
 namespace App\Http\Requests\Back;
 
@@ -12,7 +11,7 @@ class StoreCompanyRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // po potrebi gate-aj preko policy/role
+        return true;
     }
 
     public function rules(): array
@@ -42,8 +41,8 @@ class StoreCompanyRequest extends FormRequest
             'description' => ['nullable', 'array'],
 
             // Files
-            'logo_file'   => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:5120'],
-            'banner_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:8192'],
+            'logo_file'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:5120'],
+            'banner_file'   => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:8192'],
             'remove_logo'   => ['sometimes', 'boolean'],
             'remove_banner' => ['sometimes', 'boolean'],
         ];
@@ -53,7 +52,6 @@ class StoreCompanyRequest extends FormRequest
             $rules["name.$code"] = ['required', 'string', 'max:255'];
             $rules["slug.$code"] = [
                 'required', 'string', 'max:255',
-                // unique per (locale, slug)
                 Rule::unique('company_translations', 'slug')->where('locale', $code),
             ];
             $rules["slogan.$code"]      = ['nullable', 'string', 'max:255'];
@@ -69,16 +67,27 @@ class StoreCompanyRequest extends FormRequest
         $this->merge([
             'is_published'   => (bool) $this->boolean('is_published'),
             'is_link_active' => (bool) $this->boolean('is_link_active'),
-            'remove_logo'   => (bool) $this->boolean('remove_logo'),
-            'remove_banner' => (bool) $this->boolean('remove_banner'),
+            'remove_logo'    => (bool) $this->boolean('remove_logo'),
+            'remove_banner'  => (bool) $this->boolean('remove_banner'),
         ]);
 
         // Ensure arrays exist
-        $name = (array) $this->input('name', []);
-        $slug = (array) $this->input('slug', []);
-        $locales = array_keys(config('app.locales', []));
+        $name        = (array) $this->input('name', []);
+        $slug        = (array) $this->input('slug', []);
+        $slogan      = (array) $this->input('slogan', []);
+        $description = (array) $this->input('description', []);
 
-        // Auto-slug per locale if empty
+        $locales = array_keys(config('app.locales', ['hr' => 'Hrvatski', 'en' => 'English']));
+
+        // HR -> EN fallback ako EN prazno
+        if (in_array('hr', $locales, true) && in_array('en', $locales, true)) {
+            $this->hrToEnFallback($name);
+            $this->hrToEnFallback($slug);
+            $this->hrToEnFallback($slogan);
+            $this->hrToEnFallback($description);
+        }
+
+        // Auto-slug per locale (ako i dalje prazan)
         foreach ($locales as $code) {
             if (!empty($name[$code]) && empty($slug[$code])) {
                 $slug[$code] = Str::slug($name[$code], '-', $code);
@@ -86,27 +95,36 @@ class StoreCompanyRequest extends FormRequest
         }
 
         $this->merge([
-            'name' => $name,
-            'slug' => $slug,
+            'name'        => $name,
+            'slug'        => $slug,
+            'slogan'      => $slogan,
+            'description' => $description,
         ]);
+    }
+
+    protected function hrToEnFallback(array &$bag): void
+    {
+        if (blank($bag['en'] ?? null) && filled($bag['hr'] ?? null)) {
+            $bag['en'] = $bag['hr'];
+        }
     }
 
     public function attributes(): array
     {
         $attrs = [
-            'level_id' => 'level',
-            'oib' => 'OIB',
-            'street' => 'street',
-            'street_no' => 'street number',
-            'city' => 'city',
-            'state' => 'state',
-            'email' => 'email',
-            'phone' => 'phone',
-            'is_published' => 'published',
-            'is_link_active' => 'link active',
+            'level_id'        => 'level',
+            'oib'             => 'OIB',
+            'street'          => 'street',
+            'street_no'       => 'street number',
+            'city'            => 'city',
+            'state'           => 'state',
+            'email'           => 'email',
+            'phone'           => 'phone',
+            'is_published'    => 'published',
+            'is_link_active'  => 'link active',
             'referrals_count' => 'referrals count',
-            'clicks' => 'clicks',
-            'published_at' => 'published at',
+            'clicks'          => 'clicks',
+            'published_at'    => 'published at',
         ];
 
         foreach (array_keys(config('app.locales', [])) as $code) {
