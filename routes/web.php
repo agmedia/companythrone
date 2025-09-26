@@ -20,7 +20,8 @@ use App\Http\Controllers\Api\V1\Settings\TaxController as ApiTaxController;
 use App\Http\Controllers\Admin\Settings\Local\OrderStatusPageController;
 use App\Http\Controllers\Api\V1\Settings\OrderStatusController as ApiOrderStatusController;
 
-use App\Http\Controllers\Admin\{CompanyController as AdminCompanyController,
+use App\Http\Controllers\Admin\{BannerEventController,
+    CompanyController as AdminCompanyController,
     BannerController as AdminBannerController,
     CategoryController as AdminCategoryController,
     DashboardController,
@@ -55,6 +56,14 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     Route::patch('subscriptions/{subscription}/resume',   [AdminSubscriptionController::class, 'resume'])->name('subscriptions.resume');
     Route::patch('subscriptions/{subscription}/cancel',   [AdminSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
 
+    Route::resource('banners', AdminBannerController::class)->names('banners');
+    // FullCalendar JSON feed + CRUD
+    Route::get('banners/{banner}/events', [BannerEventController::class, 'index'])->name('banners.events.index');
+    Route::post('banners/{banner}/events', [BannerEventController::class, 'store'])->name('banners.events.store');
+    Route::patch('banners/{banner}/events/{event}', [BannerEventController::class, 'update'])->name('banners.events.update');
+    Route::delete('banners/{banner}/events/{event}', [BannerEventController::class, 'destroy'])->name('banners.events.destroy');
+
+
     Route::get('app/settings',  [SettingsController::class, 'index'])->name('app.settings.index');
     Route::post('app/settings', [SettingsController::class, 'update'])->name('app.settings.update');
 
@@ -87,8 +96,8 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     /*Route::resource('companies', AdminCompanyController::class)
          ->parameters(['companies' => 'company']);*/
 
-    Route::resource('banners', AdminBannerController::class)
-         ->parameters(['banners' => 'banner']);
+    /*Route::resource('banners', AdminBannerController::class)
+         ->parameters(['banners' => 'banner']);*/
 });
 
 /**

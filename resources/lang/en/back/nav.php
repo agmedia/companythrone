@@ -11,6 +11,7 @@ return [
     'manufacturers' => 'Manufacturers',
 
     'orders'   => 'Subscriptions',
+    'banners'   => 'Banners',
     'marketing'=> 'Marketing',
     'actions'  => 'Actions',
     'blog'     => 'Blog',

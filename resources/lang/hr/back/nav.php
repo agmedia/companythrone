@@ -9,8 +9,9 @@ return [
     'options' => 'Opcije',
     'attributes' => 'Atributi',
     'manufacturers' => 'Proizvođači',
-    
+
     'orders'   => 'Pretplate',
+    'banners'   => 'Baneri',
     'marketing'=> 'Marketing',
     'actions'  => 'Akcije',
     'blog'     => 'Blog',

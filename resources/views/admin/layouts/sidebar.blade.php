@@ -92,6 +92,13 @@
                     </a>
                 </li>
 
+                <li class="pc-item">
+                    <a href="{{ route('banners.index') }}" class="pc-link">
+                        <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-video-play"></use></svg></span>
+                        <span class="pc-mtext">{{ __('back/nav.banners') }}</span>
+                    </a>
+                </li>
+
                 {{--<li class="pc-item pc-hasmenu">
                     <a href="#!" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-status-up"></use></svg></span>
