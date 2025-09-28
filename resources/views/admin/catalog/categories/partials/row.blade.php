@@ -9,13 +9,7 @@
     <td>{{ $node->id }}</td>
     <td>
         <div class="d-flex align-items-center gap-2" style="padding-left: {{ $pad }}px;">
-            @if($img)
-                <img src="{{ $img }}" alt="" class="rounded" style="width:28px;height:28px;object-fit:cover;">
-            @else
-                <span class="avatar bg-light border rounded" style="width:28px;height:28px;">
-          <i class="ph-duotone ph-image text-muted"></i>
-        </span>
-            @endif
+
             <div>
                 <div class="fw-semibold">{{ $t?->name ?? '—' }}</div>
                 @if($t?->slug)

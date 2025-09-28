@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="card-body border-bottom pb-0">
-                    @php $groups = ['companies','blog','pages','footer']; @endphp
+                    @php $groups = ['companies','pages']; @endphp
                     <ul class="nav nav-pills flex-wrap">
                         @foreach($groups as $key)
                             <li class="nav-item me-2 mb-2">

@@ -1,17 +1,21 @@
 @php
     $groups = [
-      'products' => __('back/categories.tabs.products'),
-      'blog'     => __('back/categories.tabs.blog'),
+      'categories' => __('back/categories.tabs.products'),
+
       'pages'    => __('back/categories.tabs.pages'),
-      'footer'   => __('back/categories.tabs.footer'),
+
     ];
-    $currentGroup = old('group', $category->group ?? request('group','products'));
+    $currentGroup = old('group', $category->group ?? request('group','categories'));
     $t = $category->translation();
 
     $imgThumb   = \Schema::hasTable('media') ? $category?->getFirstMediaUrl('image', 'thumb') : null;
     $iconThumb  = \Schema::hasTable('media') ? $category?->getFirstMediaUrl('icon', 'thumb')  : null;
     $bannerUrl  = \Schema::hasTable('media') ? $category?->getFirstMediaUrl('banner')        : null;
+
+
 @endphp
+
+
 
 <div class="row g-3">
     <div class="col-md-4">
@@ -41,7 +45,7 @@
     {{-- Translated fields --}}
     <div class="col-md-6">
         <label class="form-label">{{ __('back/categories.form.title') }}</label>
-        <input type="text" name="title" value="{{ old('title', $t?->title ?? '') }}" class="form-control">
+        <input type="text" name="name" value="{{ old('name', $t->name ?? '') }}" class="form-control">
     </div>
 
     <div class="col-md-6">
@@ -55,7 +59,7 @@
         <textarea name="description" rows="4" class="form-control">{{ old('description', $t?->description ?? '') }}</textarea>
     </div>
 
-    {{-- MEDIA (FilePond) --}}
+    {{-- MEDIA (FilePond)
     <div class="col-md-4">
         <label class="form-label">{{ __('back/categories.form.image') }}</label>
         <input type="file" name="image_file" id="image_file" class="filepond" accept="image/*">
@@ -99,14 +103,14 @@
             </div>
         @endif
         @error('banner_file') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-    </div>
+    </div> --}}
 
     {{-- Flags / ordering --}}
-    <div class="col-md-3">
+    <div class="col-md-12">
         <label class="form-label">{{ __('back/categories.form.sort_order') }}</label>
         <input type="number" name="position" value="{{ old('position', $category->position ?? 0) }}" class="form-control">
     </div>
-    <div class="col-md-3 d-flex align-items-end">
+    <div class="col-md-12 d-flex align-items-end">
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" value="1" name="is_active" id="is_active"
                     @checked(old('is_active', ($category->is_active ?? true)))>
@@ -122,7 +126,7 @@
 @endpush
 
 @push('scripts')
-    {{-- FilePond JS (CDN) --}}
+    {{-- FilePond JS (CDN)
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
     <script src="https://unpkg.com/filepond@^4/dist/filepond.min.js"></script>
     <script>
@@ -134,6 +138,8 @@
                     allowMultiple: false,
                     credits: false,
                     imagePreviewHeight: 120,
+                    instantUpload: false, // submitom ide kroz formu
+                    storeAsFile: true
                 };
 
                 document.querySelectorAll('input.filepond').forEach((el) => {
@@ -141,5 +147,5 @@
                 });
             }
         });
-    </script>
+    </script>  --}}
 @endpush

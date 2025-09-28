@@ -213,5 +213,17 @@
         });
     </script>
 
+    <script>
+        (function () {
+            const KEY = 'refresh_once';
+            if (!sessionStorage.getItem(KEY)) {
+                sessionStorage.setItem(KEY, '1');
+                setTimeout(() => window.location.reload(), 2000);
+            } else {
+                sessionStorage.removeItem(KEY); // resetiraj za idući put
+            }
+        })();
+    </script>
+
 
 @endpush

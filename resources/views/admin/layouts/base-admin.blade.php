@@ -140,17 +140,7 @@
     document.addEventListener('livewire:navigated', initSwalMixins);
 </script>
 
-<script>
-    (function () {
-        const KEY = 'refresh_once';
-        if (!sessionStorage.getItem(KEY)) {
-            sessionStorage.setItem(KEY, '1');
-            setTimeout(() => window.location.reload(), 2000);
-        } else {
-            sessionStorage.removeItem(KEY); // resetiraj za idući put
-        }
-    })();
-</script>
+
 
 {{-- Ostale tvoje skripte koje KORISTE Swal smjesti IZA ovoga
      ili provjeri postojanje: window.Swal && Swal.fire({...})
