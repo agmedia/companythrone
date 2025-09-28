@@ -3,8 +3,8 @@
 return [
     // Naslovi stranica
     'title'         => 'Kategorije',
-    'title_create'  => 'Dodaj kategoriju',
-    'title_edit'    => 'Uredi kategoriju',
+    'title_create'  => 'Dodaj',
+    'title_edit'    => 'Uredi',
 
     // Manje oznake
     'group_label'   => 'Grupa',
@@ -12,6 +12,7 @@ return [
 
     // Kartice (grupe kategorija)
     'tabs' => [
+        'categories' => 'Kategorija',
         'products' => 'Kategorija',
         'companies' => 'Kategorije',
         'blog'     => 'Blog',

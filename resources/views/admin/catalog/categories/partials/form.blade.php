@@ -35,7 +35,7 @@
             @foreach($parents as $p)
                 @php $pt = $p->translation(); @endphp
                 <option value="{{ $p->id }}" @selected(old('parent_id', $category->parent_id ?? null) == $p->id)>
-                    {{ $pt?->title ?? '—' }}
+                    {{ $pt?->name ?? '—' }}
                 </option>
             @endforeach
         </select>
@@ -51,12 +51,12 @@
     <div class="col-md-6">
         <label class="form-label">{{ __('back/categories.form.slug') }}</label>
         <input type="text" name="slug" value="{{ old('slug', $t?->slug ?? '') }}" class="form-control">
-        <div class="form-text">{{ __('back/categories.form.auto_slug_hint') }}</div>
+       {{--  <div class="form-text">{{ __('back/categories.form.auto_slug_hint') }}</div>--}}
     </div>
 
     <div class="col-12">
         <label class="form-label">{{ __('back/categories.form.description') }}</label>
-        <textarea name="description" rows="4" class="form-control">{{ old('description', $t?->description ?? '') }}</textarea>
+        <textarea name="description" id="description" rows="4" class="form-control">{{ old('description', $t?->description ?? '') }}</textarea>
     </div>
 
     {{-- MEDIA (FilePond)
@@ -106,7 +106,7 @@
     </div> --}}
 
     {{-- Flags / ordering --}}
-    <div class="col-md-12">
+    <div class="col-md-2">
         <label class="form-label">{{ __('back/categories.form.sort_order') }}</label>
         <input type="number" name="position" value="{{ old('position', $category->position ?? 0) }}" class="form-control">
     </div>
@@ -123,9 +123,47 @@
     {{-- FilePond CSS (CDN) --}}
     <link rel="stylesheet" href="https://unpkg.com/filepond@^4/dist/filepond.css">
     <link rel="stylesheet" href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css">
+    <style>
+        /* Min visina za editable dio */
+        .ck-editor__editable[role="textbox"] { min-height: 300px; }
+    </style>
 @endpush
 
 @push('scripts')
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            ClassicEditor
+                .create(document.querySelector('#description'), {
+                    toolbar: {
+                        items: [
+                            'undo','redo','|',
+                            'heading','|',
+                            'bold','italic','|',
+                            'bulletedList','numberedList','|',
+                            'blockQuote'
+                        ]
+                    },
+                    removePlugins: [
+                        /* link */
+                        'Link','AutoLink',
+                        /* video (embed) */
+                        'MediaEmbed',
+                        /* SVE vezano uz slike */
+                        'Image','ImageBlock','ImageInline','ImageUpload','ImageInsert',
+                        'ImageToolbar','ImageCaption','ImageStyle','AutoImage','PictureEditing',
+                        /* cloud / box / finder koji vuku PictureEditing */
+                        'CKBox','CKBoxToolbar','CKFinder','EasyImage','CloudServices'
+                    ]
+                })
+                .then(editor => {
+                    editor.ui.view.editable.element.style.minHeight = '200px';
+                })
+                .catch(err => console.error('CKEditor init error:', err));
+        });
+    </script>
     {{-- FilePond JS (CDN)
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
     <script src="https://unpkg.com/filepond@^4/dist/filepond.min.js"></script>

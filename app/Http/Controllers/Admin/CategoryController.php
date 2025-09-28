@@ -48,7 +48,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'group'        => ['required', 'in:companies,blog,pages,footer'],
+            'group'        => ['required', 'in:categories,blog,pages,footer'],
             'parent_id'    => ['nullable', 'exists:categories,id'],
             'position'     => ['nullable', 'integer'],
             'is_active'    => ['nullable', 'boolean'],
@@ -128,7 +128,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'group' => ['required','in:companies,blog,pages,footer'],
+            'group' => ['required','in:categories,blog,pages,footer'],
             'parent_id'    => ['nullable', 'exists:categories,id'],
             'position'     => ['nullable', 'integer'],
             'is_active'    => ['nullable', 'boolean'],

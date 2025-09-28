@@ -10,7 +10,7 @@
                 @csrf @method('PUT')
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="mb-0">
-                        {{ __('back/categories.title_edit') }}: {{ $t?->title ?? '—' }}
+                        {{ __('back/categories.title_edit') }}: {{ $t?->name ?? '—' }}
                     </h5>
                     <a href="{{ route('catalog.categories.index', ['group'=>request('group','companies')]) }}"
                        class="btn btn-light">{{ __('back/common.actions.back') }}</a>

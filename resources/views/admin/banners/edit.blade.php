@@ -34,7 +34,7 @@
 
                         {{-- I18N: tabs po jezicima --}}
                         <div class="col-12">
-                            <label class="form-label">Translations</label>
+                           {{--  <label class="form-label">Translations</label>
                             <ul class="nav nav-pills flex-wrap justify-content-end mb-2">
                                 @foreach($locales as $code => $name)
                                     <li class="nav-item me-2 mb-2">
@@ -45,7 +45,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-
+--}}
                             <div class="tab-content">
                                 @foreach($locales as $code => $name)
                                     @php
@@ -114,7 +114,13 @@
         document.addEventListener('DOMContentLoaded', function () {
             if (window.FilePond) {
                 FilePond.registerPlugin(FilePondPluginImagePreview);
-                document.querySelectorAll('input.filepond').forEach((el) => FilePond.create(el, {allowMultiple:false, credits:false, imagePreviewHeight:120}));
+                document.querySelectorAll('input.filepond').forEach((el) => FilePond.create(el, {
+                    allowMultiple:false,
+                    credits:false,
+                    imagePreviewHeight:120,
+                    instantUpload: false, // submitom ide kroz formu
+                    storeAsFile: true
+                }));
             }
         });
     </script>

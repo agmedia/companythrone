@@ -13,47 +13,47 @@
                         <div class="col-auto">
                             <label class="form-label small mb-1">Status</label>
                             <select name="status" class="form-select form-select-sm">
-                                @php $opts = ['all'=>'All','trialing'=>'Trialing','active'=>'Active','paused'=>'Paused','canceled'=>'Canceled','expired'=>'Expired']; @endphp
+                                @php $opts = ['all'=>'Sve','trialing'=>'Probno','active'=>'Aktivna','paused'=>'Pauzirana','canceled'=>'Otkazana','expired'=>'Istekla']; @endphp
                                 @foreach($opts as $val => $label)
                                     <option value="{{ $val }}" @selected(request('status','all')===$val)>{{ $label }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-auto">
-                            <label class="form-label small mb-1">Period</label>
+                        {{--<div class="col-auto">
+                            <label class="form-label small mb-1">Razdoblje</label>
                             <select name="period" class="form-select form-select-sm">
-                                <option value="">All</option>
-                                <option value="monthly" @selected(request('period')==='monthly')>Monthly</option>
-                                <option value="yearly"  @selected(request('period')==='yearly')>Yearly</option>
+                                <option value="">Sve</option>
+                                <option value="monthly" @selected(request('period')==='monthly')>Mjesečno</option>
+                                <option value="yearly"  @selected(request('period')==='yearly')>Godišnje</option>
                             </select>
-                        </div>
+                        </div>--}}
                         <div class="col-auto">
-                            <label class="form-label small mb-1">Auto-renew</label>
+                            <label class="form-label small mb-1">Automatska obnova</label>
                             <select name="auto" class="form-select form-select-sm">
-                                <option value="">All</option>
-                                <option value="1" @selected(request('auto')==='1')>Yes</option>
-                                <option value="0" @selected(request('auto')==='0')>No</option>
+                                <option value="">Sve</option>
+                                <option value="1" @selected(request('auto')==='1')>Da</option>
+                                <option value="0" @selected(request('auto')==='0')>Ne</option>
                             </select>
                         </div>
+                        {{-- <div class="col-auto">
+                            <label class="form-label small mb-1">Paket</label>
+                            <input type="text" name="plan" class="form-control form-control-sm" value="{{ request('plan') }}" placeholder="npr. pro">
+                        </div>--}}
                         <div class="col-auto">
-                            <label class="form-label small mb-1">Plan</label>
-                            <input type="text" name="plan" class="form-control form-control-sm" value="{{ request('plan') }}" placeholder="e.g. pro">
+                            <label class="form-label small mb-1">E-pošta tvrtke</label>
+                            <input type="text" name="email" class="form-control form-control-sm" value="{{ request('email') }}" placeholder="email@domena">
                         </div>
                         <div class="col-auto">
-                            <label class="form-label small mb-1">Company e-mail</label>
-                            <input type="text" name="email" class="form-control form-control-sm" value="{{ request('email') }}" placeholder="email@domain">
-                        </div>
-                        <div class="col-auto">
-                            <label class="form-label small mb-1">Renewal from</label>
+                            <label class="form-label small mb-1">Obnova od</label>
                             <input type="date" name="renew_from" class="form-control form-control-sm" value="{{ request('renew_from') }}">
                         </div>
                         <div class="col-auto">
-                            <label class="form-label small mb-1">to</label>
+                            <label class="form-label small mb-1">do</label>
                             <input type="date" name="renew_to" class="form-control form-control-sm" value="{{ request('renew_to') }}">
                         </div>
                         <div class="col-auto d-flex gap-2">
-                            <button class="btn btn-sm btn-outline-secondary">Filter</button>
-                            <a href="{{ route('subscriptions.index') }}" class="btn btn-sm btn-light">Reset</a>
+                            <button class="btn btn-sm btn-outline-secondary">Filtriraj</button>
+                            <a href="{{ route('subscriptions.index') }}" class="btn btn-sm btn-light">Poništi</a>
                         </div>
                     </form>
                 </div>
@@ -71,81 +71,90 @@
                             <thead class="table-light">
                             <tr>
                                 <th style="width:56px;">#</th>
-                                <th>Company</th>
-                                <th>Plan</th>
-                                <th>Period</th>
-                                <th>Price</th>
+                                <th>Tvrtka</th>
+                                {{-- <th>Paket</th>
+                                <th>Razdoblje</th> --}}
+                                <th>Cijena</th>
                                 <th>Status</th>
-                                <th>Auto-renew</th>
-                                <th>Next renewal</th>
+                                <th>Auto. obnova</th>
+                                <th>Obnova</th>
                                 <th class="text-end" style="width:240px;">{{ __('back/companies.table.actions') }}</th>
                             </tr>
                             </thead>
                             <tbody>
+                            @php
+                                $statusLabels = [
+                                    'trialing' => 'Probno',
+                                    'active'   => 'Aktivna',
+                                    'paused'   => 'Pauzirana',
+                                    'canceled' => 'Otkazana',
+                                    'expired'  => 'Istekla',
+                                ];
+                            @endphp
                             @forelse($subscriptions as $s)
                                 <tr>
                                     <td>{{ $s->id }}</td>
                                     <td class="text-break">{{ $s->company?->email ?? '—' }}</td>
-                                    <td>{{ $s->plan }}</td>
-                                    <td class="text-nowrap">{{ ucfirst($s->period) }}</td>
+                                    {{-- <td>{{ $s->plan }}</td>
+                                    <td class="text-nowrap">{{ ucfirst($s->period) }}</td> --}}
                                     <td class="text-nowrap">{{ number_format($s->price, 2) }} {{ $s->currency }}</td>
                                     <td>
                                         @php
                                             $badge = in_array($s->status, ['active','trialing']) ? 'bg-success'
                                                 : ($s->status === 'paused' ? 'bg-warning' : 'bg-outline-secondary');
                                         @endphp
-                                        <span class="badge {{ $badge }}">{{ ucfirst($s->status) }}</span>
+                                        <span class="badge {{ $badge }}">{{ $statusLabels[$s->status] ?? ucfirst($s->status) }}</span>
                                     </td>
-                                    <td>{{ $s->is_auto_renew ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $s->is_auto_renew ? 'Da' : 'Ne' }}</td>
                                     <td class="text-nowrap">{{ $s->next_renewal_on?->format('Y-m-d') ?? '—' }}</td>
                                     <td class="text-end">
                                         <div class="d-inline-flex flex-wrap gap-1">
-                                            {{-- Show --}}
+                                            {{-- Prikaži --}}
                                             <a href="{{ route('subscriptions.show', $s) }}"
                                                class="btn btn-sm btn-outline-secondary" title="{{ __('back/common.actions.show') }}">
                                                 <i class="ti ti-eye"></i>
                                             </a>
 
-                                            {{-- Edit --}}
+                                            {{-- Uredi --}}
                                             <a href="{{ route('subscriptions.edit', $s) }}"
                                                class="btn btn-sm btn-outline-primary" title="{{ __('back/common.actions.edit') }}">
                                                 <i class="ti ti-edit"></i>
                                             </a>
 
-                                            {{-- Quick actions (states) --}}
+                                            {{-- Brze radnje (stanja) --}}
                                             @if(in_array($s->status, ['trialing','paused','canceled','expired']))
                                                 <form action="{{ route('subscriptions.activate', $s) }}" method="POST" class="d-inline">
                                                     @csrf @method('PATCH')
-                                                    <button class="btn btn-sm btn-success" title="Activate">Activate</button>
+                                                    <button class="btn btn-sm btn-success" title="Aktiviraj">Aktiviraj</button>
                                                 </form>
                                             @endif
 
                                             @if($s->status === 'active')
                                                 <form action="{{ route('subscriptions.pause', $s) }}" method="POST" class="d-inline">
                                                     @csrf @method('PATCH')
-                                                    <button class="btn btn-sm btn-warning" title="Pause">Pause</button>
+                                                    <button class="btn btn-sm btn-warning" title="Pauziraj">Pauziraj</button>
                                                 </form>
                                             @endif
 
                                             @if($s->status === 'paused')
                                                 <form action="{{ route('subscriptions.resume', $s) }}" method="POST" class="d-inline">
                                                     @csrf @method('PATCH')
-                                                    <button class="btn btn-sm btn-info" title="Resume">Resume</button>
+                                                    <button class="btn btn-sm btn-info" title="Nastavi">Nastavi</button>
                                                 </form>
                                             @endif
 
                                             @if(in_array($s->status, ['trialing','active','paused']))
                                                 <form action="{{ route('subscriptions.cancel', $s) }}" method="POST" class="d-inline"
-                                                      onsubmit="return confirm('Cancel this subscription?')">
+                                                      onsubmit="return confirm('Želite li otkazati ovu pretplatu?')">
                                                     @csrf @method('PATCH')
-                                                    <button class="btn btn-sm btn-outline-danger" title="Cancel">Cancel</button>
+                                                    <button class="btn btn-sm btn-outline-danger" title="Otkaži">Otkaži</button>
                                                 </form>
                                             @endif
                                         </div>
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="9">No subscriptions found.</td></tr>
+                                <tr><td colspan="9">Nema pronađenih pretplata.</td></tr>
                             @endforelse
                             </tbody>
                         </table>

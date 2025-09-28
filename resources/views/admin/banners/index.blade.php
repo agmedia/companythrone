@@ -5,20 +5,22 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-1">Banners</h5>
+                    <h5 class="mb-1">Baneri</h5>
                     <div class="d-flex gap-2">
                         <form method="get" class="d-flex gap-2">
-                            <input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="search title">
+                            <input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="pretraži naslov">
+                            @php $statusOpts = ['draft'=>'Nacrt','active'=>'Aktivan','archived'=>'Arhivirano']; @endphp
                             <select name="status" class="form-select form-select-sm">
                                 <option value="">Status</option>
-                                @foreach(['draft','active','archived'] as $st)
-                                    <option value="{{ $st }}" @selected(request('status')===$st)>{{ ucfirst($st) }}</option>
+                                @foreach($statusOpts as $stVal => $stLabel)
+                                    <option value="{{ $stVal }}" @selected(request('status')===$stVal)>{{ $stLabel }}</option>
                                 @endforeach
                             </select>
-                            <button class="btn btn-sm btn-outline-secondary">Filter</button>
-                            <a href="{{ route('banners.index') }}" class="btn btn-sm btn-light">Reset</a>
+                            <button class="btn btn-sm btn-outline-secondary">Filtriraj</button>
+
                         </form>
-                        <a href="{{ route('banners.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i> New</a>
+                        <a href="{{ route('banners.index') }}" class="btn  btn-outline-secondary">Poništi</a>
+                        <a href="{{ route('banners.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i> Novi baner</a>
                     </div>
                 </div>
 
@@ -30,14 +32,17 @@
                             <thead class="table-light">
                             <tr>
                                 <th style="width:56px;">#</th>
-                                <th>Preview</th>
-                                <th>Title</th>
+                                <th>Pregled</th>
+                                <th>Naslov</th>
                                 <th>Status</th>
-                                <th>Clicks</th>
-                                <th class="text-end" style="width:160px;">Actions</th>
+                                <th>Klikovi</th>
+                                <th class="text-end" style="width:160px;">Radnje</th>
                             </tr>
                             </thead>
                             <tbody>
+                            @php
+                                $statusLabels = ['draft'=>'Nacrt','active'=>'Aktivan','archived'=>'Arhivirano'];
+                            @endphp
                             @forelse($banners as $b)
                                 @php $t = $b->translation(); @endphp
                                 <tr>
@@ -52,26 +57,26 @@
                                         @if($t?->url)<div class="text-muted small">{{ $t->url }}</div>@endif
                                     </td>
                                     <td>
-                  <span class="badge @class([
-                    'bg-outline-secondary' => $b->status==='draft',
-                    'bg-success' => $b->status==='active',
-                    'bg-secondary' => $b->status==='archived',
-                  ])">{{ ucfirst($b->status) }}</span>
+                                        @php
+                                            $badge = $b->status === 'active' ? 'badge text-bg-success'
+                                                : ($b->status === 'draft' ? 'badge text-bg-warning' : 'badge text-bg-info');
+                                        @endphp
+                                        <span class="{{ $badge }}">{{ $statusLabels[$b->status] ?? ucfirst($b->status) }}</span>
                                     </td>
                                     <td>{{ number_format($b->clicks ?? 0) }}</td>
                                     <td class="text-end">
                                         <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('banners.show', $b) }}" class="btn btn-sm btn-outline-secondary rounded-circle" title="Show"><i class="ti ti-eye"></i></a>
-                                            <a href="{{ route('banners.edit', $b) }}" class="btn btn-sm btn-outline-primary rounded-circle" title="Edit"><i class="ti ti-edit"></i></a>
-                                            <form action="{{ route('banners.destroy', $b) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete banner?')">
+                                            <a href="{{ route('banners.show', $b) }}" class="btn btn-sm btn-outline-secondary rounded-circle" title="Prikaži"><i class="ti ti-eye"></i></a>
+                                            <a href="{{ route('banners.edit', $b) }}" class="btn btn-sm btn-outline-primary rounded-circle" title="Uredi"><i class="ti ti-edit"></i></a>
+                                            <form action="{{ route('banners.destroy', $b) }}" method="POST" class="d-inline" onsubmit="return confirm('Izbrisati baner?')">
                                                 @csrf @method('DELETE')
-                                                <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete"><i class="ti ti-trash"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger rounded-circle" title="Obriši"><i class="ti ti-trash"></i></button>
                                             </form>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="6">No banners.</td></tr>
+                                <tr><td colspan="6">Nema banera.</td></tr>
                             @endforelse
                             </tbody>
                         </table>

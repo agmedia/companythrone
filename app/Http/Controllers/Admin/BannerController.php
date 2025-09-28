@@ -85,7 +85,7 @@ class BannerController extends Controller
             $banner->addMediaFromRequest('image')->toMediaCollection('banner');
         }
 
-        return redirect()->route('admin.banners.show', $banner)->with('success', 'Banner updated.');
+        return redirect()->route('banners.show', $banner)->with('success', 'Banner updated.');
     }
 
     public function destroy(Banner $banner)
@@ -107,4 +107,6 @@ class BannerController extends Controller
             );
         }
     }
+
+
 }

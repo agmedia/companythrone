@@ -30,11 +30,15 @@
                 </div>
 
                 <div class="card-body border-bottom pb-0">
-                    @php $groups = ['companies','pages']; @endphp
+                    @php
+                        $groups = ['companies','pages'];
+                        $activeGroup = in_array($group ?? null, $groups, true) ? $group : $groups[0];
+                    @endphp
+
                     <ul class="nav nav-pills flex-wrap">
                         @foreach($groups as $key)
                             <li class="nav-item me-2 mb-2">
-                                <a class="nav-link {{ ($group ?? 'products') === $key ? 'active' : '' }}"
+                                <a class="nav-link {{ $activeGroup === $key ? 'active' : '' }}"
                                    href="{{ route('catalog.categories.index', ['group'=>$key]) }}">
                                     {{ __('back/categories.tabs.'.$key) }}
                                 </a>
