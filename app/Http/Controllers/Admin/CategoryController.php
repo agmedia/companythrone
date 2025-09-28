@@ -134,7 +134,7 @@ class CategoryController extends Controller
             'is_active'    => ['nullable', 'boolean'],
 
             // translated (current locale)
-            'title'            => ['required', 'string', 'max:255'],
+            'name'            => ['required', 'string', 'max:255'],
             'slug'             => ['nullable', 'string', 'max:255'],
             'description'      => ['nullable', 'string'],
             'seo_title'        => ['nullable', 'string', 'max:255'],
