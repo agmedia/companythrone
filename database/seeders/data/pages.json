@@ -1,0 +1,46 @@
+[
+  {
+    "title": {
+      "hr": "Uvjeti kupnje",
+      "en": "Terms of Purchase"
+    },
+    "slug": "uvjeti-kupnje",
+    "body": {
+      "hr": "<p>Uvjeti kupnje sastavni su dio Ugovora o kupoprodaji između tvrtke {{ config('app.name') }} i kupca.</p>\n<h2>Načini plaćanja</h2>\n<p><strong>Uplata internet bankarstvom ili uplatnicom na naš IBAN:</strong> HR3123600001101595832 (Zagrebačka banka d.d.).</p>\n<p><strong>Karticama:</strong> American Express, Visa, Master Card, Diners i Maestro, jednokratno.</p>\n<h2>Osnovni podaci</h2>\n<p>Kupac je fizička osoba koja naručuje ili plaća dostavu proizvoda putem web stranice {{ config('app.name') }}.</p>\n<h2>Prodavatelj</h2>\n<p>Prodavatelj: {{ config('app.name') }}, Zagreb, OIB: 86828835656.</p>",
+      "en": "<p>The Terms of Purchase are part of the Sales Agreement between {{ config('app.name') }} and the customer.</p>\n<h2>Payment methods</h2>\n<p><strong>Bank transfer to IBAN:</strong> HR3123600001101595832 (Zagrebačka banka d.d.).</p>\n<p><strong>Cards:</strong> American Express, Visa, Master Card, Diners, Maestro (one-time).</p>\n<h2>Basic info</h2>\n<p>The buyer is a natural person ordering or paying via {{ config('app.name') }} website.</p>\n<h2>Seller</h2>\n<p>Seller: {{ config('app.name') }}, Zagreb, OIB: 86828835656.</p>"
+    }
+  },
+  {
+    "title": {
+      "hr": "Privatnost i zaštita podataka",
+      "en": "Privacy and Data Protection"
+    },
+    "slug": "privatnost-i-zastita-podataka",
+    "body": {
+      "hr": "<h2>Uvod</h2><p>{{ config('app.name') }} poštuje Vaša prava na privatnost i sigurnost dok koristite naše usluge.</p>",
+      "en": "<h2>Introduction</h2><p>{{ config('app.name') }} respects your rights to privacy and security when using our services.</p>"
+    }
+  },
+  {
+    "title": {
+      "hr": "Dostava",
+      "en": "Delivery"
+    },
+    "slug": "dostava",
+    "body": {
+      "hr": "<h2>Troškovnik dostave</h2><p>GLS dostavna služba: 25 kn po pošiljci, dostava sljedeći radni dan.</p>",
+      "en": "<h2>Delivery costs</h2><p>GLS delivery service: 25 HRK per shipment, next working day delivery.</p>"
+    }
+  },
+  {
+    "title": {
+      "hr": "O nama",
+      "en": "About Us"
+    },
+    "slug": "o-nama",
+    "body": {
+      "hr": "<h2>{{ config('app.name') }}</h2><p>Nalazimo se u Zagrebu, Palmotićeva 28. Radno vrijeme: pon–pet 9–20h, sub 9–14h.</p>",
+      "en": "<h2>{{ config('app.name') }}</h2><p>Located in Zagreb, Palmotićeva 28. Open Mon–Fri 9–20h, Sat 9–14h.</p>"
+    }
+  }
+]

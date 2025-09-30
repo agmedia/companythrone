@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,18 +12,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Obavezni seeders
         $this->call([
             RoleSeeder::class,
             LevelSeeder::class,
             AdminUserSeeder::class,
-            CategoriesSeeder::class,
-            //CategorySeeder::class,
-            CompanySeeder::class,
-            BannersSeeder::class,
             SettingsSeeder::class,
-            //
-            SubscriptionSeeder::class,
-            PaymentSeeder::class,
+            RequiredPagesSeeder::class,
         ]);
+
+        // Pitaj korisnika samo u CLI kontekstu
+        if (App::runningInConsole()) {
+            if ($this->command->confirm('Želite li generirati dummy podatke?', false)) {
+                $this->call([
+                    // popis opcionalnih seedera
+                    CompanySeeder::class,
+                    CategorySeeder::class,
+                    BannerSeeder::class,
+                    UserSeeder::class,
+                    // dodaj ovdje sve koje želiš
+                ]);
+            }
+        }
     }
 }

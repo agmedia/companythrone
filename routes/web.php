@@ -180,6 +180,11 @@ Route::group([
              Route::get('/moj-racun/invoices/{invoice}/download', [SubscriptionsController::class, 'downloadInvoice'])
                   ->name('account.invoices.download');
 
+             Route::get('company', [\App\Http\Controllers\Front\Account\CompanyController::class, 'edit'])
+                  ->name('company.edit');
+             Route::put('company', [\App\Http\Controllers\Front\Account\CompanyController::class, 'update'])
+                  ->name('company.update');
+
              Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
              Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
          });

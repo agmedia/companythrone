@@ -20,5 +20,9 @@
            class="list-group-item list-group-item-action {{ request()->routeIs('account.profile.*') ? 'active' : '' }}">
             <i class="fi-user me-2"></i> {{ __('Moj profil') }}
         </a>
+        <a href="{{ route('account.company.edit') }}"
+           class="list-group-item list-group-item-action {{ request()->routeIs('account.company.*') ? 'active' : '' }}">
+            <i class="fi-anchor me-2"></i> {{ __('Moja tvrtka') }}
+        </a>
     </div>
 </aside>

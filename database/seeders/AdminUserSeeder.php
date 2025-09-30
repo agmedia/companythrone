@@ -58,6 +58,25 @@ class AdminUserSeeder extends Seeder
                     'status'  => 1,
                 ],
             ],
+            [
+                'name'   => 'Testko Testić',
+                'email'  => 'test@test.hr',
+                'pass'   => 'testtest001#',
+                'detail' => [
+                    'fname'   => 'Testko',
+                    'lname'   => 'Testić',
+                    'address' => 'Bebe bb',
+                    'zip'     => '10000',
+                    'city'    => 'Zagreb',
+                    'state'   => null,
+                    'phone'   => null,
+                    'avatar'  => 'media/avatars/default_avatar.png',
+                    'bio'     => 'Lorem ipsum...',
+                    'social'  => '',
+                    'role'    => 'company_owner',
+                    'status'  => 1,
+                ],
+            ],
         ];
 
         foreach ($users as $u) {
