@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+
     protected $fillable = [
-        'company_id','subscription_id','amount','currency','vat_rate','tax_amount','net_amount',
-        'status','period_start','period_end','issued_at','paid_at',
-        'provider','provider_ref','method','invoice_no','meta',
+        'company_id', 'subscription_id', 'amount', 'currency', 'vat_rate', 'tax_amount', 'net_amount',
+        'status', 'period_start', 'period_end', 'issued_at', 'paid_at',
+        'provider', 'provider_ref', 'method', 'invoice_no', 'meta',
     ];
 
     protected $casts = [
@@ -24,10 +25,12 @@ class Payment extends Model
         'meta'         => 'array',
     ];
 
+
     public function company()
     {
         return $this->belongsTo(\App\Models\Back\Catalog\Company::class);
     }
+
 
     public function subscription()
     {

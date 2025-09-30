@@ -27,8 +27,13 @@ use App\Http\Controllers\Admin\{BannerEventController,
     DashboardController,
     Settings\SettingsController,
     SubscriptionController as AdminSubscriptionController};
-use App\Http\Controllers\Front\{ClickRedirectController, CompanyListController, HomeController, CompanyController, CategoryController};
+use App\Http\Controllers\Front\{Account\DashboardController as AccDashboard, Account\LinksController, Account\ProfileController, Account\SubscriptionsController, ClickRedirectController, CompanyListController, HomeController, CompanyController, CategoryController};
 use Illuminate\Support\Facades\Crypt;
+
+
+Route::get('/dashboard', function () {
+    // prazan endpoint – RedirectByRole middleware odlučuje
+})->name('dashboard')->middleware(['auth','verified','redirect.by.role']);
 
 /**
  *
@@ -38,7 +43,7 @@ use Illuminate\Support\Facades\Crypt;
 Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function () {
     // Dashboard (Blade wrapper)
     //Route::view('/dashboard', 'dashboard')->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     // Tools (header dropdown actions)
     Route::post('/tools/maintenance/on',  [DashboardController::class, 'maintenanceOn'])->name('tools.maintenance.on');
     Route::post('/tools/maintenance/off', [DashboardController::class, 'maintenanceOff'])->name('tools.maintenance.off');
@@ -127,6 +132,9 @@ Route::middleware(['web', 'auth'])->prefix('api/v1/settings')->name('api.v1.sett
     Route::delete('geozones', [ApiGeozoneController::class, 'destroy'])->name('geozones.destroy');
 });
 
+
+require __DIR__.'/auth.php';
+
 /**
  *
  * PUBLIC (lokalizirano)
@@ -143,17 +151,58 @@ Route::group([
     ],
 ], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-
     Route::get('/kontakt', [HomeController::class, 'contact'])->name('kontakt');
-
-  Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
-
-    // /{locale}/companies (lista)
+    Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
     Route::get('/companies', [CompanyListController::class, 'index'])->name('companies.index');
-
-    // /{locale}/companies/{slug} (detalj po lokaliziranom slug-u)
     Route::get('/companies/{companyBySlug}', [CompanyListController::class, 'show'])->name('companies.show');
-    Route::get('/categories/{categoryBySlug}', [CategoryController::class, 'show'])->name('categories.show');
+
+    Route::get('/add-company',  [CompanyController::class, 'create'])->name('companies.create');
+    Route::post('/add-company', [CompanyController::class, 'store'])->name('companies.store');
+    Route::get('/add-payment',  [CompanyController::class, 'payment'])->name('companies.payment');
+    Route::post('/review',  [CompanyController::class, 'review'])->name('companies.review');
+    Route::post('/success',  [CompanyController::class, 'success'])->name('companies.success');
+
+    /**
+     * Mini-admin za vlasnike
+     */
+    Route::middleware(['auth','verified'])
+         ->prefix('moj-racun')
+         ->as('account.')
+         ->group(function () {
+             Route::get('/', [AccDashboard::class, 'index'])->name('dashboard');   // = route('account.dashboard')
+
+             Route::get('/links',  [LinksController::class, 'index'])->name('links.index');
+             Route::post('/links', [LinksController::class, 'store'])->name('links.store');
+
+             Route::get('/payments', [SubscriptionsController::class, 'index'])->name('payments');
+             Route::get('/subscriptions', [SubscriptionsController::class, 'subscriptions'])->name('subscriptions');
+             Route::get('/invoices',      [SubscriptionsController::class, 'invoices'])->name('invoices');
+             Route::get('/moj-racun/invoices/{invoice}/download', [SubscriptionsController::class, 'downloadInvoice'])
+                  ->name('account.invoices.download');
+
+             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+             Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+         });
+
+    Route::post('/account/links/click', [LinksController::class, 'click'])
+         ->name('account.links.click')
+         ->middleware('auth');
+
+    // složi regex iz svih lokaliziranih slugova
+    $allowedGroupSlugs = collect(config('settings.group_slugs', []))
+        ->flatMap(fn ($perLocale) => array_values($perLocale))
+        ->map(fn ($s) => preg_quote($s, '#'))
+        ->unique()
+        ->implode('|');
+    // Root listing grupe (npr. /hr/tvrtke, /hr/blog, /hr/info-stranica)
+    Route::get('{groupSlug}', [CategoryController::class, 'index'])
+         ->where('groupSlug', $allowedGroupSlugs)
+         ->name('front.group.index');
+    // Pojedinačna kategorija / stranica (npr. /hr/tvrtke/auto, /hr/info-stranica/o-nama)
+    Route::get('{groupSlug}/{slug}', [CategoryController::class, 'show'])
+         ->where('groupSlug', $allowedGroupSlugs)
+         ->name('front.category.show');
+
 
     Route::get('/decrypt-email', function (Illuminate\Http\Request $request) {
         return response()->json([
@@ -161,14 +210,6 @@ Route::group([
         ]);
     });
 
-    Route::get('/add-company',  [CompanyController::class, 'create'])->name('companies.create');
-    Route::post('/add-company', [CompanyController::class, 'store'])->name('companies.store');
-
-
-    Route::get('/add-payment',  [CompanyController::class, 'payment'])->name('companies.payment');
-    Route::post('/review',  [CompanyController::class, 'review'])->name('companies.review');
-
-    Route::post('/success',  [CompanyController::class, 'success'])->name('companies.success');
 });
 
 Route::post('/kontakt/posalji', [HomeController::class, 'sendContactMessage'])->name('poruka');
@@ -191,6 +232,6 @@ Route::get('/r/{from}/{to}/{slot}', [ClickRedirectController::class, 'go'])
 
 
 
-    require __DIR__.'/auth.php';
+
 
 

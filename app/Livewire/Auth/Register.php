@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -27,17 +29,27 @@ class Register extends Component
     public function register(): void
     {
         $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
         event(new Registered(($user = User::create($validated))));
 
+        // ➕ dodijeli rolu company_owner
+        if (method_exists($user, 'assignRole')) {
+            // Spatie\Permission\Traits\HasRoles na User modelu
+            $user->assignRole('company_owner');
+        } elseif (Schema::hasColumn($user->getTable(), 'role')) {
+            // fallback: plain kolona "role" na users tablici
+            $user->forceFill(['role' => 'company_owner'])->save();
+        }
+
         Auth::login($user);
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);
     }
+
 }

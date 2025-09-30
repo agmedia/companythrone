@@ -2,6 +2,7 @@
 
 namespace App\Models\Shared;
 
+use App\Models\Back\Billing\Subscription;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
@@ -13,5 +14,11 @@ class Payment extends Model
     public function company()
     {
         return $this->belongsTo(\App\Models\Back\Catalog\Company::class);
+    }
+
+
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class);
     }
 }

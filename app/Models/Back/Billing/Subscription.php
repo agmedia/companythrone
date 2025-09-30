@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
+
     protected $fillable = [
-        'company_id','plan','period','price','currency',
-        'status','is_auto_renew',
-        'starts_on','ends_on','next_renewal_on','trial_ends_on','canceled_at',
+        'company_id', 'plan', 'period', 'price', 'currency',
+        'status', 'is_auto_renew',
+        'starts_on', 'ends_on', 'next_renewal_on', 'trial_ends_on', 'canceled_at',
         'notes',
     ];
 
@@ -23,15 +24,21 @@ class Subscription extends Model
         'price'           => 'decimal:2',
     ];
 
+
     public function company()
     {
         return $this->belongsTo(\App\Models\Back\Catalog\Company::class);
     }
+
 
     public function payments()
     {
         return $this->hasMany(\App\Models\Back\Billing\Payment::class);
     }
 
-    public function scopeActive($q) { return $q->where('status', 'active'); }
+
+    public function scopeActive($q)
+    {
+        return $q->where('status', 'active');
+    }
 }

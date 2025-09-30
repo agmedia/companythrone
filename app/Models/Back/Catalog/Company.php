@@ -2,6 +2,8 @@
 
 namespace App\Models\Back\Catalog;
 
+use App\Models\Back\Billing\Subscription;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -84,6 +86,12 @@ class Company extends Model implements HasMedia
     }
 
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+
     public function level()
     {
         return $this->belongsTo(Level::class);
@@ -93,6 +101,12 @@ class Company extends Model implements HasMedia
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_company');
+    }
+
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
     }
 
 

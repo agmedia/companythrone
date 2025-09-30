@@ -21,6 +21,14 @@ return [
         ],
     ],
 
+    'group_slugs' => [
+        'tvrtke' => ['hr' => 'tvrtke',   'en' => 'companies'],
+        'blog'   => ['hr' => 'blog',     'en' => 'blog'],
+        'pages'  => ['hr' => 'info-stranica', 'en' => 'info-page'],
+        'footer' => ['hr' => 'footer',   'en' => 'footer'],
+    ],
+
+
     // Tabovi / grupe u adminu
     'groups' => [
         'site'     => ['label' => 'Site',     'icon' => 'ti ti-world',  'i18n' => true],

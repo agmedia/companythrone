@@ -154,7 +154,8 @@
                                                   "breakpoints": { "991": { "allowTouchMove": false } }
                                                 }'>
                                             {{-- TODO: Kad uvedemo galeriju (media collection "images"), ovdje petljaj po slici; sada 1 fallback --}}
-                                            <a class="swiper-wrapper h-100" href="{{ localized_route('companies.show', ['companyBySlug' => $c->t_slug]) }}">
+                                            {{--<a class="swiper-wrapper h-100" href="{{ localized_route('companies.show', ['companyBySlug' => $c->t_slug]) }}">--}}
+                                            <a class="swiper-wrapper h-100" href="{{ company_url($c) }}">
                                                 <div class="swiper-slide">
                                                     @php
                                                         $cover = method_exists($c,'hasMedia') && $c->hasMedia('logo')
@@ -187,7 +188,6 @@
                                         <div class="row flex-lg-nowrap g-0 position-relative pt-1 pt-sm-0">
 
 
-
                                             {{-- Naziv, avatar, kratko --}}
                                             <div class="col-lg-12 pe-lg-4 d-flex flex-column">
                                                 <div class=" align-items-center pe-5 pe-lg-0 pb-2 mb-1">
@@ -199,20 +199,19 @@
                                                 </div>
 
                                                 <p class="fs-sm mb-2 text-body">
-                                                    <i class="fi-map-pin fs-sm me-1" ></i> {{ trim(($c->street ?? '').' '.($c->street_no ?? '')) }} {{ trim(($c->city ?? '').($c->city && $c->state ? ', ' : '').($c->state ?? '')) }}
+                                                    <i class="fi-map-pin fs-sm me-1"></i> {{ trim(($c->street ?? '').' '.($c->street_no ?? '')) }} {{ trim(($c->city ?? '').($c->city && $c->state ? ', ' : '').($c->state ?? '')) }}
                                                 </p>
 
                                                 @php $desc = $c->description ?? null; @endphp
                                                 @if($desc)
                                                     <p class="fs-sm mb-3 text-body">{{ \Illuminate\Support\Str::limit(strip_tags($desc), 180) }}</p>
 
-
                                                 @endif
 
 
 
                                                 {{-- “Connect” je placeholder – može kasnije otvoriti modal ili ići na kontakt --}}
-                                                <a href="{{ localized_route('companies.show', ['companyBySlug' => $c->t_slug]) }}" style="width: auto;" class="btn btn-outline-dark position-relative z-2 w-auto mt-auto align-self-start">
+                                                <a href="{{ company_url($c) }}" style="width: auto;" class="btn btn-outline-dark position-relative z-2 w-auto mt-auto align-self-start">
                                                     Opširnije
                                                 </a>
                                             </div>

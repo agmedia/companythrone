@@ -15,57 +15,34 @@
             <form method="post" enctype="multipart/form-data" action="{{ localized_route('companies.review') }}" class="vstack gap-3">
                 @csrf
 
-                <fieldset class="border-bottom py-4" role="radiogroup" aria-label="Ad review options">
-                    <div class="row align-items-center py-md-1 py-lg-2 py-xl-3">
-                        <div class="col-12 col-md-5">
-                            <div class="d-flex align-items-center gap-2">
-                                <input
-                                    type="radio"
-                                    class="form-check-input switch-radio"
-                                    name="certify"
-                                    id="certify_yes"
-                                    value="1"
-                                    required
-                                >
-                                <label for="certify_yes" class="form-check-label h6 fs-6 mb-0">
-                                    Plaćenje karticama - Corvus Pay
-                                </label>
+                @foreach($payments as $p)
+                    <fieldset class="border-bottom py-4" role="radiogroup" aria-label="Ad review options">
+                        <div class="row align-items-center py-md-1 py-lg-2 py-xl-3">
+                            <div class="col-12 col-md-5">
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="radio" @checked(($selectedCode ?? null) === $p['code']) class="form-check-input switch-radio" name="plan" value="{{ $p['code'] }}" id="certify-{{ $p['code'] }}" required>
+                                    <label for="certify_yes" class="form-check-label h6 fs-6 mb-0">{{ $p['name'] }}</label>
+                                </div>
+                            </div>
+                            <div class="col-8 col-md-5">
+                                @if(!empty($p['short_description']))
+                                    @if (is_string($p['short_description']))
+                                        <p class="fs-sm mb-0">{{ $p['short_description'] ?: '' }}</p>
+                                    @else
+                                        <p class="fs-sm mb-0">{{ $p['short_description'][current_locale()] ?: '' }}</p>
+                                    @endif
+                                @endif
+                            </div>
+                            <div class="col-4 col-md-2">
+                                @if(($p['price'] ?? 0) > 0)
+                                    <div class="h5 text-end text-nowrap mb-0">{{ rtrim(rtrim(number_format($p['price'], 2, '.', ''), '0'), '.') }} {{ $p['currency'] ?? 'EUR' }} <span class="fs-sm ">/ godišnje</span> </div>
+                                @else
+                                    <div class="h5 text-end text-nowrap mb-0"><span class="fs-sm ">Besplatno</span></div>
+                                @endif
                             </div>
                         </div>
-                        <div class="col-8 col-md-5">
-                            <p class="fs-sm mb-0">Plaćanje kreditnim i debitnim karticama, Google Pay, Apple Pay</p>
-                        </div>
-                        <div class="col-4 col-md-2">
-                            <div class="h5 text-end text-nowrap mb-0">25€  <span class="fs-sm ">/ godišnje</span> </div>
-                        </div>
-                    </div>
-                </fieldset>
-
-                <fieldset class="border-bottom py-4">
-                    <div class="row align-items-center py-md-1 py-lg-2 py-xl-3">
-                        <div class="col-12 col-md-5">
-                            <div class="d-flex align-items-center gap-2">
-                                <input
-                                    type="radio"
-                                    class="form-check-input switch-radio"
-                                    name="certify"
-                                    id="certify_no"
-                                    value="0"
-                                >
-                                <label for="certify_no" class="form-check-label h6 fs-6 mb-0">
-
-                                    Općom uplatnicom / Virmanom / Internet bankarstvom
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-8 col-md-5">
-                            <p class="fs-sm mb-0">Uplatite direktno na naš bankovni račun. Uputstva i uplatnice vam stiže putem maila.</p>
-                        </div>
-                        <div class="col-4 col-md-2">
-                            <div class="h5 text-end text-nowrap mb-0">25€  <span class="fs-sm ">/ godišnje</span> </div>
-                        </div>
-                    </div>
-                </fieldset>
+                    </fieldset>
+                @endforeach
 
                 <div class="d-flex mt-3 gap-2">
 

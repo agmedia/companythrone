@@ -41,6 +41,62 @@
         </div>
     </section>
 
+    @if($banners->isNotEmpty())
+        <!-- Responsive slider with multiple slides, featuring external Prev/Next buttons and bullets positioned outside the slider. -->
+        <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
+            <div class="position-relative px-5 mb-5">
+
+                <!-- External slider prev/next buttons -->
+                <button type="button" id="home-banners-prev" class="btn btn-icon btn-outline-secondary rounded-circle animate-slide-start position-absolute top-50 start-0 translate-middle-y mt-n3" aria-label="Prev">
+                    <i class="fi-chevron-left fs-lg animate-target"></i>
+                </button>
+                <button type="button" id="home-banners-next" class="btn btn-icon btn-outline-secondary rounded-circle animate-slide-end position-absolute top-50 end-0 translate-middle-y mt-n3" aria-label="Next">
+                    <i class="fi-chevron-right fs-lg animate-target"></i>
+                </button>
+
+                <!-- Slider -->
+                <div class="swiper px-2" data-swiper='{
+      "slidesPerView": 1,
+      "spaceBetween": 16,
+      "loop": true,
+      "pagination": { "el": ".home-banners-pagination", "clickable": true },
+      "navigation": { "prevEl": "#home-banners-prev", "nextEl": "#home-banners-next" },
+      "breakpoints": { "600": { "slidesPerView": 2 }, "1000": { "slidesPerView": 3 } }
+    }'>
+                    <div class="swiper-wrapper">
+
+                        @foreach($banners as $banner)
+                            @php
+                                $t = $banner->translation() ?? $banner->translations->first();
+                                // Ako koristiš MediaLibrary:
+                                // $img = $banner->getFirstMediaUrl('banners', 'xl') ?: $banner->getFirstMediaUrl('banners');
+                                // Ako imaš kolonu `image`:
+                                $img = isset($banner->image) ? Storage::url($banner->image) : asset('img/placeholder-4x3.jpg');
+                            @endphp
+
+                            <div class="swiper-slide">
+                                <a @if(!empty($t?->url)) href="{{ $t->url }}" @endif class="text-decoration-none d-block">
+                                    <div class="ratio ratio-4x3 bg-body-tertiary rounded position-relative overflow-hidden">
+                                        <img src="{{ $img }}" alt="{{ $t?->title ?? 'Banner' }}" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+                                        <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-dark bg-opacity-50 text-white">
+                                            @if($t?->title)<div class="fw-semibold">{{ $t->title }}</div>@endif
+                                            @if($t?->slogan)<div class="small opacity-75">{{ $t->slogan }}</div>@endif
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+
+                    </div>
+
+                    <!-- Pagination (Bullets) -->
+                    <div class="swiper-pagination home-banners-pagination position-static mt-3"></div>
+                </div>
+            </div>
+        </section>
+    @endif
+
+
     <!-- Popular categories -->
    {{--  @if(isset($cats) && $cats->count())
         <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
@@ -147,7 +203,8 @@
 
                                             </ul>
                                             <h3 class="h5 pt-1 mb-2">
-                                                <a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->t_name }}</a>
+                                                {{--<a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->t_name }}</a>--}}
+                                                <a class="hover-effect-underline stretched-link" href="{{ nav()->urlById($c->id) }}">{{ $c->t_name }}</a>
                                             </h3>
                                             <div class="d-flex align-items-center fs-sm">
                                                 <i class="fi-map-pin me-1"></i>
@@ -156,7 +213,8 @@
                                         </div>
 
                                         <div class="card-footer d-flex align-items-center justify-content-between gap-3 bg-transparent border-0 pt-0 pt-sm-4 p-4 pe-sm-0">
-                                            <a href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}" class="btn btn-outline-dark position-relative z-2"> Opširnije </a>
+                                            {{--<a href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}" class="btn btn-outline-dark position-relative z-2"> Opširnije </a>--}}
+                                            <a href="{{ nav()->urlById($c->id) }}" class="btn btn-outline-dark position-relative z-2"> Opširnije </a>
                                         </div>
 
                                     </div>
