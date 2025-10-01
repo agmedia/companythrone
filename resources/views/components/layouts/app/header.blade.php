@@ -48,28 +48,10 @@
                     </li>--}}
                     @auth
                         <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
-                            <a class="nav-link btn btn-primary{{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
+                            <a class="nav-link bg-body-tertiary {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Korisnička ploča</a>
                         </li>
                     @endauth
-                    {{--<li class="nav-item dropdown py-lg-2 me-lg-n1 me-xl-0">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-trigger="hover" data-bs-auto-close="outside" aria-expanded="false">Account</a>
-                        <ul class="dropdown-menu">
-                            <li class="dropend">
-                                <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-trigger="hover" aria-expanded="false">Auth Pages</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="account-signin.html">Sign In</a></li>
-                                    <li><a class="dropdown-item" href="account-signup.html">Sign Up</a></li>
-                                    <li><a class="dropdown-item" href="account-password-recovery.html">Password Recovery</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="dropdown-item" href="account-profile.html">My Profile</a></li>
-                            <li><a class="dropdown-item" href="account-listings.html">My Listings</a></li>
-                            <li><a class="dropdown-item" href="account-reviews.html">Reviews</a></li>
-                            <li><a class="dropdown-item" href="account-favorites.html">Favorites</a></li>
-                            <li><a class="dropdown-item" href="account-payment.html">Payment Details</a></li>
-                            <li><a class="dropdown-item" href="account-settings.html">Account Settings</a></li>
-                        </ul>
-                    </li>--}}
+
                 </ul>
             </div>
         </nav>
@@ -101,7 +83,7 @@
             <!-- User (login/profile/logout/...) -->
             @auth
                 <div class="dropdown">
-                    <button type="button" class="theme-switcher btn btn-icon btn-outline-secondary fs-lg border-0 animate-scale" data-bs-toggle="dropdown" data-bs-display="dynamic" aria-expanded="false" aria-label="Toggle user account">
+                    <button type="button" class=" btn btn-icon btn-outline-secondary fs-lg border animate-scale" data-bs-toggle="dropdown" data-bs-display="dynamic" aria-expanded="false" aria-label="Toggle user account">
                         <span class="theme-icon-active d-flex animate-target"><i class="fi-user-check"></i></span>
                     </button>
                     <ul class="dropdown-menu start-50 translate-middle-x" style="--fn-dropdown-min-width: 9rem; --fn-dropdown-spacer: .5rem">
@@ -109,7 +91,7 @@
                         <li><a class="dropdown-item" href="{{ route('settings.profile') }}">@lang('settings.profile_title')</a></li>
                             <li><a class="dropdown-item" href="{{ route('settings.password') }}">@lang('settings.password_title')</a></li>
                         @else
-                            <li><a class="dropdown-item" href="{{ route('dashboard') }}">@lang('settings.profile_title')</a></li>
+                            <li><a class="dropdown-item" href="{{ route('dashboard') }}">Korisnička ploča</a></li>
                        @endif
 
                         {{--<li><a class="dropdown-item" href="{{ route('settings.appearance') }}">@lang('settings.appearance_title')</a></li>--}}
@@ -125,7 +107,7 @@
             @else
 
                 <!-- Log in button -->
-                <a class="btn btn-outline-secondary animate-slide-end me-2" href="{{ route('login') }}" aria-label="{{ __('auth.login') }}">
+                <a class="btn btn-outline-secondary animate-slide-end me-2 border" href="{{ route('login') }}" aria-label="{{ __('auth.login') }}">
                     <i class="fi-user animate-target mx-n2 me-xl-2"></i>
                     <span class="d-none d-xl-inline">{{ __('auth.login') }}</span>
                 </a>
@@ -136,9 +118,13 @@
 
             @auth
             <!-- Join button  -->
-            <a class="btn btn-primary animate-scale" href="{{ localized_route('companies.create') }}">
-                <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i>  {{ __('nav.add_company') }}
-            </a>
+                @if(!$hasCompany)
+
+                    <a class="btn btn-primary animate-scale" href="{{ localized_route('companies.create') }}">
+                    <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i>  {{ __('nav.add_company') }}
+                    </a>
+
+                @endif
 
             @else
                 <a class="btn btn-primary animate-scale" href="{{ route('register') }}">

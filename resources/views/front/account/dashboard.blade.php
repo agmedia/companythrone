@@ -7,9 +7,12 @@
         <div class="row g-3">
             @include('front.account._sidebar')
 
+
+            <div class="col-lg-9">
+
             <div class="row g-3">
 
-                {{-- Pretplate i plaćanja --}}
+                {{-- Pretplate i plaćanja
                 <div class="col-md-3">
                     <div class="card shadow-sm h-100">
                         <div class="card-body d-flex flex-column">
@@ -44,9 +47,9 @@
                         </div>
                     </div>
                 </div>
-
+--}}
                 {{-- Profil tvrtke --}}
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-body d-flex flex-column">
                             <div class="text-muted small">{{ __('Profil') }}</div>
@@ -60,7 +63,7 @@
                                 <div class="small text-muted mt-2">{{ __('Nema podataka o tvrtki') }}</div>
                             @endif
 
-                            <a class="btn btn-sm btn-outline-primary mt-auto" href="{{ localized_route('account.profile.edit') }}">
+                            <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.profile.edit') }}">
                                 {{ __('Uredi profil') }}
                             </a>
                         </div>
@@ -68,7 +71,7 @@
                 </div>
 
                 {{-- Moji linkovi (dnevni zadaci) --}}
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-body d-flex flex-column">
                             <div class="text-muted small">{{ __('Moji linkovi') }}</div>
@@ -80,7 +83,7 @@
                                 {{ __('Dnevni zadatak') }}
                             </div>
 
-                            <a class="btn btn-sm btn-outline-primary mt-auto" href="{{ localized_route('account.links.index') }}">
+                            <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.links.index') }}">
                                 {{ __('Pregledaj') }}
                             </a>
                         </div>
@@ -88,7 +91,7 @@
                 </div>
 
                 {{-- Referral preporuke --}}
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-body d-flex flex-column">
                             <div class="text-muted small">{{ __('Preporuke') }}</div>
@@ -104,13 +107,14 @@
                                 {{ __('Potrebno za aktivaciju') }}
                             </div>
 
-                            <a class="btn btn-sm btn-outline-primary mt-auto" href="{{ localized_route('account.links.index') }}">
+                            <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.links.index') }}">
                                 {{ __('Dodaj preporuku') }}
                             </a>
                         </div>
                     </div>
                 </div>
 
+            </div>
             </div>
 
 

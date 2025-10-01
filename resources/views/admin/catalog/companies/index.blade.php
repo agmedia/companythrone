@@ -38,7 +38,7 @@
                                     <td>{{ $com->city }}</td>
                                     <td>{{ $com->clicks }}</td>
                                     <td>
-                                        @if($com->is_publiched)
+                                        @if($com->is_published)
                                             <span class="badge text-bg-success">{{ __('back/common.status.active') }}</span>
                                         @else
                                             <span class="badge text-bg-danger">{{ __('back/common.status.hidden') }}</span>

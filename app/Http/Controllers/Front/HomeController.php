@@ -36,7 +36,15 @@ class HomeController extends Controller
                          ->take(12) // prilagodi koliko slajdova želiš
                          ->get();
 
-        return view('front.home', compact('featured', 'cats', 'banners'));
+        // 🔍 Provjeri ima li logirani user svoju company
+        $user = auth()->user();
+        $hasCompany = false;
+
+        if ($user) {
+            $hasCompany = Company::where('user_id', $user->id)->exists();
+        }
+
+        return view('front.home', compact('featured', 'cats', 'banners', 'hasCompany'));
     }
 
 

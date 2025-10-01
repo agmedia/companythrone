@@ -8,6 +8,8 @@ use App\Policies\CategoryPolicy;
 use App\Policies\CompanyPolicy;
 use Illuminate\Support\ServiceProvider;
 
+use Illuminate\Support\Facades\Auth;
+
 class AppServiceProvider extends ServiceProvider
 {
 
@@ -30,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('*', function ($view) {
+            $user = Auth::user();
+            $hasCompany = $user ? Company::where('user_id', $user->id)->exists() : false;
+            $view->with('hasCompany', $hasCompany);
+        });
     }
 }

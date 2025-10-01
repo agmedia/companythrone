@@ -77,12 +77,12 @@
 
                     <!-- Description -->
                     <h2 class="h5 pt-2 pt-sm-0 ">Opis</h2>
-                   <p> {{ $company->t_desc }}</p>
+                   <p> {!! $company->t_desc !!}  </p>
 
                     <!-- Organizer -->
                     <div class="d-flex flex-column flex-sm-row flex-md-column flex-lg-row align-items-center justify-content-start gap-3  pt-2  rounded p-0 mt-4">
 
-                        <a href="#" class="btn btn-primary"><i class="fi-link me-2"></i> Web stranica</a>
+                        <a href="{{$company->weburl}}" target="_blank" class="btn btn-primary"><i class="fi-link me-2"></i> Web stranica</a>
 
 
                         <div class="d-flex align-items-center gap-1 ">
