@@ -13,6 +13,7 @@
             <label class="form-label" for="email">{{ __('auth.email') }}</label>
             <input id="email" type="email" class="form-control form-control-lg @error('email') is-invalid @enderror"
                    wire:model.defer="email" autocomplete="email">
+
             @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
@@ -24,6 +25,9 @@
                 <label class="password-toggle-button fs-lg" aria-label="Show/hide password">
                     <input type="checkbox" class="btn-check">
                 </label>
+            </div>
+            <div class="form-text" id="passwordHelpBlock">
+                Vaša lozinka mora imati najmanje 8 znakova.
             </div>
             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
