@@ -78,6 +78,10 @@ class UpdateCompanyRequest extends FormRequest
             'remove_banner'  => (bool) $this->boolean('remove_banner'),
         ]);
 
+        if ($this->has('weburl') && $this->input('weburl') === '') {
+            $this->merge(['weburl' => null]);
+        }
+
         $name        = (array) $this->input('name', []);
         $slug        = (array) $this->input('slug', []);
         $slogan      = (array) $this->input('slogan', []);
@@ -102,6 +106,7 @@ class UpdateCompanyRequest extends FormRequest
 
         // weburl normalizacija
         $weburl = trim((string) $this->input('weburl', ''));
+
         if ($weburl !== '') {
             if (!Str::startsWith(Str::lower($weburl), ['http://', 'https://'])) {
                 $weburl = preg_replace('#^/*#', '', $weburl) ?? $weburl;
@@ -123,6 +128,8 @@ class UpdateCompanyRequest extends FormRequest
             } catch (\Throwable $e) {
                 // ako parse padne, validacija će uhvatiti krivi format
             }
+        } else {
+            $weburl = null; // 🚀 OVO je ključno
         }
 
         $this->merge([
