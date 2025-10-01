@@ -75,6 +75,10 @@ class CompanyController extends Controller
                 $t = $company->translation($locale) ?? $company->translations()->make(['locale' => $locale]);
                 $t->name = $data['name'];
 
+                if($data['description']){
+                    $t->description = $data['description'];
+                }
+
                 if (empty($t->slug)) {
                     $t->slug = $this->generateUniqueCompanySlug($t->name, $locale, $company->id ?? null);
                 }

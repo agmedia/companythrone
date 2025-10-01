@@ -105,8 +105,13 @@
                         <span class="theme-icon-active d-flex animate-target"><i class="fi-user-check"></i></span>
                     </button>
                     <ul class="dropdown-menu start-50 translate-middle-x" style="--fn-dropdown-min-width: 9rem; --fn-dropdown-spacer: .5rem">
+                        @if(auth()->user()->role === 'master')
                         <li><a class="dropdown-item" href="{{ route('settings.profile') }}">@lang('settings.profile_title')</a></li>
-                        <li><a class="dropdown-item" href="{{ route('settings.password') }}">@lang('settings.password_title')</a></li>
+                            <li><a class="dropdown-item" href="{{ route('settings.password') }}">@lang('settings.password_title')</a></li>
+                        @else
+                            <li><a class="dropdown-item" href="{{ route('dashboard') }}">@lang('settings.profile_title')</a></li>
+                       @endif
+
                         {{--<li><a class="dropdown-item" href="{{ route('settings.appearance') }}">@lang('settings.appearance_title')</a></li>--}}
                         <li><hr class="dropdown-divider"></li>
                         <li>

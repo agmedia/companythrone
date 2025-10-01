@@ -13,12 +13,16 @@ class CompanyController extends Controller
     {
         $company = auth()->user()->company;
 
+
+
         return view('front.account.company', compact('company'));
     }
 
     public function update(Request $request)
     {
         $company = auth()->user()->company;
+
+
 
         if (! $company) {
             abort(404, __('Tvrtka nije pronađena.'));

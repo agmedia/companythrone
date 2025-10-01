@@ -10,6 +10,8 @@
                     <div class="card-body">
                         <h1 class="h4 mb-3">{{ __('Podaci o tvrtki') }}</h1>
 
+
+
                         <form method="post"
                               enctype="multipart/form-data"
                               action="{{ localized_route('account.company.update') }}"
@@ -21,7 +23,7 @@
                                 <div class="col-md-8">
                                     <label for="name" class="form-label">{{ __('company.name') }} *</label>
                                     <input id="name" name="name" class="form-control form-control-lg"
-                                           value="{{ old('name', $company->name ?? '') }}" required>
+                                           value="{{ old('name', $company->t_name ?? '') }}" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="oib" class="form-label">{{ __('company.oib') }} *</label>
@@ -76,8 +78,47 @@
 
                             <div>
                                 <label for="description" class="form-label">{{ __('company.description') }}</label>
-                                <textarea id="description" name="description" class="form-control form-control-lg">{{ old('description', $company->description ?? '') }}</textarea>
+                                <textarea id="description" name="description" class="form-control form-control-lg">{!! old('description', $company->t_desc ?? '') !!} </textarea>
                             </div>
+
+                            <style>
+                                /* Min visina za editable dio */
+                                .ck-editor__editable[role="textbox"] { min-height: 300px; }
+                            </style>
+
+                            <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    ClassicEditor
+                                        .create(document.querySelector('#description'), {
+                                            toolbar: {
+                                                items: [
+                                                    'undo','redo','|',
+                                                    'heading','|',
+                                                    'bold','italic','|',
+                                                    'bulletedList','numberedList','|',
+                                                    'blockQuote'
+                                                ]
+                                            },
+                                            removePlugins: [
+                                                /* link */
+                                                'Link','AutoLink',
+                                                /* video (embed) */
+                                                'MediaEmbed',
+                                                /* SVE vezano uz slike */
+                                                'Image','ImageBlock','ImageInline','ImageUpload','ImageInsert',
+                                                'ImageToolbar','ImageCaption','ImageStyle','AutoImage','PictureEditing',
+                                                /* cloud / box / finder koji vuku PictureEditing */
+                                                'CKBox','CKBoxToolbar','CKFinder','EasyImage','CloudServices'
+                                            ]
+                                        })
+                                        .then(editor => {
+                                            editor.ui.view.editable.element.style.minHeight = '200px';
+                                        })
+                                        .catch(err => console.error('CKEditor init error:', err));
+                                });
+                            </script>
 
                             <div>
                                 <label for="logo" class="form-label">{{ __('company.logo') }}</label>
