@@ -44,10 +44,11 @@ class CompanyController extends Controller
             'street'      => ['nullable','string','max:255'],
             'street_no'   => ['nullable','string','max:50'],
             'city'        => ['nullable','string','max:120'],
-            'state'       => ['nullable','string','max:5'],
+            'state'       => ['nullable','string','max:50'],
             'description' => ['nullable','string'],
             'categories'  => ['array'],
             'categories.*'=> ['integer','exists:categories,id'],
+
         ]);
 
         $company = $this->currentDraft() ?? new Company();
@@ -65,6 +66,7 @@ class CompanyController extends Controller
                 'state'        => $data['state'] ?? null,
                 'description'  => $data['description'] ?? null,
                 'is_published' => false, // draft
+                'user_id'      => auth()->id(),  // ✅ set from the session user
             ]);
 
             // prijevod (t_* polja) – osiguraj slug

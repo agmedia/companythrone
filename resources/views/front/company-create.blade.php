@@ -14,6 +14,8 @@
           <h1 class="h2 mb-3">{{ __('company.add') }}</h1>
           <form method="post" enctype="multipart/form-data" action="{{ localized_route('companies.store') }}" class="vstack gap-3">
             @csrf
+
+
             <div class="row g-3">
               <div class="col-md-8">
                 <label class="form-label " for="name">{{ __('company.name') }} *</label>
