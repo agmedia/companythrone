@@ -24,7 +24,7 @@ class RedirectByRole
         // Spatie\Permission?
         if (method_exists($user, 'hasAnyRole')) {
             if ($user->hasAnyRole(['admin', 'master'])) {
-                return redirect()->to(localized_route('admin.dashboard'));
+                return redirect()->to(route('admin.dashboard'));
             }
             if ($user->hasRole('company_owner')) {
                 return redirect()->to(localized_route('account.dashboard'));
@@ -34,7 +34,7 @@ class RedirectByRole
         // Fallback (ako nema Spatie-a): kolona role na users
         if (isset($user->role)) {
             if (in_array($user->role, ['admin', 'master'], true)) {
-                return redirect()->to(localized_route('admin.dashboard'));
+                return redirect()->to(route('admin.dashboard'));
             }
             if ($user->role === 'company_owner') {
                 return redirect()->to(localized_route('account.dashboard'));

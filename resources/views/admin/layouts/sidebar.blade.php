@@ -70,14 +70,14 @@
                         <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
                     <ul class="pc-submenu">
-                        <li class="pc-item {{ $is('categories.*') ? 'active' : '' }}">
+                        <li class="pc-item {{ $is('catalog.categories.*') ? 'active' : '' }}">
                             <a class="pc-link"
                                href="{{ route('catalog.categories.index', ['group' => $currentGroup]) }}"
                                data-i18n="Categories">
                                 {{ __('back/nav.categories') }}
                             </a>
                         </li>
-                        <li class="pc-item {{ $is('companies.*') ? 'active' : '' }}">
+                        <li class="pc-item {{ $is('catalog.companies.*') ? 'active' : '' }}">
                             <a class="pc-link"
                                href="{{ route('catalog.companies.index') }}"
                                data-i18n="Categories">
