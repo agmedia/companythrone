@@ -44,6 +44,9 @@ class UpdateCompanyRequest extends FormRequest
             'slogan'      => ['nullable', 'array'],
             'description' => ['nullable', 'array'],
 
+            'category_ids'   => ['nullable', 'array'],
+            'category_ids.*' => ['exists:categories,id'],
+
             // Files
             'logo_file'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:5120'],
             'banner_file'   => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:8192'],

@@ -36,12 +36,7 @@ class CompanyController extends Controller
 
     public function store(StoreCompanyRequest $request)
     {
-
-
         $company = Company::create($request->baseData());
-
-
-
 
         // Spremi prijevode
         foreach ($request->translationsData() as $tr) {
@@ -50,6 +45,8 @@ class CompanyController extends Controller
                 Arr::except($tr, ['locale']) + ['company_id' => $company->id]
             );
         }
+
+        $company->categories()->sync($request->input('category_ids', []));
 
         if ($request->hasFile('logo_file')) {
             $company->addMediaFromRequest('logo_file')->toMediaCollection('logo');
@@ -83,6 +80,8 @@ class CompanyController extends Controller
                 Arr::except($tr, ['locale']) + ['company_id' => $company->id]
             );
         }
+
+        $company->categories()->sync($request->input('category_ids', []));
 
         // LOGO
         if ($request->boolean('remove_logo')) {

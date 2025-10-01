@@ -181,6 +181,22 @@
 
                     <hr class="my-4">
 
+                    {{-- Kategorije --}}
+                    <div class="col-md-12">
+                        <label class="form-label">Kategorije</label>
+                        <select name="category_ids[]" class="form-select" multiple>
+                            @foreach(\App\Models\Back\Catalog\Category::where('group', 'companies')->orderBy('id')->get() as $cat)
+                                <option value="{{ $cat->id }}"
+                                        @selected(isset($company) && $company->categories->pluck('id')->contains($cat->id))>
+                                    {{ $cat->translations->firstWhere('locale', app()->getLocale())->name ?? $cat->id }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="form-text">Drži CTRL ili CMD za višestruki odabir.</div>
+                    </div>
+
+                    <hr class="my-4">
+
                     {{-- ===== TRANSLATABLE ===== --}}
                    <div class="mb-3">
                        {{--   <label class="form-label d-flex align-items-center justify-content-between">

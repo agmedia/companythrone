@@ -34,7 +34,7 @@
                                 <tr>
                                     <td>{{ $com->id }}</td>
                                     <td>{{ $com?->t_name ?? '' }}</td> {{-- blank if no parent --}}
-                                    <td>{{ $com->level->number }}</td>
+                                    <td>{{ $com->level ? $com->level->number : '-' }}</td>
                                     <td>{{ $com->city }}</td>
                                     <td>{{ $com->clicks }}</td>
                                     <td>
