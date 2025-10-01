@@ -73,6 +73,7 @@ return [
         'manager'  => 'Menadžer',
         'editor'   => 'Urednik',
         'customer' => 'Kupac',
+        'company_owner' => 'Vlasnik tvrtke'
     ],
 
     // Tablica

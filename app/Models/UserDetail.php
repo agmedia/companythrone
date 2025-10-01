@@ -16,6 +16,8 @@ class UserDetail extends Model
         'status' => 'boolean',
     ];
 
+    public const ROLES = ['master', 'admin', 'editor', 'company_owner'];
+
 
     public function user()
     {

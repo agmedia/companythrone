@@ -26,7 +26,8 @@ use App\Http\Controllers\Admin\{BannerEventController,
     CategoryController as AdminCategoryController,
     DashboardController,
     Settings\SettingsController,
-    SubscriptionController as AdminSubscriptionController};
+    SubscriptionController as AdminSubscriptionController,
+    UserController};
 use App\Http\Controllers\Front\{Account\DashboardController as AccDashboard, Account\LinksController, Account\ProfileController, Account\SubscriptionsController, ClickRedirectController, CompanyListController, HomeController, CompanyController, CategoryController};
 use Illuminate\Support\Facades\Crypt;
 
@@ -68,6 +69,7 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     Route::patch('banners/{banner}/events/{event}', [BannerEventController::class, 'update'])->name('banners.events.update');
     Route::delete('banners/{banner}/events/{event}', [BannerEventController::class, 'destroy'])->name('banners.events.destroy');
 
+    Route::resource('users', UserController::class)->names('users');
 
     Route::get('app/settings',  [SettingsController::class, 'index'])->name('app.settings.index');
     Route::post('app/settings', [SettingsController::class, 'update'])->name('app.settings.update');

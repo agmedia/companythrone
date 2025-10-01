@@ -1,10 +1,10 @@
-@extends('back.layouts.base-admin')
+@extends('admin.layouts.base-admin')
 
 @section('title', __('back/users.title'))
 
 @section('content')
     @php
-        $roles = \App\Models\Back\User\UserDetail::ROLES;
+        $roles = \App\Models\UserDetail::ROLES;
     @endphp
 
     <div class="row g-3">
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('users.create', ['role'=>$role]) }}" class="btn btn-primary">
+                        <a href="{{ route('users.create') }}" class="btn btn-primary">
                             <i class="ti ti-plus"></i> {{ __('back/common.actions.new') }}
                         </a>
                     </div>
@@ -59,7 +59,7 @@
                             </thead>
                             <tbody>
                             @forelse($users as $detail)
-                                @include('back.users.partials.row', ['detail' => $detail])
+                                @include('admin.users.partials.row', ['detail' => $detail])
                             @empty
                                 <tr>
                                     <td colspan="8" class="text-center text-muted py-5">{{ __('back/common.no_results') }}</td>

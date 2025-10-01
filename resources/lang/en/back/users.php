@@ -73,6 +73,7 @@ return [
         'manager'  => 'Manager',
         'editor'   => 'Editor',
         'customer' => 'Customer',
+        'company_owner' => 'Company owner'
     ],
 
     // ===== Existing table =====

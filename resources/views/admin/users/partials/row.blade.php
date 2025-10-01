@@ -25,20 +25,16 @@
     <td class="text-muted">{{ $detail->updated_at?->format('Y-m-d H:i') }}</td>
     <td class="text-end">
         <div class="d-inline-flex gap-2">
-            @can('update', $detail)
-                <a href="{{ route('users.edit', $detail) }}" class="btn btn-sm btn-outline-primary rounded-circle" title="@lang('back/common.actions.edit')">
-                    <i class="ti ti-edit"></i>
-                </a>
-            @endcan
-            @can('delete', $detail)
-                <form action="{{ route('users.destroy', $detail) }}" method="POST"
-                      onsubmit="return confirm('{{ __('back/users.confirm_delete') }}')" class="d-inline">
-                    @csrf @method('DELETE')
-                    <button class="btn btn-sm btn-outline-danger rounded-circle" title="@lang('back/common.actions.delete')">
-                        <i class="ti ti-trash"></i>
-                    </button>
-                </form>
-            @endcan
+            <a href="{{ route('users.edit', $detail) }}" class="btn btn-sm btn-outline-primary rounded-circle" title="@lang('back/common.actions.edit')">
+                <i class="ti ti-edit"></i>
+            </a>
+            <form action="{{ route('users.destroy', $detail) }}" method="POST"
+                  onsubmit="return confirm('{{ __('back/users.confirm_delete') }}')" class="d-inline">
+                @csrf @method('DELETE')
+                <button class="btn btn-sm btn-outline-danger rounded-circle" title="@lang('back/common.actions.delete')">
+                    <i class="ti ti-trash"></i>
+                </button>
+            </form>
         </div>
     </td>
 </tr>
