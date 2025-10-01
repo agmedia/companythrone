@@ -40,22 +40,12 @@
             <img src="{{ asset('theme1/images/hero4.png') }}" alt="Image">
         </div>
     </section>
-
     @if($banners->isNotEmpty())
-        <!-- Responsive slider with multiple slides, featuring external Prev/Next buttons and bullets positioned outside the slider. -->
         <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
-            <div class="position-relative px-5 mb-5">
-
-                <!-- External slider prev/next buttons -->
-                <button type="button" id="home-banners-prev" class="btn btn-icon btn-outline-secondary rounded-circle animate-slide-start position-absolute top-50 start-0 translate-middle-y mt-n3" aria-label="Prev">
-                    <i class="fi-chevron-left fs-lg animate-target"></i>
-                </button>
-                <button type="button" id="home-banners-next" class="btn btn-icon btn-outline-secondary rounded-circle animate-slide-end position-absolute top-50 end-0 translate-middle-y mt-n3" aria-label="Next">
-                    <i class="fi-chevron-right fs-lg animate-target"></i>
-                </button>
+            <div class="position-relative mb-5">
 
                 <!-- Slider -->
-                <div class="swiper px-2" data-swiper='{
+                <div class="swiper px-2 position-relative" data-swiper='{
       "slidesPerView": 1,
       "spaceBetween": 16,
       "loop": true,
@@ -63,31 +53,43 @@
       "navigation": { "prevEl": "#home-banners-prev", "nextEl": "#home-banners-next" },
       "breakpoints": { "600": { "slidesPerView": 2 }, "1000": { "slidesPerView": 3 } }
     }'>
-                    <div class="swiper-wrapper">
 
+                    <div class="swiper-wrapper">
                         @foreach($banners as $banner)
                             @php
                                 $t = $banner->translation() ?? $banner->translations->first();
-                                // Ako koristiš MediaLibrary:
-                                // $img = $banner->getFirstMediaUrl('banners', 'xl') ?: $banner->getFirstMediaUrl('banners');
-                                // Ako imaš kolonu `image`:
-                                $img = isset($banner->image) ? Storage::url($banner->image) : asset('img/placeholder-4x3.jpg');
+                                $img = $banner->getFirstMediaUrl('banners', 'xl') ?: $banner->getFirstMediaUrl('banner');
                             @endphp
 
                             <div class="swiper-slide">
                                 <a @if(!empty($t?->url)) href="{{ $t->url }}" @endif class="text-decoration-none d-block">
-                                    <div class="ratio ratio-4x3 bg-body-tertiary rounded position-relative overflow-hidden">
-                                        <img src="{{ $img }}" alt="{{ $t?->title ?? 'Banner' }}" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-                                        <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-dark bg-opacity-50 text-white">
+                                    <div class="ratio ratio-4x3 bg-body-tertiary rounded border position-relative overflow-hidden">
+                                        <img src="{{ $img }}" alt="{{ $t?->title ?? 'Banner' }}"
+                                             class="position-absolute bottom-0 start-0 w-100 h-100 object-fit-cover ">
+
+                                        <!-- Natpis dolje lijevo -->
+                                        {{-- <div class="position-absolute bottom-0 start-0 p-3 bg-dark bg-opacity-50 text-white">
                                             @if($t?->title)<div class="fw-semibold">{{ $t->title }}</div>@endif
                                             @if($t?->slogan)<div class="small opacity-75">{{ $t->slogan }}</div>@endif
-                                        </div>
+                                        </div>--}}
                                     </div>
+
                                 </a>
                             </div>
                         @endforeach
-
                     </div>
+
+                    <!-- Navigation (unutra slidera, preko slika) -->
+                    <button type="button" id="home-banners-prev"
+                            class="btn btn-icon btn-outline-secondary rounded-circle position-absolute top-50 start-0 translate-middle-y z-3"
+                            aria-label="Prev">
+                        <i class="fi-chevron-left fs-lg"></i>
+                    </button>
+                    <button type="button" id="home-banners-next"
+                            class="btn btn-icon btn-outline-secondary rounded-circle position-absolute top-50 end-0 translate-middle-y z-3"
+                            aria-label="Next">
+                        <i class="fi-chevron-right fs-lg"></i>
+                    </button>
 
                     <!-- Pagination (Bullets) -->
                     <div class="swiper-pagination home-banners-pagination position-static mt-3"></div>
@@ -95,6 +97,7 @@
             </div>
         </section>
     @endif
+
 
 
     <!-- Popular categories -->

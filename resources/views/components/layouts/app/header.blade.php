@@ -48,7 +48,7 @@
                     </li>--}}
                     @auth
                         <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
-                            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
+                            <a class="nav-link btn btn-primary{{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
                         </li>
                     @endauth
                     {{--<li class="nav-item dropdown py-lg-2 me-lg-n1 me-xl-0">
@@ -133,10 +133,19 @@
 
             @endauth
 
+
+            @auth
             <!-- Join button  -->
             <a class="btn btn-primary animate-scale" href="{{ localized_route('companies.create') }}">
                 <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i>  {{ __('nav.add_company') }}
             </a>
+
+            @else
+                <a class="btn btn-primary animate-scale" href="{{ route('register') }}">
+                    <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i>  {{ __('nav.add_company') }}
+                </a>
+            @endauth
+
         </div>
     </div>
 </header>
