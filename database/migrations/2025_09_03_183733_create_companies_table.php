@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('email')->unique();
+            $table->string('weburl')->unique();
             $table->string('phone')->nullable();
             $table->boolean('is_published')->default(false);
             $table->boolean('is_link_active')->default(false);

@@ -9,19 +9,22 @@ use Illuminate\Support\Str;
 
 class RequiredPagesSeeder extends Seeder
 {
+
     public function run(): void
     {
         $path = database_path('seeders/data/pages.json');
 
-        if (! File::exists($path)) {
+        if ( ! File::exists($path)) {
             $this->command->error("Datoteka pages.json nije pronađena na: {$path}");
+
             return;
         }
 
         $pages = json_decode(File::get($path), true);
 
-        if (! is_array($pages)) {
+        if ( ! is_array($pages)) {
             $this->command->error("Greška kod parsiranja pages.json");
+
             return;
         }
 
@@ -42,13 +45,10 @@ class RequiredPagesSeeder extends Seeder
                     DB::table('category_translations')->insert([
                         'category_id' => $categoryId,
                         'locale'      => $locale,
-                        'title'       => $page['title'][$locale],
-                        'slogan'      => $page['slogan'][$locale] ?? null,
-                        'url'         => null,
-                        'slug'        => $page['slug'][$locale] ?? Str::slug($page['title'][$locale]),
-                        'body'        => $page['body'][$locale] ?? null,
-                        'created_at'  => now(),
-                        'updated_at'  => now(),
+                        'name'        => $page['title'][$locale],
+                        'description' => $page['body'][$locale] ?? null,
+                        'link_url'    => null,
+                        'slug'        => $page['slug'][$locale] ?? Str::slug($page['title'][$locale])
                     ]);
                 }
             });

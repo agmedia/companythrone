@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->string('social')->nullable(); // može URL ili mali JSON string
 
             // radi integriteta koristimo enum (može i string ako želiš)
-            $table->enum('role', ['master', 'admin', 'manager', 'editor', 'customer'])->default('customer');
+            $table->enum('role', ['master', 'admin', 'manager', 'editor', 'company_owner', 'customer'])->default('customer');
 
             $table->boolean('status')->default(true);
             $table->timestamps();

@@ -75,6 +75,10 @@ class StoreCompanyRequest extends FormRequest
             'remove_banner'  => (bool) $this->boolean('remove_banner'),
         ]);
 
+        if ($this->has('weburl') && $this->input('weburl') === '') {
+            $this->merge(['weburl' => null]);
+        }
+
         // Ensure arrays exist
         $name        = (array) $this->input('name', []);
         $slug        = (array) $this->input('slug', []);
@@ -98,16 +102,15 @@ class StoreCompanyRequest extends FormRequest
             }
         }
 
-        // ---- NOVO: weburl normalizacija ----
+        // weburl normalizacija
         $weburl = trim((string) $this->input('weburl', ''));
+
         if ($weburl !== '') {
-            // Ako nema shemu (http/https) → dodaj http://
             if (!Str::startsWith(Str::lower($weburl), ['http://', 'https://'])) {
                 $weburl = preg_replace('#^/*#', '', $weburl) ?? $weburl;
                 $weburl = 'http://' . $weburl;
             }
 
-            // Uredi host u lowercase i ukloni duple kose crte u pathu
             try {
                 $parts = parse_url($weburl);
                 if ($parts !== false) {
@@ -121,10 +124,11 @@ class StoreCompanyRequest extends FormRequest
                     $weburl = $scheme . '://' . Str::lower($host) . $path . $query . $frag;
                 }
             } catch (\Throwable $e) {
-                // Ako parse padne, ostavi kakvo jest; validacija će uhvatiti krivi unos.
+                // ako parse padne, validacija će uhvatiti krivi format
             }
+        } else {
+            $weburl = null; // 🚀 OVO je ključno
         }
-        // -------------------------------
 
         $this->merge([
             'name'        => $name,
