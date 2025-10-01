@@ -30,8 +30,8 @@
                 <input id="email" type="email" name="email" class="form-control  form-control-lg" value="{{ old('email') }}" required>
               </div>
               <div class="col-md-6">
-                <label class="form-label" for="website">{{ __('company.website') }} *</label>
-                <input id="website" name="website" class="form-control  form-control-lg" placeholder="https:/www.tvrtka.hr" value="{{ old('website') }}"  required>
+                <label class="form-label" for="weburl">{{ __('company.website') }} *</label>
+                <input id="weburl" name="weburl" class="form-control  form-control-lg" placeholder="https:/www.tvrtka.hr" value="{{ old('weburl') }}"  required>
               </div>
             </div>
             <div class="row g-3">

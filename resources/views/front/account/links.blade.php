@@ -68,32 +68,46 @@
             </div>
 
 
-            <div class="mb-4">
+            <div class="mb-4 mt-5 ">
                 <h5 class="fw-semibold">{{ __('Dnevni zadaci (25 klikova)') }}</h5>
+
                 <ul class="list-group mb-3">
-                    @foreach($targets as $i => $target)
-                        @php $slot = $i+1; @endphp
-                        @php $done = in_array($slot, json_decode($session->slots_payload, true) ?? []); @endphp
+                    @php
+                        // dekodiraj slots samo ako postoji session i payload
+                        $slots = [];
+                        if (!empty($session?->slots_payload)) {
+                            $slots = json_decode($session->slots_payload, true) ?: [];
+                        }
+                    @endphp
+
+                    @forelse($targets as $i => $target)
+                        @php
+                            $slot = $i + 1;
+                            $done = in_array($slot, $slots, true);
+                        @endphp
+
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}">{{ $slot }}</span>
                                 {{ $target->t_name ?? '—' }}
                             </div>
-                            <a href="{{ $target->weburl }}"
+
+                            <a href="{{ $target->weburl ?? '#' }}"
                                target="_blank"
                                class="btn btn-sm {{ $done ? 'btn-success disabled' : 'btn-outline-primary task-btn' }}"
                                data-slot="{{ $slot }}"
-                               data-company="{{ $target->id }}">
+                               @if(!empty($target?->id)) data-company="{{ $target->id }}" @endif>
                                 {{ $done ? __('Odrađeno') : __('Posjeti') }}
                             </a>
                         </li>
-
-                    @endforeach
+                    @empty
+                        <li class="list-group-item text-muted">
+                            {{ __('Trenutno nema dostupnih ciljeva.') }}
+                        </li>
+                    @endforelse
                 </ul>
-                <div class="small text-muted">
-                    {{ __('Dovršeno:') }} {{ $session->completed_count }} / {{ $limitPerDay }}
-                </div>
             </div>
+
 
 
         </div>
