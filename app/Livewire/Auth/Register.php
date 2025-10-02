@@ -43,7 +43,7 @@ class Register extends Component
         if (method_exists($user, 'assignRole')) {
             UserDetail::create([
                 'user_id' => $user->id,
-                'fname'   => $request->input('name', ''),
+                'fname'   => $user->name,
                 'role'    => 'customer',
                 'status'  => true,
             ]);
