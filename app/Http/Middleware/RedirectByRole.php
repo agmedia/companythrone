@@ -29,6 +29,16 @@ class RedirectByRole
             if ($user->hasRole('company_owner')) {
                 return redirect()->to(localized_route('account.dashboard'));
             }
+
+            if ($user->hasRole('customer')) {
+                if ($user->company) {
+                    // ako već ima tvrtku, vodi ga na neku drugu stranicu (npr. account dashboard)
+                    return redirect()->to(localized_route('account.dashboard'));
+                }
+
+                // ako nema tvrtku, vodi ga na wizard za unos
+                return redirect()->to(localized_route('companies.create'));
+            }
         }
 
         // Fallback (ako nema Spatie-a): kolona role na users

@@ -1,6 +1,7 @@
 @php
     $avatar = $detail->avatar ? asset($detail->avatar) : asset('media/avatars/default_avatar.png');
 @endphp
+
 <tr>
     <td>{{ $detail->id }}</td>
     <td>
@@ -25,10 +26,10 @@
     <td class="text-muted">{{ $detail->updated_at?->format('Y-m-d H:i') }}</td>
     <td class="text-end">
         <div class="d-inline-flex gap-2">
-            <a href="{{ route('users.edit', $detail) }}" class="btn btn-sm btn-outline-primary rounded-circle" title="@lang('back/common.actions.edit')">
+            <a href="{{ route('users.edit', $detail->user->id) }}" class="btn btn-sm btn-outline-primary rounded-circle" title="@lang('back/common.actions.edit')">
                 <i class="ti ti-edit"></i>
             </a>
-            <form action="{{ route('users.destroy', $detail) }}" method="POST"
+            <form action="{{ route('users.destroy', $detail->user->id) }}" method="POST"
                   onsubmit="return confirm('{{ __('back/users.confirm_delete') }}')" class="d-inline">
                 @csrf @method('DELETE')
                 <button class="btn btn-sm btn-outline-danger rounded-circle" title="@lang('back/common.actions.delete')">

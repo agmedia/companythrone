@@ -22,8 +22,7 @@ class CompanyController extends Controller
     public function update(Request $request)
     {
         $company = auth()->user()->company;
-
-        if (! $company) {
+        if (!$company) {
             abort(404, __('Tvrtka nije pronađena.'));
         }
 
@@ -38,25 +37,59 @@ class CompanyController extends Controller
             'state'       => ['nullable', 'string', 'max:255'],
             'phone'       => ['nullable', 'string', 'max:50'],
             'description' => ['nullable', 'string'],
-            'logo_file'        => ['nullable', 'image', 'max:2048'],
+            'logo_file'   => ['nullable', 'image', 'max:2048'],
             'remove_logo' => ['nullable', 'boolean'],
         ]);
 
-        // 1) Update osnovnih polja bez 'logo'
-        //$company->update(Arr::except($validated, ['logo_file']));
+        // 1) DB dio (osnovna polja + prijevod) u transakciji
+        \DB::transaction(function () use ($company, $validated) {
 
-        // 2) LOGO MediaLibrary
+            // Ažuriraj bazna polja (bez slike)
+            $company->fill([
+                'oib'         => $validated['oib'],
+                'email'       => $validated['email'],
+                'weburl'      => $validated['weburl'],
+                'street'      => $validated['street']     ?? null,
+                'street_no'   => $validated['street_no']  ?? null,
+                'city'        => $validated['city']       ?? null,
+                'state'       => $validated['state']      ?? null,
+                'phone'       => $validated['phone']      ?? null,
+                'description' => $validated['description']?? null,
+            ]);
+            $company->save();
+
+            // Ako koristiš prijevode (t_* polja u company_translations)
+            if (method_exists($company, 'translations')) {
+                $locale = app()->getLocale();
+                $t = $company->translation($locale) ?? $company->translations()->make(['locale' => $locale]);
+
+                $t->name = $validated['name'];
+                if (!empty($validated['description'])) {
+                    $t->description = $validated['description'];
+                }
+
+                if (empty($t->slug)) {
+                    $t->slug = \Str::slug($t->name) ?: (string) $company->getKey();
+                }
+
+                $company->translations()->save($t);
+            } else {
+                // Ako je name na baznom modelu
+                $company->name = $validated['name'];
+                if (empty($company->slug)) {
+                    $company->slug = \Str::slug($company->name) ?: (string) $company->getKey();
+                }
+                $company->save();
+            }
+        });
+
+        // 2) Logo upload/brisanje izvan transakcije (filesystem)
         if ($request->boolean('remove_logo')) {
             $company->clearMediaCollection('logo');
         } elseif ($request->hasFile('logo_file')) {
-
-            // Ako PHP limit “pojede” file, hasFile će biti false — pa ovo NIJE ni pokrenuto.
-            // Ako dođe do ove linije, dodatno provjeri valjanost uploada:
-            if (! $request->file('logo_file')->isValid()) {
+            if (!$request->file('logo_file')->isValid()) {
                 return back()->withErrors(['logo_file' => __('Neispravan upload datoteke (provjeri veličinu i tip).')])->withInput();
             }
-
-            // singleFile() će automatski zamijeniti stari logo
             $company->addMediaFromRequest('logo_file')->toMediaCollection('logo');
         }
 
@@ -64,5 +97,6 @@ class CompanyController extends Controller
             ->route('account.company.edit', app()->getLocale())
             ->with('status', __('Podaci o tvrtki su uspješno ažurirani.'));
     }
+
 
 }
