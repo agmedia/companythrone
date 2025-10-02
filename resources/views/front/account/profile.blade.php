@@ -13,26 +13,58 @@
                 <form method="post" action="{{ route('account.profile.update') }}" class="vstack gap-3">
                     @csrf
 
-                    <div class="mb-3">
-                        <label for="name" class="form-label">{{ __('Ime i prezime') }}</label>
-                        <input id="name" name="name" class="form-control" value="{{ old('name', auth()->user()->name) }}" required>
-                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">{{ __('Korisničko ime') }}</label>
+                            <input id="name" name="name" class="form-control" value="{{ old('name', auth()->user()->name) }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">{{ __('E-mail') }}</label>
+                            <input id="email" type="email" name="email" class="form-control" value="{{ old('email', auth()->user()->email) }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Ime</label>
+                            <input type="text" name="fname" class="form-control" value="{{ old('fname',$user->detail->fname ?? '') }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Prezime</label>
+                            <input type="text" name="lname" class="form-control" value="{{ old('lname',$user->detail->lname ?? '') }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Telefon</label>
+                            <input type="text" name="phone" class="form-control" value="{{ old('phone',$user->detail->phone ?? '') }}">
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">{{ __('E-mail') }}</label>
-                        <input id="email" type="email" name="email" class="form-control"
-                               value="{{ old('email', auth()->user()->email) }}" required>
-                    </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Adresa</label>
+                            <input type="text" name="address" class="form-control" value="{{ old('address',$user->detail->address ?? '') }}">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Poštanski broj</label>
+                            <input type="text" name="zip" class="form-control" value="{{ old('zip',$user->detail->zip ?? '') }}">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Grad</label>
+                            <input type="text" name="city" class="form-control" value="{{ old('city',$user->detail->city ?? '') }}">
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">{{ __('Nova lozinka') }}</label>
-                        <input id="password" type="password" name="password" class="form-control">
-                        <div class="form-text">{{ __('Ostavite prazno ako ne mijenjate lozinku.') }}</div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Država</label>
+                            <input type="text" name="state" class="form-control" value="{{ old('state',$user->detail->state ?? '') }}">
+                        </div>
+                        <div class="col-md-6 mb-3" style="display: block;">
+                            <button type="submit" class="btn btn-primary">{{ __('Spremi promjene') }}</button>
+                        </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">{{ __('Spremi promjene') }}</button>
                 </form>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <livewire:settings.password :user="auth()->user()" />
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 @endsection

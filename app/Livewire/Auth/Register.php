@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use App\Models\UserDetail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -40,6 +41,13 @@ class Register extends Component
 
         // ➕ dodijeli rolu company_owner
         if (method_exists($user, 'assignRole')) {
+            UserDetail::create([
+                'user_id' => $user->id,
+                'fname'   => $request->input('name', ''),
+                'role'    => 'company_owner',
+                'status'  => true,
+            ]);
+
             // Spatie\Permission\Traits\HasRoles na User modelu
             $user->assignRole('company_owner');
         } elseif (Schema::hasColumn($user->getTable(), 'role')) {

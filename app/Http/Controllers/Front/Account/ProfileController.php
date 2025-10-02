@@ -11,7 +11,9 @@ class ProfileController extends Controller
 
     public function edit()
     {
-        return view('front.account.profile');
+        $user = auth()->user();
+
+        return view('front.account.profile', compact('user'));
     }
 
 
@@ -21,17 +23,25 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'password' => ['nullable', 'string', 'min:8'],
+            'email'    => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id]
         ]);
 
-        if ( ! empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
+        $updated = $user->update($validated);
 
-        $user->update($validated);
+        if ($updated) {
+            $user->detail()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'fname' => $request->input('fname', ''),
+                    'lname' => $request->input('lname', ''),
+                    'address' => $request->input('address', ''),
+                    'zip'     => $request->input('zip', ''),
+                    'city'    => $request->input('city', ''),
+                    'state'   => $request->input('state', ''),
+                    'phone'   => $request->input('phone', ''),
+                ]
+            );
+        }
 
         return back()->with('status', __('Podaci su uspješno ažurirani.'));
     }
