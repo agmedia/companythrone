@@ -41,11 +41,11 @@
         </div>
     </section>
     @if($banners->isNotEmpty())
-        <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
-            <div class="position-relative mb-5">
+        <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-0 my-xxl-3">
+            <div class="position-relative mb-0">
 
                 <!-- Slider -->
-                <div class="swiper px-2 position-relative" data-swiper='{
+                <div class="swiper px-0 position-relative" data-swiper='{
       "slidesPerView": 1,
       "spaceBetween": 16,
       "loop": true,
@@ -81,12 +81,12 @@
 
                     <!-- Navigation (unutra slidera, preko slika) -->
                     <button type="button" id="home-banners-prev"
-                            class="btn btn-icon btn-outline-secondary rounded-circle position-absolute top-50 start-0 translate-middle-y z-3"
+                            class="btn btn-icon btn-secondary rounded-circle position-absolute top-50 start-0 translate-middle-y z-3"
                             aria-label="Prev">
                         <i class="fi-chevron-left fs-lg"></i>
                     </button>
                     <button type="button" id="home-banners-next"
-                            class="btn btn-icon btn-outline-secondary rounded-circle position-absolute top-50 end-0 translate-middle-y z-3"
+                            class="btn btn-icon btn-secondary rounded-circle position-absolute top-50 end-0 translate-middle-y z-3"
                             aria-label="Next">
                         <i class="fi-chevron-right fs-lg"></i>
                     </button>
@@ -100,65 +100,10 @@
 
 
 
-    <!-- Popular categories -->
-   {{--  @if(isset($cats) && $cats->count())
-        <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
-            <h2 class="text-center pb-2 pb-sm-3 pb-lg-4 mb-xl-4">Currently in demand</h2>
 
-            <!-- Row of items that turns into carousel on screens < 992px wide (lg breakpoint) -->
-            <div class="swiper" data-swiper='{
-          "slidesPerView": 2,
-          "spaceBetween": 24,
-          "pagination": {
-            "el": ".swiper-pagination",
-            "clickable": true
-          },
-          "breakpoints": {
-            "500": {
-              "slidesPerView": 3
-            },
-            "768": {
-              "slidesPerView": 4
-            },
-            "992": {
-              "slidesPerView": 5
-            }
-          }
-        }'>
-                <div class="swiper-wrapper">
-                    @foreach($cats as $cat)
-                        @php $children = $cat->children->take(3); @endphp
-                        @if($children->count())
-                            @foreach($children as $child)
-                                <a class="badge rounded-pill text-bg-secondary text-decoration-none"
-                                   href="{{ localized_route('categories.show', $child) }}">{{ $child->name }}</a>
-
-                                <!-- Category -->
-                                <div class="swiper-slide">
-                                    <article class="hover-effect-scale position-relative text-center">
-                                        <div class="bg-body-tertiary rounded-circle overflow-hidden mx-auto" style="width: 132px">
-                                            <div class="ratio ratio-1x1 hover-effect-target">
-                                                <img src="{{ $child->getFirstMediaUrl('icon') }}" alt="Image">
-                                            </div>
-                                        </div>
-                                        <h3 class="h6 pt-3 mb-0">
-                                            <a class="hover-effect-underline stretched-link" href="{{ localized_route('categories.show', $child) }}">{{ $child->name }}</a>
-                                        </h3>
-                                    </article>
-                                </div>
-                            @endforeach
-                        @endif
-                    @endforeach
-                    <!-- Pagination (Bullets) -->
-                    <div class="swiper-pagination position-static mt-3"></div>
-                </div>
-            </div>
-        </section>
-    @endif
---}}
 
     <!-- Popular projects near you -->
-    <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
+    <section class="container pt-0 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
         <div class="row align-items-center">
 
             <!-- Banner -->
