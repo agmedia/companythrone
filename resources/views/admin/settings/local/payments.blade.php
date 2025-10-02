@@ -53,7 +53,7 @@
 
     {{-- Provider modals --}}
     @foreach($providers as $code => $def)
-        @includeIf('admin.settings.shop.payments.modals.' . $code, ['locales' => $locales, 'geozones' => $geo_zones])
+        @includeIf('admin.settings.local.payments.modals.' . $code, ['locales' => $locales, 'geozones' => $geo_zones])
     @endforeach
 @endsection
 
