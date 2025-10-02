@@ -185,7 +185,7 @@
                     <div class="col-md-12">
                         <label class="form-label">Kategorije</label>
                         <select name="category_ids[]" class="form-select" multiple>
-                            @foreach(\App\Models\Back\Catalog\Category::where('group', 'companies')->orderBy('id')->get() as $cat)
+                            @foreach(\App\Models\Back\Catalog\Category::where('group', 'categories')->orderBy('id')->get() as $cat)
                                 <option value="{{ $cat->id }}"
                                         @selected(isset($company) && $company->categories->pluck('id')->contains($cat->id))>
                                     {{ $cat->translations->firstWhere('locale', app()->getLocale())->name ?? $cat->id }}
