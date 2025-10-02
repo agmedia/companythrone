@@ -59,7 +59,7 @@ class CompanyController extends Controller
 
         $company = $this->currentDraft() ?? new Company();
 
-        DB::transaction(function () use (&$company, $data) {
+        DB::transaction(function () use (&$company, $data, $request) {
             // osnovna polja
             $company->fill([
                 'oib'          => $data['oib'] ?? null,
@@ -123,11 +123,11 @@ class CompanyController extends Controller
     /** STEP 2: CHOOSE PAYMENT (GET /add-payment) */
     public function payment(Request $request, SettingsManager $settings)
     {
-        $company   = $this->requireDraft();
-        $payments  = $settings->paymentsActive(); // aktivne opcije iz DB (+fallback config)
+        $company      = $this->requireDraft();
+        $payments     = $settings->paymentsActive(); // provideri
         $selectedCode = $request->session()->get(self::S_PLAN);
 
-        // ako nema payment opcija, preskoči na review
+        // Ako nema payment opcija, preskoči na review
         if (empty($payments)) {
             $request->session()->forget(self::S_PLAN);
             return view('front.company-review', [
@@ -136,8 +136,34 @@ class CompanyController extends Controller
             ]);
         }
 
+        // === Cijena iz configa (NETO) + PDV iz settings (JSON lista) ===
+        $planConf = config('settings.payments.plans.default', [
+            'price'    => 20.00,   // neto
+            'currency' => 'EUR',
+            'period'   => 'yearly',
+            'tax_code' => 'tax',
+        ]);
+
+        // helper za PDV stopu (koristi onaj što smo dodali) ili quick inline dohvat:
+        $vatRate = $this->getVatRate(); // npr. 25.0
+
+        $net      = (float) ($planConf['price'] ?? 0);
+        $gross    = round($net * (1 + $vatRate/100), 2);
+        $currency = (string) ($planConf['currency'] ?? 'EUR');
+        $period   = in_array(($planConf['period'] ?? 'yearly'), ['monthly','yearly'], true)
+            ? $planConf['period'] : 'yearly';
+
+        // Ubrizgaj display polja u svaki provider (listu $payments)
+        $payments = collect($payments)->map(function ($p) use ($gross, $currency, $period) {
+            $p['display_price_gross'] = $gross;     // npr. 25.00
+            $p['display_currency']    = $currency;  // EUR
+            $p['display_period']      = $period;    // 'yearly' ili 'monthly'
+            return $p;
+        })->all();
+
         return view('front.company-payment', compact('company', 'payments', 'selectedCode'));
     }
+
 
     /** STEP 3: REVIEW (POST /review) */
     public function review(Request $request, SettingsManager $settings)

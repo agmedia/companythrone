@@ -34,11 +34,20 @@
                                 @endif
                             </div>
                             <div class="col-4 col-md-2">
-                                @if(($p['price'] ?? 0) > 0)
-                                    <div class="h5 text-end text-nowrap mb-0">{{ rtrim(rtrim(number_format($p['price'], 2, '.', ''), '0'), '.') }} {{ $p['currency'] ?? 'EUR' }} <span class="fs-sm ">/ godišnje</span> </div>
+                                @if(($p['display_price_gross'] ?? 0) > 0)
+                                    <div class="h5 text-end text-nowrap mb-0">
+                                        {{ rtrim(rtrim(number_format($p['display_price_gross'], 2, '.', ''), '0'), '.') }}
+                                        {{ $p['display_currency'] ?? 'EUR' }}
+                                        <span class="fs-sm ">
+      / {{ ($p['display_period'] ?? 'yearly') === 'monthly' ? __('mjesečno') : __('godišnje') }}
+    </span>
+                                    </div>
                                 @else
-                                    <div class="h5 text-end text-nowrap mb-0"><span class="fs-sm ">Besplatno</span></div>
+                                    <div class="h5 text-end text-nowrap mb-0">
+                                        <span class="fs-sm ">{{ __('Besplatno') }}</span>
+                                    </div>
                                 @endif
+
                             </div>
                         </div>
                     </fieldset>
