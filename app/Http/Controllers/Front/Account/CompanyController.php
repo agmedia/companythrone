@@ -7,7 +7,8 @@ use App\Models\Back\Catalog\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 class CompanyController extends Controller
 {
     public function edit()
@@ -42,7 +43,7 @@ class CompanyController extends Controller
         ]);
 
         // 1) DB dio (osnovna polja + prijevod) u transakciji
-        \DB::transaction(function () use ($company, $validated) {
+        DB::transaction(function () use ($company, $validated) {
 
             // Ažuriraj bazna polja (bez slike)
             $company->fill([
@@ -69,7 +70,7 @@ class CompanyController extends Controller
                 }
 
                 if (empty($t->slug)) {
-                    $t->slug = \Str::slug($t->name) ?: (string) $company->getKey();
+                    $t->slug = Str::slug($t->name) ?: (string) $company->getKey();
                 }
 
                 $company->translations()->save($t);
@@ -77,7 +78,7 @@ class CompanyController extends Controller
                 // Ako je name na baznom modelu
                 $company->name = $validated['name'];
                 if (empty($company->slug)) {
-                    $company->slug = \Str::slug($company->name) ?: (string) $company->getKey();
+                    $company->slug = Str::slug($company->name) ?: (string) $company->getKey();
                 }
                 $company->save();
             }
