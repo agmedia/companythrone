@@ -60,7 +60,8 @@ class SubscriptionController extends Controller
     public function update(UpdateSubscriptionRequest $request, Subscription $subscription)
     {
         $subscription->update($request->validated());
-        return redirect()->route('admin.subscriptions.show', $subscription)->with('success', 'Subscription updated.');
+        return redirect()->route('admin.subscriptions.index')
+            ->with('success', 'Subscription updated.');
     }
 
     // ---------- Quick actions ----------
