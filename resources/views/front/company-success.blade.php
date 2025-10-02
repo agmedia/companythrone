@@ -62,14 +62,14 @@
                                         <td>
                                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-2">
                                                 <strong>{{ $planData['name'] ?? '—' }}</strong>
-                                                @if(isset($planData['price']) && is_numeric($planData['price']))
+                                               {{--  @if(isset($planData['price']) && is_numeric($planData['price']))
                                                     <span class="text-muted">
                                                         — {{ rtrim(rtrim(number_format($planData['price'], 2, ',', '.'), '0'), ',') }}
                                                         {{ $planData['currency'] ?? 'EUR' }}
                                                     </span>
-                                                @endif
+                                                @endif --}}
                                                 <a href="{{ localized_route('companies.payment') }}" class="btn btn-sm btn-outline-secondary ms-md-auto">
-                                                    {{ __('common.change') ?? 'Promijeni' }}
+                                                    {{'Promijeni' }}
                                                 </a>
                                             </div>
                                             @if(!empty($planData['short_description']))
@@ -108,9 +108,7 @@
 
                         {{-- Korisne akcije (fallback, ako netko želi preskočiti plaćanje) --}}
                         <div class="d-flex mt-4 gap-2">
-                            <a href="{{ localized_route('companies.review') }}" class="btn btn-outline-secondary">
-                                {{ __('common.back') ?? 'Natrag' }}
-                            </a>
+
                             <a href="{{ localized_route('home') }}" class="btn btn-light">
                                 {{ __('Početna') }}
                             </a>
