@@ -107,8 +107,8 @@
 
             </div>
             <div>
-              <label class="form-label" for="logo">{{ __('company.logo') ?? 'Logo' }}</label>
-              <input id="logo" type="file" name="logo" class="form-control  form-control-lg">
+                <label for="logo_file" class="form-label">{{ __('company.logo') }}</label>
+                <input id="logo_file" type="file" name="logo_file" class="form-control form-control-lg">
             </div>
             <div class="d-flex  mt-3 gap-2">
               <button type="submit" class="btn btn-lg btn-primary ms-auto">{{ __('company.submit') }}  <i class="fi-chevron-right fs-lg ms-1 me-n2"></i></button>

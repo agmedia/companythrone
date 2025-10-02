@@ -17,7 +17,27 @@ return [
                 'enabled' => true,
                 'driver'  => \App\Payments\Providers\Wspay\Driver::class,
             ],
-            // add more ...
+            // ...
+        ],
+
+        // 💶 Planovi pretplate
+        'plans' => [
+            'default' => [
+                'label'    => 'Godišnja pretplata',
+                'price'    => 20.00,   // neto cijena (bez PDV-a)
+                'currency' => 'EUR',
+                'period'   => 'yearly', // monthly | yearly
+                'tax_code' => 'tax',    // kod u settings tablici (gdje je spremljen PDV %)
+            ],
+
+            // primjer dodatnog plana:
+            // 'pro' => [
+            //     'label'    => 'Pro Plan',
+            //     'price'    => 50.00,
+            //     'currency' => 'EUR',
+            //     'period'   => 'monthly',
+            //     'tax_code' => 'tax',
+            // ],
         ],
     ],
 

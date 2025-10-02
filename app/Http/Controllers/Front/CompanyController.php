@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Models\Back\Settings\Settings;
+
+use App\Models\Back\Billing\Subscription;
+use App\Models\Back\Billing\Payment;
+
 
 class CompanyController extends Controller
 {
@@ -48,6 +53,7 @@ class CompanyController extends Controller
             'description' => ['nullable','string'],
             'categories'  => ['array'],
             'categories.*'=> ['integer','exists:categories,id'],
+            'logo_file' => ['nullable','image','max:2048'],
 
         ]);
 
@@ -84,6 +90,15 @@ class CompanyController extends Controller
                 }
 
                 $company->save();
+                // LOGO upload (nakon $company->save())
+                if ($request->hasFile('logo_file')) {
+                    $file = $request->file('logo_file');
+                    if (!$file->isValid()) {
+                        throw new \RuntimeException('Neispravan upload datoteke.');
+                    }
+                    // Ako u modelu imaš ->singleFile() za 'logo', stari će se automatski zamijeniti.
+                    $company->addMediaFromRequest('logo_file')->toMediaCollection('logo');
+                }
                 $company->translations()->save($t);
             } else {
                 // ako je ime na baznom modelu
@@ -151,38 +166,60 @@ class CompanyController extends Controller
      * - Ne objavljuje tvrtku.
      * - Rendera driverov Blade s pripremljenim $paymentData (npr. WSPay hidden polja i MD5).
      */
+
+
     public function success(Request $request, SettingsManager $settings)
     {
         $company = $this->requireDraft();
 
-        // odabrani plan iz sesije
-        $code = $request->session()->get(self::S_PLAN);
-        $plan = $code ? $settings->paymentByCode($code) : null;
+        // ============ 1) Odabrani PAYMENT PROVIDER iz sesije ============
+        $providerCode = $request->session()->get(self::S_PLAN); // npr. 'wspay' ili 'bank'
+        $selectedPlan = $providerCode ? $settings->paymentByCode($providerCode) : null;
 
+        // ============ 2) Učitaj PLAN iz config/settings.php ============
+        // Ako imaš više planova, promijeni 'default' u ključ koji želiš.
+        $planConf  = config('settings.payments.plans.default', [
+            'label'    => 'Godišnja pretplata',
+            'price'    => 20.00,  // NETO
+            'currency' => 'EUR',
+            'period'   => 'yearly',
+            'tax_code' => 'tax',
+        ]);
+
+        $netPrice = (float) ($planConf['price'] ?? 0);         // neto (bez PDV-a)
+        $currency = (string) ($planConf['currency'] ?? 'EUR');
+        $period   = (string) ($planConf['period'] ?? 'yearly'); // očekuje: 'yearly' ili 'monthly'
+
+        // ============ 3) PDV stopa iz baze (settings.code = 'tax') ============
+        $taxCode  = (string) ($planConf['tax_code'] ?? 'tax');
+        $vatRate = $this->getVatRate(/* npr. 1 za HR */);
+
+        // Neto → Bruto
+        $gross    = round($netPrice * (1 + $vatRate / 100), 2);
+        $net      = round($netPrice, 2);
+        $tax      = round($gross - $net, 2);
+
+        // ============ 4) Priprema payment driver view-a kao i do sad ============
         $paymentView = null;
         $paymentData = [];
-        $selectedPlan = $plan; // za prikaz u tablici
-
-        if ($plan && !empty($plan['code'])) {
-            // povuci driver iz configa: settings.payments.providers.{code}.driver
-            $providerConf = config('settings.payments.providers.' . $plan['code'], []);
+        if ($selectedPlan && !empty($selectedPlan['code'])) {
+            $providerConf = config('settings.payments.providers.' . $selectedPlan['code'], []);
             $driverFqcn   = $providerConf['driver'] ?? null;
 
             if ($driverFqcn && class_exists($driverFqcn) && method_exists($driverFqcn, 'frontBlade')) {
-                // merge default config + DB data
+                // merge default config + DB data (iz SettingsManagera)
                 $provider = array_replace_recursive(
                     $driverFqcn::defaultConfig(),
-                    (array) ($plan['data'] ?? [])
+                    (array) ($selectedPlan['data'] ?? [])
                 );
 
-                // pripremi kontekst
                 $ctx = [
                     'order_id' => $company->id,
-                    'total'    => $plan['price'] ?? 0,
+                    'total'    => $gross, // šaljemo BRUTO izračunato iz plana + PDV-a
                     'customer' => [
                         'firstname' => optional(auth()->user())->first_name ?? '',
                         'lastname'  => optional(auth()->user())->last_name ?? '',
-                        'address'   => trim(($company->street ?? '').' '.($company->street_no ?? '')),
+                        'address'   => trim(($company->street ?? '') . ' ' . ($company->street_no ?? '')),
                         'city'      => $company->city ?? '',
                         'country'   => $company->state ?? 'HR',
                         'postcode'  => $company->postcode ?? '',
@@ -190,51 +227,138 @@ class CompanyController extends Controller
                         'email'     => $company->email ?? (optional(auth()->user())->email ?? ''),
                     ],
                     'lang'   => app()->getLocale() === 'hr' ? 'HR' : 'EN',
-                    // povratni URL-ovi (možeš prilagoditi na vlastite callback rute)
                     'return' => localized_route('companies.show', [
                         'companyBySlug' => $company->t_slug
-                                           ?? (method_exists($company, 'translation') ? optional($company->translation(app()->getLocale()))->slug : null)
-                                              ?? (string) $company->getKey(),
+                            ?? (method_exists($company, 'translation') ? optional($company->translation(app()->getLocale()))->slug : null)
+                                ?? (string) $company->getKey(),
                     ]),
                     'cancel' => localized_route('companies.review'),
                 ];
 
                 $paymentView = $driverFqcn::frontBlade();
 
-                // ako driver ima buildFrontData, koristi ga; inače očekuješ da si $paymentData već složio
                 if (method_exists($driverFqcn, 'buildFrontData')) {
                     $paymentData = $driverFqcn::buildFrontData($provider, $ctx);
                 } else {
-                    // minimum koji WSPay blade očekuje (ako nema helpera)
                     $paymentData = array_merge([
-                        'action'   => $provider['gateway'][($provider['test'] ?? 1) ? 'test' : 'live'] ?? '',
-                        'shop_id'  => $provider['shop_id'] ?? '',
+                        'action'  => $provider['gateway'][($provider['test'] ?? 1) ? 'test' : 'live'] ?? '',
+                        'shop_id' => $provider['shop_id'] ?? '',
                     ], $ctx);
                 }
             }
         }
 
-        // “sažetak” info (order i payment objekti za tablicu)
+        // ============ 5) Spremi SUBSCRIPTION + PAYMENT (idempotentno) ============
+        DB::transaction(function () use ($company, $providerCode, $gross, $net, $tax, $vatRate, $currency, $period) {
+            $start     = \Carbon\Carbon::today();
+            $periodEnd = $period === 'monthly'
+                ? (clone $start)->addMonth()->subDay()
+                : (clone $start)->addYear()->subDay(); // default yearly
+            $nextRen   = $period === 'monthly'
+                ? (clone $start)->addMonth()
+                : (clone $start)->addYear();
+
+            // Subscription: cijena = BRUTO (što stvarno plaća korisnik)
+            $subscription = \App\Models\Back\Billing\Subscription::firstOrCreate(
+                [
+                    'company_id' => $company->id,
+                    'plan'       => 'default',               // ako imaš više planova, zamijeni ključem
+                    'period'     => $period === 'monthly' ? 'monthly' : 'yearly',
+                    'starts_on'  => $start->toDateString(),
+                ],
+                [
+                    'price'           => $gross,             // BRUTO
+                    'currency'        => $currency,
+                    'status'          => 'active',
+                    'is_auto_renew'   => 1,
+                    'ends_on'         => null,               // open-ended dok se ne otkaže
+                    'next_renewal_on' => $nextRen->toDateString(),
+                    'trial_ends_on'   => null,
+                ]
+            );
+
+            // Payment – pokriva 1 period od starta
+            \App\Models\Back\Billing\Payment::firstOrCreate(
+                [
+                    'company_id'      => $company->id,
+                    'subscription_id' => $subscription->id,
+                    'status'          => 'pending',
+                    'period_start'    => $start->toDateString(),
+                    'period_end'      => $periodEnd->toDateString(),
+                ],
+                [
+                    'amount'       => $gross,               // BRUTO
+                    'vat_rate'     => $vatRate,             // npr. 25.00
+                    'tax_amount'   => $tax,
+                    'net_amount'   => $net,
+                    'currency'     => $currency,
+                    'issued_at'    => now(),
+                    'paid_at'      => null,
+                    'provider'     => $providerCode,        // 'wspay', 'bank', ...
+                    'method'       => $providerCode === 'bank' ? 'bank' : 'card',
+                    'provider_ref' => null,
+                    'invoice_no'   => null,
+                    'meta'         => null,
+                ]
+            );
+        });
+
+        // ============ 6) “Sažetak” za prikaz ============
         $order = (object)[
-            'number'     => ($paymentData['order_id'] ?? ('CMP-'.str_pad($company->id, 6, '0', STR_PAD_LEFT))),
+            'number'     => ($paymentData['order_id'] ?? ('CMP-' . str_pad($company->id, 6, '0', STR_PAD_LEFT))),
             'created_at' => now(),
         ];
         $payment = (object)[
-            'amount'   => $paymentData['total'] ?? ($selectedPlan['price'] ?? null),
-            'currency' => $selectedPlan['currency'] ?? 'EUR',
+            'amount'   => $paymentData['total'] ?? $gross, // prikaži bruto
+            'currency' => $currency,
             'reference'=> $order->number,
-            // 'receipt_url' => ...
         ];
 
-        return view('front.company-success', compact(
-            'company',
-            'selectedPlan',
-            'paymentView',
-            'paymentData',
-            'order',
-            'payment'
-        ));
+        return view('front.company-success', [
+            'company'      => $company,
+            'selectedPlan' => $selectedPlan, // provider info za prikaz
+            'paymentView'  => $paymentView,
+            'paymentData'  => $paymentData,
+            'order'        => $order,
+            'payment'      => $payment,
+        ]);
     }
+
+
+    private function getVatRate(?int $geoZoneId = null): float
+    {
+        $row = Settings::query()
+            ->where('code', 'tax')
+            ->where('key', 'list')
+            ->where('json', 1)
+            ->latest('id')
+            ->first();
+
+        if (!$row) {
+            return 25.0; // fallback
+        }
+
+        $items = json_decode($row->value ?? '[]', true);
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($items)) {
+            return 25.0;
+        }
+
+        // prioritet: aktivna stavka koja se poklapa s geo_zonom (ako je zadana),
+        // inače prva aktivna
+        $active = collect($items)
+            ->filter(fn($it) => !empty($it['status']))
+            ->when($geoZoneId, fn($c) => $c->where('geo_zone', $geoZoneId))
+            ->sortBy([
+                ['sort_order', 'asc'],
+                ['id', 'asc'],
+            ])
+            ->first();
+
+        $rate = isset($active['rate']) ? (float)$active['rate'] : 25.0;
+
+        return $rate > 0 ? $rate : 25.0;
+    }
+
 
     /* ================= Helpers ================= */
 
