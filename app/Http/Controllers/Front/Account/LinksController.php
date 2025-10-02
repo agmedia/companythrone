@@ -40,11 +40,23 @@ class LinksController extends Controller
                 ['slots_payload' => json_encode([])]
             );
 
+            // Izvuci payload i dekodiraj u array
+            $usedSlots = json_decode($session->slots_payload, true) ?? [];
+
+// Dohvati kompanije koje nisu već odabrane
             $targets = Company::query()
+                ->where('id', '!=', $company->id)
+                ->where('is_published', 1)
+                ->whereNotIn('id', $usedSlots) // filtriraj već kliknute
+                ->inRandomOrder()
+                ->limit(25 - count($usedSlots)) // koliko još nedostaje do 25
+                ->get(['id', 'weburl']);
+
+           /* $targets = Company::query()
                 ->where('id', '!=', $company->id)
                 ->inRandomOrder()
                 ->limit(25)
-                ->get(['id', 'weburl']);
+                ->get(['id', 'weburl']); */
         } else {
             $session = null;
             // ako user nema company, samo daj random targete (bez isključenja vlastite)

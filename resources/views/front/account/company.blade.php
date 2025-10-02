@@ -39,9 +39,9 @@
                                            value="{{ old('email', $company->email ?? '') }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="website" class="form-label">{{ __('company.website') }} *</label>
-                                    <input id="website" name="website" class="form-control form-control-lg"
-                                           value="{{ old('website', $company->weburl ?? '') }}" placeholder="https://www.tvrtka.hr" required>
+                                    <label for="weburl" class="form-label">{{ __('company.weburl') }} *</label>
+                                    <input id="weburl" name="weburl" class="form-control form-control-lg"
+                                           value="{{ old('weburl', $company->weburl ?? '') }}" placeholder="https://www.tvrtka.hr" required>
                                 </div>
                             </div>
 
@@ -121,14 +121,27 @@
                             </script>
 
                             <div>
-                                <label for="logo" class="form-label">{{ __('company.logo') }}</label>
-                                <input id="logo" type="file" name="logo" class="form-control form-control-lg">
-                                @if(!empty($company->logo))
-                                    <div class="mt-2">
-                                        <img src="{{ $company->logo_url }}" alt="Logo" height="60">
+                                <label for="logo_file" class="form-label">{{ __('company.logo') }}</label>
+                                <input id="logo_file" type="file" name="logo_file" class="form-control form-control-lg">
+
+                                @if(!empty($company->getFirstMediaUrl('logo')))
+                                    <div class="mt-2 row align-items-center">
+                                        <div class="col-md-3">
+                                            <img src="{{ $company->getFirstMediaUrl('logo') }}" class="img-thumbnail" alt="Logo" height="60">
+                                        </div>
+                                        <div class="col-md-9 d-flex align-items-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="1" id="remove_logo" name="remove_logo">
+                                                <label class="form-check-label" for="remove_logo">
+                                                    {{ __('Ukloni postojeći logo') }}
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endif
                             </div>
+
+
 
                             <div class="d-flex mt-3 gap-2">
                                 <button type="submit" class="btn btn-lg btn-primary ms-auto">
