@@ -57,7 +57,7 @@
                 <div class="col-md-3">
                     <label class="form-label">Uloga</label>
                     <select name="role" class="form-select">
-                        @foreach(['admin','editor','company_owner'] as $role)
+                        @foreach(['admin','editor','company_owner','customer'] as $role)
                             <option value="{{ $role }}" @selected(old('role',$user->detail->role ?? '') === $role)>{{ __('back/users.tabs.'.$role) }}</option>
                         @endforeach
                     </select>

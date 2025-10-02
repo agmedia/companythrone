@@ -15,11 +15,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $role  = $request->string('role')->toString();
+
         if ( ! $role) {
             $role = 'company_owner';
 
             return redirect()->route('users.index', ['role' => $role]);
         }
+
         $users = UserDetail::with('user')
                            ->where('role', $role)
                            ->latest('updated_at')
@@ -80,7 +82,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-            'role'     => ['required', 'in:master,admin,manager,editor,company_owner,customer'],
+            'role'     => ['required', 'in:master,admin,editor,company_owner,customer'],
         ]);
 
         $user->update([

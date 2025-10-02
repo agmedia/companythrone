@@ -44,15 +44,15 @@ class Register extends Component
             UserDetail::create([
                 'user_id' => $user->id,
                 'fname'   => $request->input('name', ''),
-                'role'    => 'company_owner',
+                'role'    => 'customer',
                 'status'  => true,
             ]);
 
             // Spatie\Permission\Traits\HasRoles na User modelu
-            $user->assignRole('company_owner');
+            $user->assignRole('customer');
         } elseif (Schema::hasColumn($user->getTable(), 'role')) {
             // fallback: plain kolona "role" na users tablici
-            $user->forceFill(['role' => 'company_owner'])->save();
+            $user->forceFill(['role' => 'customer'])->save();
         }
 
         Auth::login($user);
