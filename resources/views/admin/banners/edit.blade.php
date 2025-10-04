@@ -16,8 +16,8 @@
                 @csrf @if($isEdit) @method('PUT') @endif
 
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">{{ $isEdit ? 'Edit banner' : 'Create banner' }}</h5>
-                    <a href="{{ route('banners.index') }}" class="btn btn-light">Back</a>
+                    <h5 class="mb-0">{{ $isEdit ? 'Uredi baner' : 'Kreiraj baner' }}</h5>
+                    <a href="{{ route('banners.index') }}" class="btn btn-light">Povratak</a>
                 </div>
 
                 <div class="card-body">
@@ -25,27 +25,27 @@
                         <div class="col-md-3">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                @foreach(['draft'=>'Draft','active'=>'Active','archived'=>'Archived'] as $k=>$v)
+                                @foreach(['draft'=>'Nacrt','active'=>'Aktivan','archived'=>'Arhiviran'] as $k=>$v)
                                     <option value="{{ $k }}" @selected(old('status', $banner->status ?? 'draft') === $k)>{{ $v }}</option>
                                 @endforeach
                             </select>
                             @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        {{-- I18N: tabs po jezicima --}}
+                        {{-- I18N: kartice po jezicima --}}
                         <div class="col-12">
-                           {{--  <label class="form-label">Translations</label>
-                            <ul class="nav nav-pills flex-wrap justify-content-end mb-2">
-                                @foreach($locales as $code => $name)
-                                    <li class="nav-item me-2 mb-2">
-                                        <a class="nav-link @if ($code == $currentLocale) active @endif" data-bs-toggle="pill" href="#tr-{{ $code }}">
-                                            <img class="me-1" width="18" src="{{ asset('media/flags/' . $code . '.png') }}" />
-                                            {{ strtoupper($code) }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
---}}
+                            {{--  <label class="form-label">Prijevodi</label>
+                             <ul class="nav nav-pills flex-wrap justify-content-end mb-2">
+                                 @foreach($locales as $code => $name)
+                                     <li class="nav-item me-2 mb-2">
+                                         <a class="nav-link @if ($code == $currentLocale) active @endif" data-bs-toggle="pill" href="#tr-{{ $code }}">
+                                             <img class="me-1" width="18" src="{{ asset('media/flags/' . $code . '.png') }}" />
+                                             {{ strtoupper($code) }}
+                                         </a>
+                                     </li>
+                                 @endforeach
+                             </ul>
+ --}}
                             <div class="tab-content">
                                 @foreach($locales as $code => $name)
                                     @php
@@ -54,7 +54,7 @@
                                     <div id="tr-{{ $code }}" class="tab-pane fade @if ($code == $currentLocale) show active @endif">
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <label class="form-label">Title ({{ strtoupper($code) }})</label>
+                                                <label class="form-label">Naslov ({{ strtoupper($code) }})</label>
                                                 <input type="text" class="form-control @error("tr.$code.title") is-invalid @enderror"
                                                        name="tr[{{ $code }}][title]" value="{{ old("tr.$code.title", $t?->title) }}">
                                                 @error("tr.$code.title") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -75,9 +75,9 @@
                             </div>
                         </div>
 
-                        {{-- Media --}}
+                        {{-- Mediji --}}
                         <div class="col-md-6">
-                            <label class="form-label">Image</label>
+                            <label class="form-label">Slika</label>
                             <input type="file" name="image" class="filepond" accept="image/*">
                             @if($thumb)
                                 <div class="form-text mt-2">
@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" value="1" id="remove_image" name="remove_image">
-                                    <label class="form-check-label" for="remove_image">Remove image</label>
+                                    <label class="form-check-label" for="remove_image">Ukloni sliku</label>
                                 </div>
                             @endif
                             @error('image') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
@@ -95,8 +95,8 @@
                 </div>
 
                 <div class="card-footer d-flex gap-2">
-                    <button class="btn btn-primary">{{ $isEdit ? 'Update' : 'Save' }}</button>
-                    <a href="{{ route('banners.index') }}" class="btn btn-secondary">Cancel</a>
+                    <button class="btn btn-primary">{{ $isEdit ? 'Ažuriraj' : 'Spremi' }}</button>
+                    <a href="{{ route('banners.index') }}" class="btn btn-secondary">Odustani</a>
                 </div>
             </form>
         </div>
@@ -118,7 +118,7 @@
                     allowMultiple:false,
                     credits:false,
                     imagePreviewHeight:120,
-                    instantUpload: false, // submitom ide kroz formu
+                    instantUpload: false, // ide kroz formu pri slanju
                     storeAsFile: true
                 }));
             }

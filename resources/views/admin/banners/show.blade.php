@@ -11,10 +11,10 @@
         <div class="col-12 col-xl-8">
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">{{ $t?->title ?? 'Banner #'.$banner->id }}</h5>
+                    <h5 class="mb-0">{{ $t?->title ?? 'Baner #'.$banner->id }}</h5>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('banners.edit', $banner) }}" class="btn btn-primary">Edit</a>
-                        <a href="{{ route('banners.index') }}" class="btn btn-light">Back</a>
+                        <a href="{{ route('banners.edit', $banner) }}" class="btn btn-primary">Uredi</a>
+                        <a href="{{ route('banners.index') }}" class="btn btn-light">Povratak</a>
                     </div>
                 </div>
                 <div class="card-body row g-3">
@@ -25,14 +25,23 @@
                     </div>
                     <div class="col-md-4">
                         <div class="text-muted small">Status</div>
-                        <div><span class="badge @class([
-                'bg-outline-secondary' => $banner->status==='draft',
-                'bg-success' => $banner->status==='active',
-                'bg-secondary' => $banner->status==='archived',
-              ])">{{ ucfirst($banner->status) }}</span></div>
+                        <div>
+                            <span class="badge @class([
+                                'bg-outline-secondary' => $banner->status==='draft',
+                                'bg-success' => $banner->status==='active',
+                                'bg-secondary' => $banner->status==='archived',
+                              ])">
+                                @switch($banner->status)
+                                    @case('draft') Nacrt @break
+                                    @case('active') Aktivan @break
+                                    @case('archived') Arhiviran @break
+                                    @default {{ ucfirst($banner->status) }}
+                                @endswitch
+                            </span>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="text-muted small">Clicks</div>
+                        <div class="text-muted small">Klikovi</div>
                         <div>{{ number_format($banner->clicks ?? 0) }}</div>
                     </div>
                     <div class="col-md-4">
@@ -47,13 +56,13 @@
             </div>
         </div>
 
-        {{-- FULLCALENDAR + position picker --}}
+        {{-- FULLCALENDAR + izbor pozicije --}}
         <div class="col-12 col-xl-4">
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h6 class="mb-0">Schedule</h6>
+                    <h6 class="mb-0">Raspored</h6>
                     <div class="d-flex align-items-center gap-2">
-                        <label class="small mb-0">Position</label>
+                        <label class="small mb-0">Pozicija</label>
                         <select id="schedule-position" class="form-select form-select-sm">
                             @foreach(range(1,5) as $p) <option value="{{ $p }}">P{{ $p }}</option> @endforeach
                         </select>
@@ -61,7 +70,11 @@
                 </div>
                 <div class="card-body">
                     <div id="banner-calendar"></div>
-                    <div class="form-text mt-2">Select range to create (uses Position). Drag/resize to adjust. Click event to delete.</div>
+                    <div class="form-text mt-2">
+                        Označite raspon za stvaranje (koristi odabranu poziciju).
+                        Povucite/promijenite veličinu za prilagodbu.
+                        Kliknite na događaj za brisanje.
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,6 +84,7 @@
 @push('styles')
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
 @endpush
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <script>
@@ -115,7 +129,7 @@
                 },
 
                 eventClick: async (info) => {
-                    if (!confirm('Delete this slot?')) return;
+                    if (!confirm('Obrisati ovaj termin?')) return;
                     await fetch(@json(route('banners.events.destroy', [$banner, 'event' => 'ID'])).replace('ID', info.event.id), {
                         method: 'DELETE',
                         headers: {'X-CSRF-TOKEN': @json(csrf_token())}

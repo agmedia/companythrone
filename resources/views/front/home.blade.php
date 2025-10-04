@@ -49,6 +49,7 @@
       "slidesPerView": 1,
       "spaceBetween": 16,
       "loop": true,
+      "autoplay": { "delay": 3000, "disableOnInteraction": false },
       "pagination": { "el": ".home-banners-pagination", "clickable": true },
       "navigation": { "prevEl": "#home-banners-prev", "nextEl": "#home-banners-next" },
       "breakpoints": { "600": { "slidesPerView": 2 }, "1000": { "slidesPerView": 3 } }
@@ -81,12 +82,12 @@
 
                     <!-- Navigation (unutra slidera, preko slika) -->
                     <button type="button" id="home-banners-prev"
-                            class="btn btn-icon btn-secondary rounded-circle position-absolute top-50 start-0 translate-middle-y z-3"
+                            class="btn btn-icon btn-secondary rounded-circle position-absolute top-50 start-0 translate-middle-y z-3 d-none"
                             aria-label="Prev">
                         <i class="fi-chevron-left fs-lg"></i>
                     </button>
                     <button type="button" id="home-banners-next"
-                            class="btn btn-icon btn-secondary rounded-circle position-absolute top-50 end-0 translate-middle-y z-3"
+                            class="btn btn-icon btn-secondary rounded-circle position-absolute top-50 end-0 translate-middle-y z-3 d-none"
                             aria-label="Next">
                         <i class="fi-chevron-right fs-lg"></i>
                     </button>
@@ -254,10 +255,25 @@
                 <div class="col-12 py-lg-2 py-xl-4 py-xxl-5 mb-md-3">
                     <h2 class="text-white text-center  pb-2 pb-sm-3">Povećajte promet svoje web stranice.</h2>
                     <div class="d-flex flex-column flex-sm-row flex-md-column flex-lg-row justify-content-center  gap-3">
-                        <a class="btn btn-lg btn-primary animate-scale" href="add-contractor-location.html">
-                            <i class="fi-plus fs-lg animate-target ms-n2 me-2"></i>
-                            Dodaj tvrtku
-                        </a>
+
+                        @auth
+                            <!-- Join button  -->
+                            @if(!$hasCompany)
+
+                                <a class="btn btn-lg btn-primary animate-scale" href="{{ localized_route('companies.create') }}">
+                                    <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i>  {{ __('nav.add_company') }}
+                                </a>
+
+                            @endif
+
+                        @else
+                            <a class="btn btn-lg btn-primary animate-scale" href="{{ route('register') }}">
+                                <i class="fi-plus fs-lg animate-target ms-n2 me-1 me-sm-2"></i>  {{ __('nav.add_company') }}
+                            </a>
+                        @endauth
+
+
+
                         <a class="btn btn-lg btn-outline-light animate-slide-end" href="#!">
                             Saznajte više
                             <i class="fi-chevron-right fs-lg animate-target ms-2 me-n2"></i>
