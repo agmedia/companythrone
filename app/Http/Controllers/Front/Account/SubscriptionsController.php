@@ -13,6 +13,8 @@ class SubscriptionsController extends Controller
     {
         $payments = collect($settings->paymentsActive());
 
+        //dd($payments);
+
         return view('front.account.payments', compact('payments'));
     }
 

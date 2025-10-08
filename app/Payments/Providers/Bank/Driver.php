@@ -91,7 +91,7 @@ class Driver implements PaymentProviderInterface
             'issued_at'       => $start->toDateString(),
             'paid_at'         => null,
             'invoice_no'      => $invoiceNo,
-            'provider'        => $selectedPlan['name'],
+            'provider'        => $selectedPlan['name']->{current_locale()},
             'method'          => $selectedPlan['code'],
             'provider_ref'    => $selectedPlan['driver'],
             'meta'            => null,

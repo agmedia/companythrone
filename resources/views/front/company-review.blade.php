@@ -225,7 +225,7 @@
                                         <th class="text-nowrap">{{ __('Odabrani paket / način plaćanja:') }}</th>
                                         <td>
                                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                                                <strong>{{ $planData['name'] ?? '—' }}</strong>
+                                                <strong>{{ $planData['name']->{current_locale()} ?? '—' }}</strong>
                                                 {{--  @if(isset($planData['price']) && is_numeric($planData['price']))
                                                      <span class="text-muted">
                                                          — {{ rtrim(rtrim(number_format($planData['price'], 2, ',', '.'), '0'), ',') }}

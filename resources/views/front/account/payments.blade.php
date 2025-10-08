@@ -13,7 +13,7 @@
                 <div class="list-group mb-4">
                     @forelse($payments as $pay)
                         <div class="list-group-item">
-                            <div class="fw-semibold">{{ $pay['name'] ?? $pay['code'] }}</div>
+                            <div class="fw-semibold">{{ $pay['name']->{current_locale()} ?? $pay['code'] }}</div>
                             @if (is_array($pay['short_description']))
                                 <div class="small text-muted">{{ $pay['short_description']['hr'] ?: '' }}</div>
                             @else
