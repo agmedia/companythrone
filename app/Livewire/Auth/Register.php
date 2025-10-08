@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use App\Models\UserDetail;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,7 @@ use Livewire\Component;
 #[Layout('components.layouts.auth')]
 class Register extends Component
 {
+
     public string $name = '';
 
     public string $email = '';
@@ -24,10 +26,11 @@ class Register extends Component
 
     public string $password_confirmation = '';
 
+
     /**
      * Handle an incoming registration request.
      */
-    public function register(): void
+    public function register(Request $request): void
     {
         $validated = $this->validate([
             'name'     => ['required', 'string', 'max:255'],
@@ -53,6 +56,10 @@ class Register extends Component
         } elseif (Schema::hasColumn($user->getTable(), 'role')) {
             // fallback: plain kolona "role" na users tablici
             $user->forceFill(['role' => 'customer'])->save();
+        }
+
+        if ($request->has('ref')) {
+            session(['referral_token' => $request->input('ref')]);
         }
 
         Auth::login($user);

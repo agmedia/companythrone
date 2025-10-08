@@ -14,4 +14,9 @@ class ReferralLink extends Model
     {
         return $this->hasMany(\App\Models\Shared\Click::class, 'from_company_id');
     }
+
+
+    public function user() {
+        return $this->belongsTo(\App\Models\User::class);
+    }
 }

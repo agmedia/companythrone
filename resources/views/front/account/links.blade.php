@@ -7,38 +7,25 @@
 
             <div class="col-lg-9">
 
-                    <h1 class="h4 mb-3">{{ __('Moji linkovi') }}</h1>
+                <h1 class="h4 mb-3">{{ __('Moji linkovi') }}</h1>
 
-                    <form method="post" action="{{ localized_route('account.links.store') }}" class="row g-2 mb-3">
-                        @csrf
-                        <div class="col-md-8">
-                            <input name="url" type="url" class="form-control" placeholder="https://..." required>
-                        </div>
-                        <div class="col-md-3">
-                            <input name="label" type="text" class="form-control" placeholder="{{ __('Opis (opcionalno)') }}">
-                        </div>
-                        <div class="col-md-1 d-grid">
-                            <button class="btn btn-primary" @disabled($todayLinks >= $limitPerDay)>{{ __('Dodaj') }}</button>
-                        </div>
-                        <div class="col-12 text-muted small">
-                            {{ __('Danas:') }} {{ $todayLinks }} / {{ $limitPerDay }}
-                        </div>
-                    </form>
+                <form method="post" action="{{ localized_route('account.links.store') }}" class="row g-2 mb-3">
+                    @csrf
+                    <div class="col-md-8">
+                        <input name="url" type="email" class="form-control" placeholder="{{ __('Email osobe koju želiš pozvati') }}" required>
 
-                    <div class="vstack gap-2">
-                        @foreach($links as $link)
-                            <div class="d-flex align-items-center justify-content-between border rounded p-2">
-                                <div class="text-truncate me-3">
-                                    <div class="fw-semibold">{{ $link->label ?? __('Bez naziva') }}</div>
-                                    <a href="{{ $link->url }}" target="_blank" class="small">{{ $link->url }}</a>
-                                </div>
-                                <div class="text-muted small">{{ __('Klikovi:') }} {{ $link->clicks }}</div>
-                            </div>
-                        @endforeach
                     </div>
+                    <div class="col-md-3">
+                        <input name="label" type="text" class="form-control" placeholder="{{ __('Opis (opcionalno)') }}">
+                    </div>
+                    <div class="col-md-1 d-grid">
+                        <button class="btn btn-primary" @disabled($todayLinks >= $limitPerDay)>{{ __('Dodaj') }}</button>
+                    </div>
+                    {{--<div class="col-12 text-muted small">
+                        {{ __('Danas:') }} {{ $todayLinks }} / {{ $limitPerDay }}
+                    </div>--}}
+                </form>
 
-                    <div class="mt-3">{{ $links->links('pagination::bootstrap-5') }}</div>
-              
 
                 <div class="mt-5">
                     <h5 class="fw-semibold">{{ __('Moje preporuke') }}</h5>

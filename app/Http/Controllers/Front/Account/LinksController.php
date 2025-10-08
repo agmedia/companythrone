@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Front\Account;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ReferralInvitationMail;
 use App\Models\Back\Catalog\Company;
 use App\Models\Shared\Click;
 use App\Models\Shared\DailySession;
 use App\Models\Shared\ReferralLink;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class LinksController extends Controller
 {
@@ -146,26 +149,36 @@ class LinksController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'url'   => ['required', 'url', 'max:2048'],
+            'url'   => ['required', 'email', 'max:255'], // sada email
             'label' => ['nullable','string','max:120'],
         ]);
 
-        $userId = auth()->id();
+        $user = auth()->user();
+        $userId = $user->id;
 
-        // Dnevni limit 25 po useru (ne ovisi o company)
-        $countToday = ReferralLink::query()
-            ->where('user_id', $userId)
-            ->whereDate('created_at', now()->toDateString())
-            ->count();
+        // dnevni limit 25
+        $countToday = ReferralLink::where('user_id', $userId)
+                                  ->whereDate('created_at', today())
+                                  ->count();
 
         abort_if($countToday >= 25, 429, __('Dnevni limit linkova je dosegnut.'));
 
-        ReferralLink::create([
+        $token = Str::uuid()->toString();
+        $refUrl = route('register', ['ref' => $token]); // npr. /register?ref=TOKEN
+
+        $link = ReferralLink::create([
             'user_id' => $userId,
-            'url'     => $request->string('url'),
-            'label'   => $request->string('label') ?: null,
+            'url'     => $refUrl,
+            'label'   => $request->string('label') ?: $request->string('url'),
         ]);
 
-        return back()->with('status', __('Link dodan.'));
+        // pošalji poziv
+        Mail::to($request->input('url'))->send(
+            new ReferralInvitationMail($user, $refUrl)
+        );
+
+        // zapamti token u session (ako treba)
+        return back()->with('status', __('Pozivnica je poslana.'));
     }
+
 }

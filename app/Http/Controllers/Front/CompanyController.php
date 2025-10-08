@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Catalog\Category;
 use App\Models\Back\Catalog\Company;
+use App\Models\Shared\Referral;
+use App\Models\Shared\ReferralLink;
 use App\Services\Settings\SettingsManager;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -108,10 +110,36 @@ class CompanyController extends Controller
 
             $user->assignRole('company_owner');
 
-            // kategorije (ako relacija postoji)
-            /*if (isset($data['categories']) && method_exists($company, 'categories')) {
-                $company->categories()->sync($data['categories']);
-            }*/
+            // referral link
+            if (session()->has('referral_token')) {
+                $token = session('referral_token');
+
+                $link = ReferralLink::query()
+                                    ->where('url', 'like', "%$token%")
+                                    ->first();
+
+                if ($link && $link->user?->company) {
+                    // referrer kompanija
+                    $refCompany = $link->user->company;
+
+                    // nova kompanija level = referrer level + 1
+                    $company->level = ($refCompany->level ?? 1) + 1;
+                    $company->save();
+
+                    // opcionalno: zabilježi tko ga je pozvao
+                    Referral::query()->create([
+                        'referrer_company_id' => $refCompany->id,
+                        'referred_company_id' => $company->id,
+                    ]);
+
+                    // povećaj klikove
+                    $link->increment('clicks');
+
+                    // izbriši token da se ne koristi više puta
+                    session()->forget('referral_token');
+                }
+            }
+
         });
 
         $request->session()->put(self::S_DRAFT, $company->id);
