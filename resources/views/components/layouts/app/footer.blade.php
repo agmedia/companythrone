@@ -10,7 +10,7 @@
               <span class="flex-shrink-0 text-primary rtl-flip me-2">
                 <img src="{{ asset('theme1/assets/companythrone-round.svg') }}" alt="Companythrone">
               </span>
-                    <span class="fs-4 fw-semibold">    {{ config('app.name','Companythrone') }}</span>
+                    <span class="fs-4 fw-semibold">{{ config('app.name','Companythrone') }}</span>
                 </a>
 
             </div>
@@ -45,13 +45,13 @@
                 <div class="accordion-collapse collapse d-sm-block" id="quickLinks" aria-labelledby="quickLinksHeading" data-bs-parent="#footerLinks">
                     <ul class="nav flex-column gap-2 pt-sm-1 pt-lg-2 pb-3 pb-sm-0 mt-n1 mb-1 mb-sm-0">
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', 'korisnicka-podrska') }}">Opći uvjeti korištenja</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 3) }}">Opći uvjeti korištenja</a>
                         </li>
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', 'uvjeti-i-privatnost') }}">Pravila privatnosti</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 2) }}">Pravila privatnosti</a>
                         </li>
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="#!">Načini plaćanja</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 1) }}">Načini plaćanja</a>
                         </li>
 
 
@@ -67,13 +67,13 @@
                 <div class="accordion-collapse collapse d-sm-block" id="profileLinks" aria-labelledby="profileLinksHeading" data-bs-parent="#footerLinks">
                     <ul class="nav flex-column gap-2 pt-sm-1 pt-lg-2 pb-3 pb-sm-0 mt-n1 mb-1 mb-sm-0">
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="#!">O nama</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 4) }}">O nama</a>
                         </li>
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="#!">Česta pitanja</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ localized_route('faq') }}">Česta pitanja</a>
                         </li>
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="#!">Kontakt</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ localized_route('kontakt') }}">Kontakt</a>
                         </li>
 
                     </ul>

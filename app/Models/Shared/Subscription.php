@@ -54,4 +54,25 @@ class Subscription extends Model
     {
         return $this->belongsTo(\App\Models\Back\Catalog\Company::class);
     }
+
+    /*******************************************************************************
+    *                                Copyright : AGmedia                           *
+    *                              email: filip@agmedia.hr                         *
+    *******************************************************************************/
+
+    public static function isCompanySubscribed(int $companyId, ?\Carbon\Carbon $date = null): bool
+    {
+        $date ??= now();
+
+        return static::query()
+                     ->where('company_id', $companyId)
+                     ->whereIn('status', ['active', 'trialing'])
+                     ->where(function ($q) use ($date) {
+                         $q->whereNull('starts_on')->orWhere('starts_on', '<=', $date);
+                     })
+                     ->where(function ($q) use ($date) {
+                         $q->whereNull('ends_on')->orWhere('ends_on', '>=', $date);
+                     })
+                     ->exists();
+    }
 }

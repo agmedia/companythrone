@@ -35,7 +35,6 @@ class RedirectByRole
                     // ako već ima tvrtku, vodi ga na neku drugu stranicu (npr. account dashboard)
                     return redirect()->to(localized_route('account.dashboard'));
                 }
-
                 // ako nema tvrtku, vodi ga na wizard za unos
                 return redirect()->to(localized_route('companies.create'));
             }

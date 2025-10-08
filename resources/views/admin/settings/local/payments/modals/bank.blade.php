@@ -35,10 +35,10 @@
                             <label class="form-label">{{ __('back/shop/payments/bank.iban') }}</label>
                             <input type="text" class="form-control" data-config="iban" data-default="">
                         </div>
-                        <div class="mb-3">
+                        {{--<div class="mb-3">
                             <label class="form-label">{{ __('back/shop/payments/bank.swift') }}</label>
                             <input type="text" class="form-control" data-config="swift" data-default="">
-                        </div>
+                        </div>--}}
                         <div class="mb-3">
                             <label class="form-label">{{ __('back/shop/payments/bank.bank_name') }}</label>
                             <input type="text" class="form-control" data-config="bank_name" data-default="">

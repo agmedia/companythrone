@@ -8,7 +8,7 @@
             @include('front.account._sidebar')
 
             <div class="col-lg-9">
-                <h1 class="h4 mb-4">{{ __('Moje pretplate') }}</h1>
+                <h1 class="h4 mb-4 mt-1">{{ __('Moje pretplate') }}</h1>
 
                 @if($subs->isEmpty())
                     <div class="alert alert-info">{{ __('Nemate aktivnih pretplata.') }}</div>

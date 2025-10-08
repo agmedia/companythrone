@@ -6,16 +6,19 @@ return [
      *
      */
     'payments' => [
+        // Novi status narudžbe
+        'new_status' => 1,
+        //
         'providers' => [
             'bank' => [
                 'name'    => 'Bank Transfer',
                 'enabled' => true,
                 'driver'  => \App\Payments\Providers\Bank\Driver::class,
             ],
-            'wspay' => [
-                'name'    => 'WSPay',
+            'corvus' => [
+                'name'    => 'Corvus',
                 'enabled' => true,
-                'driver'  => \App\Payments\Providers\Wspay\Driver::class,
+                'driver'  => \App\Payments\Providers\Corvus\Driver::class,
             ],
             // ...
         ],

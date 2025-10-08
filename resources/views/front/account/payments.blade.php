@@ -8,7 +8,7 @@
             @include('front.account._sidebar')
 
             <div class="col-lg-9">
-                <h1 class="h4 mb-4">{{ __('Pretplate & Računi') }}</h1>
+                <h1 class="h4 mb-4 mt-1">{{ __('Računi & Plaćanja') }}</h1>
 
                 <div class="list-group mb-4">
                     @forelse($payments as $pay)
@@ -20,8 +20,14 @@
                                 <div class="small text-muted">{{ $pay['short_description'] ?: '' }}</div>
                             @endif
                             @if(isset($pay['price']))
-                                <div class="small">{{ __('Cijena') }}: {{ $pay['price'] }} €</div>
+                                <div class="small">{{ __('Cijena dodatno') }}: {{ $pay['price'] }} €</div>
                             @endif
+
+                            <div class="float-end">
+                                <a href="{{ route('companies.payment') }}" class="btn btn-sm btn-outline-primary">
+                                    {{ __('Plati') }}
+                                </a>
+                            </div>
                         </div>
                     @empty
                         <div class="alert alert-info mb-0">{{ __('Trenutno nema aktivnih metoda plaćanja.') }}</div>

@@ -36,7 +36,7 @@
 
 
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
-                        <a class="nav-link" href="{{ nav_url('pages', 'o-nama') }}">{{ __('nav.about_us') }}</a>
+                        <a class="nav-link" href="{{ nav_url('pages', id: 4) }}">{{ __('nav.about_us') }}</a>
                     </li>
 
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">

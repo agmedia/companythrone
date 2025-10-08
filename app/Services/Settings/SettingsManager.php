@@ -6,6 +6,7 @@ use App\Models\Back\Settings\Settings as SettingsModel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SettingsManager
 {
@@ -91,6 +92,7 @@ class SettingsManager
                 return [
                     $code => [
                         'provider_code'  => $code,
+                        'status'         => $p['enabled'],
                         'driver'         => $driver,
                         'name_default'   => $defaultTitle[$locale] ?? $defaultTitle['en'] ?? $fallbackName,
                         'config_default' => method_exists($driver, 'defaultConfig') ? (array) $driver::defaultConfig() : [],
@@ -100,98 +102,93 @@ class SettingsManager
 
         // 2) Redovi iz DB-a (key='payment', json=1) —> value = JSON array stavki
         $rows = DB::table('settings')
-                  ->where('key', 'payment')
+                  ->where('code', 'payments')
                   ->where('json', 1) // ⬅️ ako koristiš drugi stupac za flag, promijeni ovdje
                   ->orderBy('id')
                   ->get(['value'/* ⬅️ ovo je tvoj JSON */, 'key', 'code']); // dohvatimo i path ako ti zatreba
 
         $items = collect();
+        $db = collect();
 
         foreach ($rows as $row) {
-            $decoded = json_decode($row->value ?? '[]', true); // ⬅️ ako je JSON u drugom stupcu, promijeni ovdje
-            if (json_last_error() !== JSON_ERROR_NONE || ! is_array($decoded)) {
-                continue;
+            $decoded = json_decode($row->value); // ⬅️ ako je JSON u drugom stupcu, promijeni ovdje
+
+            if (is_array($decoded)) {
+                $decoded = collect($decoded)->first();
             }
-            foreach ($decoded as $entry) {
-                if ( ! is_array($entry)) {
-                    continue;
-                }
 
-                // status filter
-                if (array_key_exists('status', $entry) && ! $entry['status']) {
-                    continue;
-                }
+            $code  = (string) ($decoded->code ?? '');
+            $data  = (array) ($decoded->config ?? []);
+            $pconf = $providers->get($code, null);
 
-                $code  = (string) ($entry['code'] ?? '');
-                $data  = (array) ($entry['data'] ?? []);
-                $pconf = $providers->get($code, null);
-
-                // title može biti plain string; ako je array, uzmi lokalizirano
-                $title = $entry['title'] ?? null;
-                if (is_array($title)) {
-                    $name = $title[$locale] ?? $title['en'] ?? reset($title);
-                } else {
-                    $name = $title ?: ($pconf['name_default'] ?? ucfirst($code));
-                }
-
-                $short = $data['short_description'] ?? null;
-                if (is_array($short)) {
-                    $short = $short[$locale] ?? $short['en'] ?? reset($short);
-                }
-
-                $descr = $data['description'] ?? null;
-                if (is_array($descr)) {
-                    $descr = $descr[$locale] ?? $descr['en'] ?? reset($descr);
-                }
-
-                $items->push([
-                    'code'              => $code,
-                    'name'              => $name,
-                    'price'             => $this->castPrice($data['price'] ?? null),
-                    'currency'          => $data['currency'] ?? 'EUR',
-                    'period'            => $data['period'] ?? 'oneoff', // ili 'monthly' ako tako vodiš
-                    'short_description' => $short,
-                    'description'       => $descr,
-                    'min'               => $entry['min'] ?? null,
-                    'geo_zone'          => $entry['geo_zone'] ?? null,
-                    'sort_order'        => (int) ($entry['sort_order'] ?? 0),
-                    'status'            => (bool) ($entry['status'] ?? true),
-                    'provider'          => $code,                 // default pretpostavka: code == provider
-                    'provider_exists'   => (bool) $pconf,
-                    'driver'            => $pconf['driver'] ?? null,
-                    'data'              => $data,
-                ]);
+            // title može biti plain string; ako je array, uzmi lokalizirano
+            $title = $decoded->title ?? null;
+            if (is_array($title)) {
+                $name = $title->{$locale} ?? $title->en ?? reset($title);
+            } else {
+                $name = $title ?: ($pconf['name_default'] ?? ucfirst($code));
             }
+
+            $short = $decoded->short_description ?? null;
+            if (is_array($short)) {
+                $short = $short->{$locale} ?? $short->en ?? reset($short);
+            }
+
+            $descr = $decoded->description ?? null;
+            if (is_array($descr)) {
+                $descr = $descr->{$locale} ?? $descr->en ?? reset($descr);
+            }
+
+            $db->push([
+                'code'              => $code,
+                'name'              => $name,
+                'price'             => $this->castPrice($data->price ?? null),
+                'currency'          => $data->currency ?? 'EUR',
+                'period'            => $data->period ?? 'oneoff', // ili 'monthly' ako tako vodiš
+                'short_description' => $short,
+                'description'       => $descr,
+                'min'               => $data->min ?? null,
+                'geo_zone'          => $data->geo_zone ?? null,
+                'sort_order'        => (int) ($decoded->sort_order ?? 0),
+                'status'            => (bool) ($decoded->status ?? true),
+                'provider'          => $code,                 // default pretpostavka: code == provider
+                'provider_exists'   => (bool) $pconf,
+                'driver'            => $pconf['driver'] ?? null,
+                'data'              => $data,
+            ]);
         }
 
         // 3) Ako u DB-u nema ničega, ipak izlistaj enable-ane providere iz configa kao “fallback”
-        if ($items->isEmpty() && $providers->isNotEmpty()) {
-            $items = $providers->keys()->map(function ($code) use ($providers) {
+        if ($providers->isNotEmpty()) {
+            $items = $providers->keys()->map(function ($code) use ($providers, $db) {
                 $p = $providers[$code];
+                $row = $db->where('code', $code)->first();
 
-                return [
-                    'code'              => $code,
-                    'name'              => $p['name_default'],
-                    'price'             => $p['config_default']['price'] ?? 0,
-                    'currency'          => $p['config_default']['currency'] ?? 'EUR',
-                    'period'            => $p['config_default']['period'] ?? 'oneoff',
-                    'short_description' => Arr::get($p['config_default'], 'short_description'),
-                    'description'       => Arr::get($p['config_default'], 'description'),
-                    'min'               => null,
-                    'geo_zone'          => null,
-                    'sort_order'        => 0,
-                    'status'            => true,
-                    'provider'          => $code,
-                    'provider_exists'   => true,
-                    'driver'            => $p['driver'],
-                    'data'              => $p['config_default'],
-                ];
+                if ($row && $row['status'] === true && $p['status'] === true) {
+                    return [
+                        'code'              => $code,
+                        'name'              => $row['name'],
+                        'price'             => $row['price'] ?? 0,
+                        'currency'          => $row['currency'] ?? 'EUR',
+                        'period'            => $p['config_default']['period'] ?? 'oneoff',
+                        'short_description' => isset($row['short_description'][current_locale()]) ? $row['short_description'][current_locale()] : $row['short_description'],
+                        'description'       => Arr::get($p['config_default'], 'description'),
+                        'min'               => $row['min'],
+                        'geo_zone'          => $row['geo_zone'],
+                        'sort_order'        => $row['sort_order'] ?? 0,
+                        'status'            => true,
+                        'provider'          => $code,
+                        'provider_exists'   => true,
+                        'driver'            => $p['driver'],
+                        'data'              => $row['data'],
+                    ];
+                }
             })->values();
         }
 
         // 4) Posloži i deduplikacija po code
         $items = $items
-            ->unique('code')
+            ->unique('code')->whereNotNull()
             ->sortBy([
                 ['sort_order', 'asc'],
                 ['price', 'asc'],

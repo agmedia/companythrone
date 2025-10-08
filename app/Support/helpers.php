@@ -1,9 +1,13 @@
 <?php
 
 use App\Models\Back\Catalog\Company;
+use App\Models\Back\Settings\Settings;
+use App\Models\Shared\Payment;
+use App\Models\Shared\Subscription;
 use App\Services\Front\CategoryNav;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 if ( ! function_exists('localized_route')) {
@@ -179,5 +183,130 @@ if (!function_exists('company_url')) {
 
         // Na kraju: uvijek proslijedi samo scalar parametar
         return localized_route('companies.show', ['companyBySlug' => (string) $slug]);
+    }
+}
+
+
+if (! function_exists('subscription_active')) {
+    /**
+     * Provjerava ima li tvrtka aktivnu i plaćenu pretplatu na zadani datum.
+     */
+    function subscription_active(int $companyId, ?Carbon $date = null): bool
+    {
+        $date ??= now();
+
+        $hasSub = Subscription::query()
+                              ->where('company_id', $companyId)
+                              ->whereIn('status', ['active', 'trialing'])
+                              ->where(function ($q) use ($date) {
+                                  $q->whereNull('starts_on')->orWhere('starts_on', '<=', $date);
+                              })
+                              ->where(function ($q) use ($date) {
+                                  $q->whereNull('ends_on')->orWhere('ends_on', '>=', $date);
+                              })
+                              ->exists();
+
+        $hasPay = Payment::query()
+                         ->where('company_id', $companyId)
+                         ->where('status', 3) // 3 = Plaćeno
+                         ->whereDate('period_start', '<=', $date)
+                         ->whereDate('period_end', '>=', $date)
+                         ->exists();
+
+        return $hasSub && $hasPay;
+    }
+}
+
+
+if (! function_exists('subscription_status')) {
+    /**
+     * Vraća status pretplate tvrtke za današnji datum:
+     * - active (ima pretplatu i važeću uplatu)
+     * - trialing (trial još traje)
+     * - expired (istekla ili nije plaćeno)
+     * - canceled (otkazana)
+     */
+    function subscription_status(int $companyId, ?Carbon $date = null): string
+    {
+        $date ??= now();
+
+        $sub = Subscription::query()
+                           ->where('company_id', $companyId)
+                           ->latest('id')
+                           ->first();
+
+        if (! $sub) {
+            return 'none';
+        }
+
+        // Ako je otkazana
+        if ($sub->status === 'canceled') {
+            return 'canceled';
+        }
+
+        // Ako je trial
+        if ($sub->status === 'trialing' && $sub->trial_ends_on && $sub->trial_ends_on->gte($date)) {
+            return 'trialing';
+        }
+
+        // Ako je aktivna i ima plaćeni period
+        $pay = Payment::query()
+                      ->where('company_id', $companyId)
+                      ->where('status', 3) // 3 = Paid
+                      ->whereDate('period_start', '<=', $date)
+                      ->whereDate('period_end', '>=', $date)
+                      ->exists();
+
+        if ($sub->status === 'active' && $pay) {
+            return 'active';
+        }
+
+        // Inače, pretplata je istekla
+        return 'expired';
+    }
+}
+
+if ( ! function_exists('vat_rate')) {
+    /**
+     * Dohvaća URL za grupu na temelju zadanog jezika i grupe.
+     *
+     * @param string      $group  Naziv grupe za koju se generira URL.
+     * @param string|null $locale Jezik na kojem se generira URL.
+     *                            Ako je null, koristi se zadani jezik aplikacije.
+     *
+     * @return string Generirani URL za zadanu grupu.
+     */
+    function vat_rate(?int $geoZoneId = null): float
+    {
+        $row = Settings::query()
+                       ->where('code', 'tax')
+                       ->where('key', 'list')
+                       ->where('json', 1)
+                       ->latest('id')
+                       ->first();
+
+        if ( ! $row) {
+            return 25.0; // fallback
+        }
+
+        $items = json_decode($row->value ?? '[]', true);
+        if (json_last_error() !== JSON_ERROR_NONE || ! is_array($items)) {
+            return 25.0;
+        }
+
+        // prioritet: aktivna stavka koja se poklapa s geo_zonom (ako je zadana),
+        // inače prva aktivna
+        $active = collect($items)
+            ->filter(fn($it) => ! empty($it['status']))
+            ->when($geoZoneId, fn($c) => $c->where('geo_zone', $geoZoneId))
+            ->sortBy([
+                ['sort_order', 'asc'],
+                ['id', 'asc'],
+            ])
+            ->first();
+
+        $rate = isset($active['rate']) ? (float) $active['rate'] : 25.0;
+
+        return $rate > 0 ? $rate : 25.0;
     }
 }

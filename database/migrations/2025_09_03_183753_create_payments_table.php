@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
-            $table->decimal('amount', 10, 2)->default(25.00);
-            $table->enum('status', ['pending','paid','failed','expired'])->default('pending');
+            $table->decimal('amount', 10, 2);
+            $table->integer('status')->default(0);
             $table->date('period_start')->nullable();
             $table->date('period_end')->nullable();
             $table->timestamp('issued_at')->nullable();

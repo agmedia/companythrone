@@ -21,7 +21,7 @@
                             <div class="col-12 col-md-5">
                                 <div class="d-flex align-items-center gap-2">
                                     <input type="radio" @checked(($selectedCode ?? null) === $p['code']) class="form-check-input switch-radio" name="plan" value="{{ $p['code'] }}" id="certify-{{ $p['code'] }}" required>
-                                    <label for="certify_yes" class="form-check-label h6 fs-6 mb-0">{{ $p['name'] }}</label>
+                                    <label for="certify_yes" class="form-check-label h6 fs-6 mb-0">{{ $p['name']->{current_locale()} }}</label>
                                 </div>
                             </div>
                             <div class="col-8 col-md-5">
@@ -29,7 +29,7 @@
                                     @if (is_string($p['short_description']))
                                         <p class="fs-sm mb-0">{{ $p['short_description'] ?: '' }}</p>
                                     @else
-                                        <p class="fs-sm mb-0">{{ $p['short_description'][current_locale()] ?: '' }}</p>
+                                        <p class="fs-sm mb-0">{{ $p['short_description']->{current_locale()} ?: '' }}</p>
                                     @endif
                                 @endif
                             </div>

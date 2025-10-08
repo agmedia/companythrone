@@ -19,7 +19,7 @@ return new class extends Migration
             // Valuta/metoda + račun
             $table->string('currency', 3)->default('EUR')->after('amount');
             $table->string('method')->nullable()->after('provider'); // npr. card, bank, paypal
-            $table->string('invoice_no', 50)->nullable()->unique()->after('paid_at');
+            $table->string('invoice_no', 50)->nullable()->after('paid_at');
 
             // Porezi (ako zatreba)
             $table->decimal('vat_rate', 5, 2)->nullable()->after('amount');

@@ -106,7 +106,7 @@ abstract class AbstractProvidersPageController extends Controller
 
     public function index()
     {
-        $items   = $this->mergedProviders();
+        $items   = $this->mergedProviders()->where('id', '!=', 0);
         $locales = config('shop.locales', ['hr' => 'Hrvatski', 'en' => 'English']);
 
         $payload = [

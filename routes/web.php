@@ -36,6 +36,8 @@ Route::get('/dashboard', function () {
     // prazan endpoint – RedirectByRole middleware odlučuje
 })->name('dashboard')->middleware(['auth','verified','redirect.by.role']);
 
+Route::get('/narudzba', [CompanyController::class, 'order'])->name('order');
+
 /**
  *
  * ADMIN (NELokalizirano) – sve pod /admin
@@ -158,11 +160,12 @@ Route::group([
     Route::get('/companies', [CompanyListController::class, 'index'])->name('companies.index');
     Route::get('/companies/{companyBySlug}', [CompanyListController::class, 'show'])->name('companies.show');
 
-    Route::get('/add-company',  [CompanyController::class, 'create'])->name('companies.create');
+    Route::get('/dodaj-tvrtku',  [CompanyController::class, 'create'])->name('companies.create');
     Route::post('/add-company', [CompanyController::class, 'store'])->name('companies.store');
-    Route::get('/add-payment',  [CompanyController::class, 'payment'])->name('companies.payment');
+    Route::get('/nacin-placanja', [CompanyController::class, 'payment'])->name('companies.payment');
     Route::post('/review',  [CompanyController::class, 'review'])->name('companies.review');
-    Route::post('/success',  [CompanyController::class, 'success'])->name('companies.success');
+    Route::get('/uspjeh',  [CompanyController::class, 'success'])->name('companies.success');
+    Route::get('/greska',  [CompanyController::class, 'error'])->name('companies.error');
 
     /**
      * Mini-admin za vlasnike

@@ -60,6 +60,14 @@ return [
             'report' => false,
         ],
 
+        /**
+         * QR Code
+         */
+        'qr' => [
+            'driver' => 'local',
+            'root' => public_path('media/img/qr/'),
+            'url' => 'media/img/qr/'
+        ],
     ],
 
     /*

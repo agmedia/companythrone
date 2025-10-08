@@ -13,8 +13,6 @@ class SubscriptionsController extends Controller
     {
         $payments = collect($settings->paymentsActive());
 
-        //dd($payments->toArray(), current_locale());
-
         return view('front.account.payments', compact('payments'));
     }
 

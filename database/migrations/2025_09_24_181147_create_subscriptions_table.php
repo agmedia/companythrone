@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
 
             $table->string('plan', 50)->default('default');
-            $table->enum('period', ['monthly', 'yearly'])->default('monthly');
+            $table->enum('period', ['monthly', 'yearly'])->default('yearly');
             $table->decimal('price', 10, 2)->default(25.00);
             $table->string('currency', 3)->default('EUR');
 

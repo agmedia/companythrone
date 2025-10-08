@@ -24,23 +24,22 @@ class Payment extends Model
 
 
     // 🔹 Scope za plaćene uplate
+
     public function scopePaid(Builder $query): Builder
     {
-        return $query->where('status', 'paid');
+        return $query->where('status', 3); // 3 = Plaćeno
     }
 
 
-    // 🔹 Scope za neuspješne uplate
-    public function scopeFailed(Builder $query): Builder
-    {
-        return $query->where('status', 'failed');
-    }
-
-
-    // 🔹 Scope za pending
     public function scopePending(Builder $query): Builder
     {
-        return $query->where('status', 'pending');
+        return $query->where('status', 2); // 2 = Čeka uplatu
+    }
+
+
+    public function scopeFailed(Builder $query): Builder
+    {
+        return $query->whereIn('status', [5, 7, 8]); // Otkazano, Odbijeno, Nedovršena
     }
 
 
@@ -54,5 +53,22 @@ class Payment extends Model
     public function subscription()
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    /*******************************************************************************
+    *                                Copyright : AGmedia                           *
+    *                              email: filip@agmedia.hr                         *
+    *******************************************************************************/
+
+    public static function hasValidPayment(int $companyId, ?\Carbon\Carbon $date = null): bool
+    {
+        $date ??= now();
+
+        return static::query()
+                     ->where('company_id', $companyId)
+                     ->where('status', 3) // Paid
+                     ->whereDate('period_start', '<=', $date)
+                     ->whereDate('period_end', '>=', $date)
+                     ->exists();
     }
 }

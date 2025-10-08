@@ -41,4 +41,16 @@ class Subscription extends Model
     {
         return $q->where('status', 'active');
     }
+
+    /*******************************************************************************
+    *                                Copyright : AGmedia                           *
+    *                              email: filip@agmedia.hr                         *
+    *******************************************************************************/
+
+    public static function getPrice(int|float|string $payment_price)
+    {
+        $subscription_price = config('settings.payments.plans.default.price');
+
+        return $subscription_price + $payment_price;
+    }
 }
