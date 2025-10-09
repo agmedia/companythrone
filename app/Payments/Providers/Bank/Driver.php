@@ -61,6 +61,7 @@ class Driver implements PaymentProviderInterface
         if ( ! $subscription || ! $selectedPlan) {
             return [
                 'message'  => 'error',
+                'subscription' => $subscription,
                 'response' => 'Nema aktivne pretplate za ovu kompaniju.'
             ];
         }

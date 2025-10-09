@@ -309,7 +309,7 @@ class CompanyController extends Controller
                 'status'       => 'error',
                 'company'      => $company,
                 'subscription' => $validated['subscription'],
-                'payment'      => $validated['payment'],
+                'payment'      => null,
                 'selectedPlan' => $selectedPlan,
             ]);
 
