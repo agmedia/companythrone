@@ -76,9 +76,11 @@
         </div>
     </form>
 
-    <div class="row g-3">
-        <div class="col-md-6">
-            <livewire:settings.password :user="$user" />
+    @if ($isEdit)
+        <div class="row g-3">
+            <div class="col-md-6">
+                <livewire:settings.password :user="$user" />
+            </div>
         </div>
-    </div>
+    @endif
 @endsection
