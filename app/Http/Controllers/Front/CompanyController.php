@@ -337,15 +337,33 @@ class CompanyController extends Controller
 
     public function success(Request $request, SettingsManager $settings)
     {
-      //  dd($request->session()->get(self::S_FINISH));
+        // Dohvati sve podatke spremljene u sesiju pod ključem self::S_FINISH
+        $sessionData = $request->session()->get(self::S_FINISH);
 
-        return view('front.company-uspjeh');
+        // Raspakiraj svaki element pojedinačno (ako postoji)
+        $status       = $sessionData['status']       ?? null;
+        $company      = $sessionData['company']      ?? null;
+        $subscription = $sessionData['subscription'] ?? null;
+        $payment      = $sessionData['payment']      ?? null;
+        $selectedPlan = $sessionData['selectedPlan'] ?? null;
+        $qr           = $sessionData['qr']           ?? null;
+
+        // Vrati view s kompletnim setom podataka
+        return view('front.company-uspjeh', compact(
+            'status',
+            'company',
+            'subscription',
+            'payment',
+            'selectedPlan',
+            'qr'
+        ));
     }
+
 
 
     public function error(Request $request)
     {
-      //  dd($request->session()->get(self::S_FINISH));
+      //ß dd($request->session()->get(self::S_FINISH));
 
         return view('front.company-greska');
     }

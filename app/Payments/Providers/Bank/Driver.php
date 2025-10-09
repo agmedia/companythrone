@@ -171,10 +171,10 @@ class Driver implements PaymentProviderInterface
                         ),
                     'receiver'    =>
                         array(
-                            'name'      => 'CompanyThrone',
-                            'street'    => 'Put Gvozdenova 283',
+                            'name'      => 'UNITRG d.o.o.',
+                            'street'    => 'Donje Svetice 40',
                             'place'     => '10000 Zagreb',
-                            'iban'      => 'HR7023900011100000000',
+                            'iban'      => 'HR7923600001101523188',
                             'model'     => '00',
                             'reference' => $pozivnabroj,
                         ),
