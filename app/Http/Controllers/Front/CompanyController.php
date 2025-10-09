@@ -337,7 +337,7 @@ class CompanyController extends Controller
 
     public function success(Request $request, SettingsManager $settings)
     {
-        dd($request->session()->get(self::S_FINISH));
+      //  dd($request->session()->get(self::S_FINISH));
 
         return view('front.company-uspjeh');
     }
@@ -345,7 +345,7 @@ class CompanyController extends Controller
 
     public function error(Request $request)
     {
-        dd($request->session()->get(self::S_FINISH));
+      //  dd($request->session()->get(self::S_FINISH));
 
         return view('front.company-greska');
     }
