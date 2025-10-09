@@ -145,6 +145,7 @@ class Driver implements PaymentProviderInterface
 
     private static function create_QR(array $subscription): array
     {
+        $selectedPlan = (new SettingsManager())->paymentByCode(self::code());
         $pozivnabroj = $subscription['id'] . '-' . date("ym");
         $total       = str_replace(',', '', number_format($subscription['price'], 2, ',', ''));
 
@@ -171,10 +172,10 @@ class Driver implements PaymentProviderInterface
                         ),
                     'receiver'    =>
                         array(
-                            'name'      => 'UNITRG d.o.o.',
+                            'name'      => $selectedPlan['data']['account_name'],
                             'street'    => 'Donje Svetice 40',
                             'place'     => '10000 Zagreb',
-                            'iban'      => 'HR7923600001101523188',
+                            'iban'      => $selectedPlan['data']['iban'],
                             'model'     => '00',
                             'reference' => $pozivnabroj,
                         ),
