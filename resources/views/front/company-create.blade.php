@@ -119,5 +119,74 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const checkFields = ['email', 'weburl'];
+                const debounce = (fn, delay = 600) => {
+                    let timer;
+                    return (...args) => {
+                        clearTimeout(timer);
+                        timer = setTimeout(() => fn(...args), delay);
+                    };
+                };
+
+                const showStatus = (input, exists) => {
+                    let msg = input.parentElement.querySelector('.input-hint');
+                    if (!msg) {
+                        msg = document.createElement('div');
+                        msg.className = 'input-hint small mt-1';
+                        input.parentElement.appendChild(msg);
+                    }
+
+                    if (exists) {
+                        input.classList.add('is-invalid');
+                        msg.classList.remove('text-success');
+                        msg.classList.add('text-danger');
+                        msg.textContent = (input.name === 'email')
+                            ? "{{ __('Ova email adresa je već registrirana.') }}"
+                            : "{{ __('Ova web stranica već postoji u sustavu.') }}";
+                    } else {
+                        input.classList.remove('is-invalid');
+                        msg.classList.remove('text-danger');
+                        msg.classList.add('text-success');
+                        msg.textContent = (input.name === 'email')
+                            ? "{{ __('Email adresa je slobodna.') }}"
+                            : "{{ __('Web adresa je slobodna.') }}";
+                    }
+                };
+
+                const checkUnique = debounce((input) => {
+                    const value = input.value.trim();
+                    if (value.length < 3) return;
+
+                    fetch("{{ route('companies.checkUnique') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: JSON.stringify({
+                            field: input.name,
+                            value: value,
+                        }),
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        showStatus(input, data.exists);
+                    })
+                    .catch(console.error);
+                });
+
+                checkFields.forEach(field => {
+                    const input = document.querySelector(`[name="${field}"]`);
+                    if (!input) return;
+                    input.addEventListener('input', () => checkUnique(input));
+                });
+            });
+        </script>
+    @endpush
+
 @endsection
 

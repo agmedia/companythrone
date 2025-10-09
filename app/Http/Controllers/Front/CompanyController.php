@@ -369,6 +369,23 @@ class CompanyController extends Controller
     }
 
 
+    public function checkUnique(Request $request)
+    {
+        $field = $request->input('field');
+        $value = trim($request->input('value'));
+
+        abort_unless(in_array($field, ['email', 'weburl']), 400);
+
+        $exists = Company::query()
+                         ->where($field, $value)
+                         ->exists();
+
+        return response()->json([
+            'exists' => $exists,
+            'field'  => $field,
+        ]);
+    }
+
     /* ================= Helpers ================= */
 
     private function currentDraft(): ?Company

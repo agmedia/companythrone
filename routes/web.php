@@ -109,6 +109,9 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
          ->parameters(['banners' => 'banner']);*/
 });
 
+Route::post('/companies/check-unique', [CompanyController::class, 'checkUnique'])
+     ->name('companies.checkUnique');
+
 /**
  *
  */
