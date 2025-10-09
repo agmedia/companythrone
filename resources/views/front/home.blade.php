@@ -152,8 +152,8 @@
 
                                             </ul>
                                             <h3 class="h5 pt-1 mb-2">
-                                                {{--<a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->t_name }}</a>--}}
-                                                <a class="hover-effect-underline stretched-link" href="{{ nav()->urlById($c->id) }}">{{ $c->t_name }}</a>
+                                               <a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->t_name }}</a>
+
                                             </h3>
                                             <div class="d-flex align-items-center fs-sm">
                                                 <i class="fi-map-pin me-1"></i>
