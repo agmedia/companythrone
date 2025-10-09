@@ -40,7 +40,7 @@
                     </li>
 
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
-                        <a class="nav-link {{ request()->routeIs('faq') ? 'active' : '' }}" href="{{ localized_route('faq') }}">{{ __('nav.faq') }}</a>
+                        <a class="nav-link {{ request()->routeIs('faq') ? 'active' : '' }}" href="{{ nav_url('pages', id: 5) }}">{{ __('nav.faq') }}</a>
                     </li>
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
                         <a class="nav-link {{ request()->routeIs('kontakt') ? 'active' : '' }}" href="{{ localized_route('kontakt') }}">{{ __('nav.contact_us') }}</a>
