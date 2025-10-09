@@ -68,6 +68,17 @@
                     <input type="checkbox" name="status" value="1" @checked(old('status',$user->detail->status ?? true))> Aktivan
                 </div>
 
+                @if (! $isEdit)
+                    <div class="col-md-6">
+                        <label class="form-label">Lozinka</label>
+                        <input type="password" name="password" class="form-control" required minlength="8">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Potvrdi lozinku</label>
+                        <input type="password" name="password_confirmation" class="form-control" required minlength="8">
+                    </div>
+                @endif
+
             </div>
             <div class="card-footer d-flex gap-2">
                 <button class="btn btn-primary">{{ $isEdit ? 'Spremi promjene' : 'Dodaj korisnika' }}</button>

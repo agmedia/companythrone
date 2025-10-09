@@ -52,6 +52,8 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
+        $user->assignRole($validated['role']);
+
         UserDetail::create([
             'user_id' => $user->id,
             'fname'   => $request->input('fname', ''),
