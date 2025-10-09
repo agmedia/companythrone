@@ -109,6 +109,7 @@ class CompanyController extends Controller
             }
 
             $user->assignRole('company_owner');
+            $user->removeRole('customer');
 
             // referral link
             if (session()->has('referral_token')) {

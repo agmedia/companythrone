@@ -6,7 +6,7 @@
     <td>{{ $detail->id }}</td>
     <td>
         <div class="d-flex align-items-center gap-2">
-            <img src="{{ $avatar }}" class="rounded-circle border" style="width:36px;height:36px;object-fit:cover;">
+
             <div>
                 <div class="fw-semibold">{{ $detail->full_name }}</div>
                 <div class="text-muted small text-uppercase">{{ __('back/users.tabs.'.$detail->role) }}</div>

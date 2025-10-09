@@ -2,7 +2,7 @@
 
 return [
     'dashboard' => 'Nadzorna ploča',
-    
+
     'catalog'    => 'Katalog',
     'categories' => 'Kategorije',
     'companies'   => 'Tvrtke',
@@ -23,16 +23,16 @@ return [
     'geozones' => 'Geozone',
     'payments' => 'Načini Plaćanja',
     'shipping' => 'Načini Dostave',
-    
+
     'users'   => 'Korisnici',
-    
+
     'settings_caption' => 'Postavke',
     'my_profile'       => 'Moj profil',
     'settings'         => 'Postavke',
     'application'      => 'Aplikacija',
-    
-    'shop' => 'Lokalne Postvke',
-    
+
+    'shop' => 'Lokalne Postavke',
+
     'user' => [
         'my_account' => 'Moj račun',
         'settings'   => 'Postavke',
