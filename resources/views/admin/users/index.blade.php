@@ -19,9 +19,9 @@
                         </div>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('users.create') }}" class="btn btn-primary">
+                       {{--  <a href="{{ route('users.create') }}" class="btn btn-primary">
                             <i class="ti ti-plus"></i> {{ __('back/common.actions.new') }}
-                        </a>
+                        </a>--}}
                     </div>
                 </div>
 
