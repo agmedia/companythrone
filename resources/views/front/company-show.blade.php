@@ -107,7 +107,7 @@
         </div>
     </section>
 
-
+    @if($featured->isNotEmpty())
     <!-- Sport events carousel -->
     <section class="container pb-5 my-xxl-3">
         <div class="d-flex align-items-start justify-content-between gap-4 pb-3 mb-2 mb-sm-3">
@@ -190,7 +190,7 @@
             </button>
         </div>
     </section>
-
+    @endif
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
