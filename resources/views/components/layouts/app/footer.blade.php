@@ -70,7 +70,7 @@
                             <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 4) }}">O nama</a>
                         </li>
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ localized_route('faq') }}">Česta pitanja</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 5) }}">Česta pitanja</a>
                         </li>
                         <li class="pt-1">
                             <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ localized_route('kontakt') }}">Kontakt</a>
