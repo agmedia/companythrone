@@ -48,10 +48,10 @@
                             <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 3) }}">Opći uvjeti korištenja</a>
                         </li>
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 2) }}">Pravila privatnosti</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 2) }}">Politika privatnosti</a>
                         </li>
                         <li class="pt-1">
-                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 1) }}">Načini plaćanja</a>
+                            <a class="nav-link hover-effect-underline d-inline text-body fw-normal p-0" href="{{ nav_url('pages', id: 1) }}">Pravila o kolačićima</a>
                         </li>
 
 
