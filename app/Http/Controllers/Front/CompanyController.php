@@ -345,7 +345,7 @@ class CompanyController extends Controller
 
     public function error(Request $request)
     {
-        dd($request->all());
+        dd($request->session()->get(self::S_FINISH));
 
         return view('front.company-greska');
     }
