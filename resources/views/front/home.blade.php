@@ -163,7 +163,7 @@
 
                                         <div class="card-footer d-flex align-items-center justify-content-between gap-3 bg-transparent border-0 pt-0 pt-sm-4 p-4 pe-sm-0">
                                             {{--<a href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}" class="btn btn-outline-dark position-relative z-2"> Opširnije </a>--}}
-                                            <a href="{{ nav()->urlById($c->id) }}" class="btn btn-outline-dark position-relative z-2"> Opširnije </a>
+                                            <a href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}" class="btn btn-outline-dark position-relative z-2"> Opširnije </a>
                                         </div>
 
                                     </div>
