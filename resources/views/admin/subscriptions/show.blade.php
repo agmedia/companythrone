@@ -98,12 +98,29 @@
                             <td>{{ $p->id }}</td>
                             <td>{{ number_format($p->amount, 2) }} {{ $p->currency }}</td>
                             <td>
-                                @switch($p->status)
-                                    @case('pending') Na čekanju @break
-                                    @case('paid') Plaćeno @break
-                                    @case('failed') Neuspjelo @break
-                                    @default {{ ucfirst($p->status) }}
-                                @endswitch
+                                <form method="post" action="{{ route('payments.updateStatus', $p) }}" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <select name="status" class="form-select form-select-sm w-auto"
+                                            onchange="this.form.submit()">
+                                        @foreach($statuses as $s)
+                                            @php
+                                                $label = $s['title'][app()->getLocale()] ?? $s['title']['hr'] ?? ucfirst($s['id']);
+                                            @endphp
+                                            <option value="{{ $s['id'] }}" @selected($p->status == $s['id'])>
+                                                {{ $label }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @php
+                                        $current = $statuses->firstWhere('id', $p->status);
+                                    @endphp
+                                    <span class="badge bg-{{ $current['color'] ?? 'secondary' }}">
+                                        {{ $current['title'][app()->getLocale()] ?? ucfirst($p->status) }}
+                                    </span>
+                                    <noscript><button class="btn btn-sm btn-primary">Spremi</button></noscript>
+                                </form>
                             </td>
                             <td class="text-nowrap">
                                 {{ $p->period_start?->format('Y-m-d') ?? '—' }} — {{ $p->period_end?->format('Y-m-d') ?? '—' }}
@@ -112,9 +129,9 @@
                             <td>{{ $p->paid_at?->format('Y-m-d H:i') ?? '—' }}</td>
                             <td class="text-break">
                                 {{ $p->provider }}
-                                @if($p->provider_ref)
+                                {{--@if($p->provider_ref)
                                     <small class="text-muted">({{ $p->provider_ref }})</small>
-                                @endif
+                                @endif--}}
                             </td>
                             <td>{{ $p->invoice_no ?? '—' }}</td>
                         </tr>

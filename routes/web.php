@@ -63,6 +63,7 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     Route::patch('subscriptions/{subscription}/pause',    [AdminSubscriptionController::class, 'pause'])->name('subscriptions.pause');
     Route::patch('subscriptions/{subscription}/resume',   [AdminSubscriptionController::class, 'resume'])->name('subscriptions.resume');
     Route::patch('subscriptions/{subscription}/cancel',   [AdminSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    Route::put('/payments/{payment}/status', [AdminSubscriptionController::class, 'updateStatus'])->name('payments.updateStatus');
 
     Route::resource('banners', AdminBannerController::class)->names('banners');
     // FullCalendar JSON feed + CRUD

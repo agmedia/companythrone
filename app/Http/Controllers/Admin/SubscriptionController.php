@@ -6,12 +6,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Back\Subscription\UpdateSubscriptionRequest;
+use App\Models\Back\Billing\Payment;
 use App\Models\Back\Billing\Subscription;
+use App\Models\Back\Settings\Settings;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SubscriptionController extends Controller
 {
+
     public function index(Request $request)
     {
         $q = Subscription::query()->with(['company:id,email']);
@@ -20,14 +24,14 @@ class SubscriptionController extends Controller
         if ($request->filled('status') && $request->status !== 'all') {
             $q->where('status', $request->status);
         }
-        if ($request->filled('period') && in_array($request->period, ['monthly','yearly'], true)) {
+        if ($request->filled('period') && in_array($request->period, ['monthly', 'yearly'], true)) {
             $q->where('period', $request->period);
         }
-        if ($request->filled('auto') && in_array($request->auto, ['1','0'], true)) {
+        if ($request->filled('auto') && in_array($request->auto, ['1', '0'], true)) {
             $q->where('is_auto_renew', $request->auto === '1');
         }
         if ($request->filled('plan')) {
-            $q->where('plan', 'like', '%'.$request->string('plan')->toString().'%');
+            $q->where('plan', 'like', '%' . $request->string('plan')->toString() . '%');
         }
         if ($request->filled('email')) {
             $term = $request->string('email')->toString();
@@ -45,33 +49,45 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.index', compact('subscriptions'));
     }
 
+
     public function show(Subscription $subscription)
     {
-        $subscription->load(['company','payments' => fn($q) => $q->latest()]);
-        return view('admin.subscriptions.show', compact('subscription'));
+        $subscription->load(['company', 'payments' => fn($q) => $q->latest()]);
+        $orderStatuses = Settings::query()
+                                ->where('code', 'order_statuses')
+                                ->where('key', 'list')
+                                ->value('value');
+
+        $statuses = collect(json_decode($orderStatuses, true));
+
+        return view('admin.subscriptions.show', compact('subscription', 'statuses'));
     }
+
 
     public function edit(Subscription $subscription)
     {
         $subscription->load('company');
+
         return view('admin.subscriptions.edit', compact('subscription'));
     }
+
 
     public function update(UpdateSubscriptionRequest $request, Subscription $subscription)
     {
         return redirect()->route('subscriptions.index')
-            ->with('success', 'Subscription updated.');
+                         ->with('success', 'Subscription updated.');
     }
+
 
     // ---------- Quick actions ----------
 
     public function activate(Subscription $subscription)
     {
-        if (!in_array($subscription->status, ['trialing','paused','canceled','expired'], true)) {
+        if ( ! in_array($subscription->status, ['trialing', 'paused', 'canceled', 'expired'], true)) {
             return back()->with('error', 'Cannot activate from current status.');
         }
 
-        $subscription->status = 'active';
+        $subscription->status        = 'active';
         $subscription->is_auto_renew = true;
         if (empty($subscription->next_renewal_on)) {
             $subscription->next_renewal_on = $this->nextRenewalFrom(Carbon::today(), $subscription->period);
@@ -82,18 +98,20 @@ class SubscriptionController extends Controller
         return back()->with('success', 'Subscription activated.');
     }
 
+
     public function pause(Subscription $subscription)
     {
         if ($subscription->status !== 'active') {
             return back()->with('error', 'Only active subscriptions can be paused.');
         }
 
-        $subscription->status = 'paused';
+        $subscription->status        = 'paused';
         $subscription->is_auto_renew = false;
         $subscription->save();
 
         return back()->with('success', 'Subscription paused.');
     }
+
 
     public function resume(Subscription $subscription)
     {
@@ -101,7 +119,7 @@ class SubscriptionController extends Controller
             return back()->with('error', 'Only paused subscriptions can be resumed.');
         }
 
-        $subscription->status = 'active';
+        $subscription->status        = 'active';
         $subscription->is_auto_renew = true;
         if (empty($subscription->next_renewal_on)) {
             $subscription->next_renewal_on = $this->nextRenewalFrom(Carbon::today(), $subscription->period);
@@ -111,15 +129,16 @@ class SubscriptionController extends Controller
         return back()->with('success', 'Subscription resumed.');
     }
 
+
     public function cancel(Subscription $subscription)
     {
-        if (!in_array($subscription->status, ['trialing','active','paused'], true)) {
+        if ( ! in_array($subscription->status, ['trialing', 'active', 'paused'], true)) {
             return back()->with('error', 'Cannot cancel from current status.');
         }
 
-        $subscription->status = 'canceled';
+        $subscription->status        = 'canceled';
         $subscription->is_auto_renew = false;
-        $subscription->canceled_at = now();
+        $subscription->canceled_at   = now();
         // ako nema definiran kraj, postavi na danas (ili kraj tekućeg perioda po tvom poslovnom pravilu)
         if (empty($subscription->ends_on)) {
             $subscription->ends_on = Carbon::today();
@@ -128,6 +147,27 @@ class SubscriptionController extends Controller
 
         return back()->with('success', 'Subscription canceled.');
     }
+
+
+    public function updateStatus(Request $request, Payment $payment)
+    {
+        $statuses = collect(json_decode(
+            Settings::where('code', 'order_statuses')
+                    ->where('key', 'list')
+                    ->value('value'), true
+        ));
+
+        $validIds = $statuses->pluck('id')->toArray();
+
+        $data = $request->validate([
+            'status' => ['required', Rule::in($validIds)],
+        ]);
+
+        $payment->update(['status' => $data['status']]);
+
+        return back()->with('status', __('Status uplate je ažuriran.'));
+    }
+
 
     private function nextRenewalFrom(Carbon $from, string $period): Carbon
     {
