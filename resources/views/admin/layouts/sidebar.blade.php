@@ -95,6 +95,13 @@
                 </li>
 
                 <li class="pc-item">
+                    <a href="{{ route('payments.index') }}" class="pc-link">
+                        <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-dollar-square"></use></svg></span>
+                        <span class="pc-mtext">{{ __('Plaćanja') }}</span>
+                    </a>
+                </li>
+
+                <li class="pc-item">
                     <a href="{{ route('banners.index') }}" class="pc-link">
                         <span class="pc-micon"><svg class="pc-icon"><use xlink:href="#custom-video-play"></use></svg></span>
                         <span class="pc-mtext">{{ __('back/nav.banners') }}</span>

@@ -149,7 +149,7 @@ class SubscriptionController extends Controller
     }
 
 
-    public function updateStatus(Request $request, Payment $payment)
+    public function updatePaymentStatus(Request $request, Payment $payment)
     {
         $statuses = collect(json_decode(
             Settings::where('code', 'order_statuses')

@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\{BannerEventController,
     BannerController as AdminBannerController,
     CategoryController as AdminCategoryController,
     DashboardController,
+    PaymentController,
     Settings\SettingsController,
     SubscriptionController as AdminSubscriptionController,
     UserController};
@@ -63,7 +64,14 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     Route::patch('subscriptions/{subscription}/pause',    [AdminSubscriptionController::class, 'pause'])->name('subscriptions.pause');
     Route::patch('subscriptions/{subscription}/resume',   [AdminSubscriptionController::class, 'resume'])->name('subscriptions.resume');
     Route::patch('subscriptions/{subscription}/cancel',   [AdminSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
-    Route::put('/payments/{payment}/status', [AdminSubscriptionController::class, 'updateStatus'])->name('payments.updateStatus');
+    Route::put('/payments/{payment}/status', [AdminSubscriptionController::class, 'updatePaymentStatus'])->name('payments.updateStatus');
+
+    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::get('/', [PaymentController::class, 'index'])->name('index');
+        Route::get('/{payment}/edit', [PaymentController::class, 'edit'])->name('edit');
+        Route::put('/{payment}', [PaymentController::class, 'update'])->name('update');
+    });
+
 
     Route::resource('banners', AdminBannerController::class)->names('banners');
     // FullCalendar JSON feed + CRUD
