@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\Billing\Payment;
 use App\Models\Back\Settings\Settings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class PaymentController extends Controller
@@ -88,8 +89,11 @@ class PaymentController extends Controller
          *
          * @var \Illuminate\Http\Request
          */
-        if ($request->expectsJson()) {
-            $status = $statuses->firstWhere('id', $payment->status);
+        if ( ! $request->hasAny(['invoice_no', 'provider', 'paid_at']) && $request->has(['status'])) {
+            $status = $statuses->firstWhere('id', $request->integer('status'));
+
+            $payment->fill($data)->save();
+
             return response()->json([
                 'success' => true,
                 'label'   => $status['title'][app()->getLocale()] ?? ucfirst($payment->status),

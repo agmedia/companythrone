@@ -69,7 +69,7 @@ Route::prefix('admin')->middleware(['auth','role:master|admin'])->group(function
     Route::prefix('payments')->name('payments.')->group(function () {
         Route::get('/', [PaymentController::class, 'index'])->name('index');
         Route::get('/{payment}/edit', [PaymentController::class, 'edit'])->name('edit');
-        Route::put('/{payment}', [PaymentController::class, 'update'])->name('update');
+        Route::post('/{payment}', [PaymentController::class, 'update'])->name('update');
     });
 
 

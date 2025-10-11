@@ -54,9 +54,9 @@ return [
 
     // Tabovi / grupe u adminu
     'groups' => [
-        'site'     => ['label' => 'Site',     'icon' => 'ti ti-world',  'i18n' => true],
+        'site'     => ['label' => 'Stranica',     'icon' => 'ti ti-world',  'i18n' => true],
         'ui'       => ['label' => 'UI',       'icon' => 'ti ti-layout', 'i18n' => false],
-        'company'  => ['label' => 'Company',  'icon' => 'ti ti-building', 'i18n' => false],
+        'company'  => ['label' => 'Basic Info',  'icon' => 'ti ti-building', 'i18n' => false],
     ],
 
     /**
@@ -71,23 +71,21 @@ return [
     // Polja po grupi (tip: text|email|number|boolean|i18n_text|i18n_textarea|textarea|decimal)
     'fields' => [
         'site' => [
-            'title'         => ['type' => 'i18n_text',     'label' => 'Site title',  'default' => ['hr'=>'','en'=>'']],
-            'slogan'        => ['type' => 'i18n_text',     'label' => 'Site slogan', 'default' => ['hr'=>'','en'=>'']],
-            'contact_email' => ['type' => 'email',         'label' => 'Contact email', 'default' => ''],
-            'contact_phone' => ['type' => 'text',          'label' => 'Contact phone', 'default' => ''],
-            'about'         => ['type' => 'i18n_textarea', 'label' => 'About (footer)', 'default' => ['hr'=>'','en'=>'']],
+            'title'         => ['type' => 'i18n_text',     'label' => 'Naslov stranice',  'default' => ['hr'=>'','en'=>'']],
+            'slogan'        => ['type' => 'i18n_text',     'label' => 'Slogan stranice', 'default' => ['hr'=>'','en'=>'']],
+            'contact_email' => ['type' => 'email',         'label' => 'Kontakt email', 'default' => ''],
+            'contact_phone' => ['type' => 'text',          'label' => 'Kontakt telefon', 'default' => ''],
         ],
 
         'ui' => [
-            'admin_pagination' => ['type' => 'number',  'label' => 'Admin pagination size', 'default' => 20, 'min' => 5, 'max' => 200, 'step' => 1],
-            'front_pagination' => ['type' => 'number',  'label' => 'Front pagination size', 'default' => 12, 'min' => 6, 'max' => 60, 'step' => 1],
-            'show_beta_badge'  => ['type' => 'boolean', 'label' => 'Show beta badge',      'default' => false],
+            'admin_pagination' => ['type' => 'number',  'label' => 'Admin paginacija', 'default' => 20, 'min' => 5, 'max' => 200, 'step' => 1],
+            'front_pagination' => ['type' => 'number',  'label' => 'Front paginacija', 'default' => 12, 'min' => 6, 'max' => 60, 'step' => 1]
         ],
 
         'company' => [
-            'auth_clicks_required'   => ['type' => 'number',  'label' => 'Daily clicks required for auth', 'default' => 5, 'min'=>0, 'max'=>100, 'step'=>1],
-            'auth_click_window_days' => ['type' => 'number',  'label' => 'Auth click window (days)',        'default' => 1, 'min'=>1, 'max'=>30,  'step'=>1],
-            'link_active_default'    => ['type' => 'boolean', 'label' => 'New company link active by default', 'default' => false],
+            'auth_clicks_required'   => ['type' => 'number',  'label' => 'Potreban broj dnevnih klikova', 'default' => 25, 'min'=>0, 'max'=>100, 'step'=>1],
+            'auth_click_window_days' => ['type' => 'number',  'label' => 'Potreban broj referenci za aktivaciju linka', 'default' => 5, 'min'=>1, 'max'=>30,  'step'=>1],
+            'link_active_default'    => ['type' => 'boolean', 'label' => 'Nova kompanija aktivna po defaultu', 'default' => false],
         ],
 
     ],

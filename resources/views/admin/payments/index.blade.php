@@ -87,7 +87,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <span class="badge bg-{{ $color }} status-badge">{{ $title }}</span>
+                                <span class="badge bg-{{ $color }} status-badge-{{ $p->id }}">{{ $title }}</span>
                             </div>
                         </td>
                         <td>{{ $p->period_start?->format('Y-m-d') }} — {{ $p->period_end?->format('Y-m-d') }}</td>
@@ -120,10 +120,16 @@
                         const paymentId = select.dataset.id;
                         const newStatus = select.value;
                         const row = select.closest('tr');
-                        const badge = row.querySelector('.status-badge');
+                        const badge = row.querySelector('.status-badge-' + paymentId);
 
                         fetch(`/admin/payments/${paymentId}`, {
-                            method: 'PUT',
+                            method: 'post',
+                            credentials: 'same-origin',
+                            redirect: 'follow',
+                            referrerPolicy: 'no-referrer',
+                            cache: 'no-cache',
+                            mode: 'same-origin',
+                            referrer: 'no-referrer',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -132,6 +138,7 @@
                         })
                         .then(r => r.json().catch(() => null))
                         .then(data => {
+                            console.log(data)
                             if (data?.success) {
                                 badge.className = 'badge bg-' + (data.color ?? 'secondary') + ' status-badge';
                                 badge.textContent = data.label ?? newStatus;
