@@ -11,11 +11,14 @@ class SubscriptionsController extends Controller
 
     public function index(SettingsManager $settings)
     {
+        $user = auth()->user();
+        $invoices = (new InvoiceService())->forUser($user);
+        $statuses = collect($settings->get('order_statuses', 'list', []));
         $payments = collect($settings->paymentsActive());
 
-        //dd($payments);
+        //dd($payments, $statuses, $statuses->where('id', 3)->first());
 
-        return view('front.account.payments', compact('payments'));
+        return view('front.account.payments', compact('user', 'payments', 'invoices', 'statuses'));
     }
 
 

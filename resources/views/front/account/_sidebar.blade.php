@@ -13,13 +13,13 @@
                     <i class="fi-link me-2"></i> {{ __('Moji linkovi') }}
                 </a>
             @endif
+            <a href="{{ route('account.subscriptions') }}"
+               class="list-group-item list-group-item-action {{ request()->routeIs('account.subscriptions') ? 'active' : '' }}">
+                <i class="fi-check-shield me-2"></i> {{ __('Pretplate') }}
+            </a>
             <a href="{{ route('account.payments') }}"
                class="list-group-item list-group-item-action {{ request()->routeIs('account.payments') ? 'active' : '' }}">
                 <i class="fi-credit-card me-2"></i> {{ __('Računi') }}
-            </a>
-            <a href="{{ route('account.subscriptions') }}"
-               class="list-group-item list-group-item-action {{ request()->routeIs('account.subscriptions') ? 'active' : '' }}">
-                <i class="fi-box me-2"></i> {{ __('Pretplate') }}
             </a>
         @endif
         <a href="{{ route('account.profile.edit') }}"

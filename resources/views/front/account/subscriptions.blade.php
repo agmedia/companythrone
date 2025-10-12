@@ -14,7 +14,7 @@
                     <div class="alert alert-info">{{ __('Nemate aktivnih pretplata.') }}</div>
                 @else
                     <div class="table-responsive">
-                        <table class="table table-striped align-middle">
+                        <table class="table table-striped table-bordered align-middle fs-sm">
                             <thead>
                             <tr>
                                 <th>{{ __('Plan') }}</th>
