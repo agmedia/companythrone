@@ -9,12 +9,18 @@
                 <h1 class="display-5 text-white text-center pb-2 pb-md-0 mb-4 mb-md-5">{{ __('home.headline') }}</h1>
 
                 <!-- Search form -->
-                <form class="bg-white border rounded-4 p-2 mb-4 mb-md-5" data-bs-theme="light" novalidate>
+                <form class="bg-white border rounded-4 p-2 mb-4 mb-md-5" method="get" action="{{ localized_route('companies.index') }}" data-bs-theme="light" novalidate>
                     <div class="d-flex flex-column flex-md-row gap-3 p-1">
                         <div class="d-flex flex-column flex-sm-row w-100 gap-2 gap-sm-3">
                             <div class="position-relative w-100">
                                 <i class="fi-search position-absolute top-50 start-0 translate-middle-y fs-xl text-secondary-emphasis ms-2"></i>
-                                <input type="search" class="form-control form-control-lg form-icon-start border-0 rounded-0 pe-0" placeholder="{{ __('company.search_placeholder') }}" required>
+                                <input type="search" class="form-control form-control-lg form-icon-start border-0 rounded-0 pe-0" placeholder="{{ __('company.search_placeholder') }}" id="q"
+                                       name="q"
+                                       value="" required>
+
+
+
+
                             </div>
                         </div>
                         <button type="submit" class="btn btn-lg btn-primary">{{ __('home.search_companies') }}</button>
