@@ -274,7 +274,7 @@
 
 
 
-                        <a class="btn btn-lg btn-outline-light animate-slide-end" href="#!">
+                        <a class="btn btn-lg btn-outline-light animate-slide-end" href="{{ nav_url('pages', id: 4) }}">
                             Saznajte više
                             <i class="fi-chevron-right fs-lg animate-target ms-2 me-n2"></i>
                         </a>
