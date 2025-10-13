@@ -265,8 +265,22 @@ class CompanyController extends Controller
                 if ($driverFqcn && class_exists($driverFqcn) && method_exists($driverFqcn, 'frontBlade')) {
                     // merge default config + DB data (iz SettingsManagera)
                     $provider                   = collect($payments)->where('code', $selectedPlan['code'])->first();
-                    $data                       = $subscription->with('company')->get()->toArray();
-                    $data[0]['company']['name'] = $company->t_name;
+                    // umjesto: $data = $subscription->with('company')->get()->toArray();
+                    $subscription->load('company');
+
+// pripremi točno ono što driver očekuje
+                    $data = [[
+                        'id'      => $subscription->id,
+                        'price'   => $subscription->price,
+                        'company' => [
+                            // koristi prevedeni naziv ako ga imaš
+                            'name'      => $company->t_name ?? $subscription->company->name,
+                            'street'    => $subscription->company->street,
+                            'street_no' => $subscription->company->street_no,
+                            'city'      => $subscription->company->city,
+                        ],
+                    ]];
+
 
                     Log::info('$data');
                     Log::info($data);
