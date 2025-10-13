@@ -45,10 +45,7 @@
 
                     <h1 class="display-6 mb-4">{{ $company->t_name }}</h1>
                     <ul class="list-unstyled gap-3 fs-sm pb-3 pb-sm-0 mb-3">
-                        <li class="d-flex">
-                            <i class="fi-calendar fs-base me-2" style="margin-top: 3px"></i>
-                           Objavljeno:  {{ $company->published_at }}
-                        </li>
+
 
 
                             <li class="d-flex flex-wrap gap-2">
