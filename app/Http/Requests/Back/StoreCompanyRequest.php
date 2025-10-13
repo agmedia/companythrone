@@ -21,7 +21,7 @@ class StoreCompanyRequest extends FormRequest
         $rules = [
             // Core (companies)
             'level_id'        => ['required', 'integer', 'exists:levels,id'],
-            'oib'             => ['required', 'string', 'max:20', 'unique:companies,oib'],
+            'oib'             => ['nullable', 'string', 'max:20'],
             'street'          => ['nullable', 'string', 'max:255'],
             'street_no'       => ['nullable', 'string', 'max:50'],
             'city'            => ['nullable', 'string', 'max:120'],

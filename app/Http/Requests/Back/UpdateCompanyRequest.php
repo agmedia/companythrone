@@ -24,7 +24,7 @@ class UpdateCompanyRequest extends FormRequest
         $rules = [
             // Core
             'level_id'        => ['nullable', 'integer', 'exists:levels,id'],
-            'oib'             => ['required', 'string', 'max:20', Rule::unique('companies', 'oib')->ignore($companyId)],
+            'oib'             => ['nullable', 'string', 'max:20'],
             'street'          => ['nullable', 'string', 'max:255'],
             'street_no'       => ['nullable', 'string', 'max:50'],
             'city'            => ['nullable', 'string', 'max:120'],
