@@ -38,7 +38,7 @@
                                         </span>
                                     </td>
                                     <td>{{ $sub->starts_on?->format('d.m.Y') ?? '—' }}</td>
-                                    <td>{{ $sub->ends_on?->format('d.m.Y') ?? '—' }}</td>
+                                    <td class="text-muted">{{ $sub->ends_on?->format('d.m.Y') ?? $sub->starts_on->addYear()->format('d.m.Y') }}</td>
                                     <td>{{ $sub->is_auto_renew ? __('Da') : __('Ne') }}</td>
                                 </tr>
                             @endforeach

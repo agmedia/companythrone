@@ -41,7 +41,7 @@ class CompanyController extends Controller
         // ⚠️ prilagodi po stvarnim inputima u company-create.blade.php
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
-            'oib'         => ['required', 'string', 'max:20'],
+            'oib'         => ['nullable', 'string', 'max:20'],
             'email'       => ['required', 'email', 'max:255'],
             'weburl'      => ['nullable', 'url', 'max:255'],
             'street'      => ['required', 'string', 'max:255'],
@@ -109,6 +109,7 @@ class CompanyController extends Controller
             }
 
             $user->assignRole('company_owner');
+            $user->detail()->update(['role' => 'company_owner']);
             $user->removeRole('customer');
 
             // referral link
