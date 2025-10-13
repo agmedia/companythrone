@@ -127,7 +127,7 @@
                         </div>
 
                         {{-- Phone --}}
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Telefon</label>
                             <input type="tel" name="phone"
                                    value="{{ old('phone', $company->phone ?? '') }}"
@@ -135,24 +135,24 @@
                             @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        {{-- Published at --}}
+                        {{-- Published at
                         <div class="col-md-4">
                             <label class="form-label">Datum i vrijeme objave</label>
                             <input type="datetime-local" name="published_at"
                                    value="{{ $publishedAtValue }}"
                                    class="form-control @error('published_at') is-invalid @enderror">
                             @error('published_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
+                        </div>--}}
 
                         {{-- Counters --}}
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label class="form-label">Broj preporuka</label>
                             <input type="number" min="0" step="1" name="referrals_count"
                                    value="{{ old('referrals_count', $company->referrals_count ?? 0) }}"
                                    class="form-control @error('referrals_count') is-invalid @enderror">
                             @error('referrals_count') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label class="form-label">Klikovi</label>
                             <input type="number" min="0" step="1" name="clicks"
                                    value="{{ old('clicks', $company->clicks ?? 0) }}"

@@ -144,13 +144,7 @@
                                     </div>
                                     <div class="col-sm-7 col-md-7 d-flex flex-column order-md-1">
                                         <div class="card-body pe-sm-0 pe-lg-4">
-                                            <ul class="list-unstyled flex-row flex-wrap align-items-center gap-2 fs-sm mb-2">
-                                                <li class="d-flex align-items-center">
-                                                    <i class="fi-calendar me-1"></i>
-                                                    {{ $c->published_at }}
-                                                </li>
 
-                                            </ul>
                                             <h3 class="h5 pt-1 mb-2">
                                                <a class="hover-effect-underline stretched-link" href="{{ LaravelLocalization::getLocalizedURL(app()->getLocale(), route('companies.show', ['companyBySlug' => $c->t_slug], false)) }}">{{ $c->t_name }}</a>
 
