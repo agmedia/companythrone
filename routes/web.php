@@ -193,6 +193,10 @@ Route::group([
 
              Route::get('/payments', [SubscriptionsController::class, 'index'])->name('payments');
              Route::get('/subscriptions', [SubscriptionsController::class, 'subscriptions'])->name('subscriptions');
+             Route::post('/subscriptions/{subscription}/toggle-renew', [SubscriptionsController::class, 'toggleRenew'])
+                  ->middleware('auth')
+                  ->name('subscriptions.toggleRenew');
+
              Route::get('/invoices',      [SubscriptionsController::class, 'invoices'])->name('invoices');
              Route::get('/moj-racun/invoices/{invoice}/download', [SubscriptionsController::class, 'downloadInvoice'])
                   ->name('account.invoices.download');

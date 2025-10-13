@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front\Account;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shared\Subscription;
 use App\Services\Billing\InvoiceService;
 use App\Services\Settings\SettingsManager;
 
@@ -44,6 +45,20 @@ class SubscriptionsController extends Controller
 
         return view('front.account.subscriptions', compact('subs'));
     }
+
+
+    public function toggleRenew(Subscription $subscription)
+    {
+        $subscription->is_auto_renew = ! $subscription->is_auto_renew;
+        $subscription->save();
+
+        return response()->json([
+            'success' => true,
+            'is_auto_renew' => $subscription->is_auto_renew,
+            'label' => $subscription->is_auto_renew ? __('Da') : __('Ne'),
+        ]);
+    }
+
 
 
     public function downloadInvoice($invoiceId)

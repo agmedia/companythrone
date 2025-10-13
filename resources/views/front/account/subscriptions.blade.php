@@ -39,7 +39,19 @@
                                     </td>
                                     <td>{{ $sub->starts_on?->format('d.m.Y') ?? '—' }}</td>
                                     <td class="text-muted">{{ $sub->ends_on?->format('d.m.Y') ?? $sub->starts_on->addYear()->format('d.m.Y') }}</td>
-                                    <td>{{ $sub->is_auto_renew ? __('Da') : __('Ne') }}</td>
+                                    <td>
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input auto-renew-toggle"
+                                                   type="checkbox"
+                                                   role="switch"
+                                                   data-id="{{ $sub->id }}"
+                                                    @checked($sub->is_auto_renew)>
+                                            <label class="form-check-label small text-muted">
+                                                {{ $sub->is_auto_renew ? __('Da') : __('Ne') }}
+                                            </label>
+                                        </div>
+                                    </td>
+
                                 </tr>
                             @endforeach
                             </tbody>
@@ -50,3 +62,39 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.auto-renew-toggle').forEach(toggle => {
+                toggle.addEventListener('change', e => {
+                    const subId = toggle.dataset.id;
+                    const label = toggle.closest('td').querySelector('.form-check-label');
+                    const state = toggle.checked;
+
+                    fetch(`/moj-racun/subscriptions/${subId}/toggle-renew`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        }
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            label.textContent = data.label;
+                            toggle.checked = data.is_auto_renew;
+                        } else {
+                            toggle.checked = !state;
+                            alert('Greška pri ažuriranju.');
+                        }
+                    })
+                    .catch(() => {
+                        toggle.checked = !state;
+                        alert('Greška pri komunikaciji.');
+                    });
+                });
+            });
+        });
+    </script>
+@endpush
