@@ -180,7 +180,7 @@ class Driver implements PaymentProviderInterface
                             'reference' => $pozivnabroj,
                         ),
                     'purpose'     => 'CMDT',
-                    'description' => 'Pretplata CompanyThrone',
+                    'description' => 'CompanyThrone pretplata'. $pozivnabroj,
                 ),
         );
 

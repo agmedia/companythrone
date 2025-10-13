@@ -268,7 +268,7 @@ class CompanyController extends Controller
                     // umjesto: $data = $subscription->with('company')->get()->toArray();
                     $subscription->load('company');
 
-// pripremi točno ono što driver očekuje
+                // pripremi točno ono što driver očekuje
                     $data = [[
                         'id'      => $subscription->id,
                         'price'   => $subscription->price,
