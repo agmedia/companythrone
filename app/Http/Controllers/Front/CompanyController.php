@@ -11,6 +11,7 @@ use App\Services\Settings\SettingsManager;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Models\Back\Settings\Settings;
@@ -51,11 +52,14 @@ class CompanyController extends Controller
             'phone'       => ['nullable', 'string', 'max:50'],
             'description' => ['nullable', 'string'],
             'logo_file'   => ['nullable', 'image', 'max:2048'],
-
         ]);
 
         $company = $this->currentDraft() ?? new Company();
         $user    = auth()->user();
+
+        if ( ! auth()->check()) {
+            return redirect()->route('login');
+        }
 
         DB::transaction(function () use (&$company, $data, $request, $user) {
             // osnovna polja
@@ -224,6 +228,10 @@ class CompanyController extends Controller
                                         ->where('status', 'active')
                                         ->first();
 
+            Log::info('public function review(Request $request, SettingsManager $settings)');
+            Log::info($company->toArray());
+            Log::info($subscription ? $subscription->toArray() : 'null');
+
             if ( ! $subscription) {
                 $start   = Carbon::today();
                 $nextRen = $period === 'monthly'
@@ -245,6 +253,8 @@ class CompanyController extends Controller
                 ]);
             }
 
+            Log::info($subscription ? $subscription->toArray() : 'null');
+
             // ============ 4) Priprema payment driver view-a kao i do sad ============
             $paymentView = null;
             $paymentData = [];
@@ -258,7 +268,8 @@ class CompanyController extends Controller
                     $data                       = $subscription->with('company')->get()->toArray();
                     $data[0]['company']['name'] = $company->t_name;
 
-
+                    Log::info('$data');
+                    Log::info($data);
 
                     $paymentData = $driverFqcn::buildFrontData($data);
 
