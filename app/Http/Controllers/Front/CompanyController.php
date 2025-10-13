@@ -72,6 +72,7 @@ class CompanyController extends Controller
                 'is_published'   => false, // draft
                 'is_link_active' => false,
                 'user_id'        => $user->id,  // ✅ set from the session user
+                'level'          => 1,
             ]);
 
             // prijevod (t_* polja) – osiguraj slug
