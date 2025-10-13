@@ -124,10 +124,10 @@ class Driver implements PaymentProviderInterface
     /** Controller će pozvati ovo da pripremi $data za blade */
     public static function buildFrontData(array $data): array
     {
-        self::create_QR($data[0]);
+        self::create_QR($data);
 
         return [
-            'id'       => $data[0]['id'] . '-' . date('Y'),
+            'id'       => $data['id'] . '-' . date('Y'),
             'callback' => route('order'),
         ];
     }

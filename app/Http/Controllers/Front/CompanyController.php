@@ -268,8 +268,8 @@ class CompanyController extends Controller
                     // umjesto: $data = $subscription->with('company')->get()->toArray();
                     $subscription->load('company');
 
-                // pripremi točno ono što driver očekuje
-                    $data = [[
+                    // pripremi točno ono što driver očekuje
+                    $data = [
                         'id'      => $subscription->id,
                         'price'   => $subscription->price,
                         'company' => [
@@ -279,11 +279,7 @@ class CompanyController extends Controller
                             'street_no' => $subscription->company->street_no,
                             'city'      => $subscription->company->city,
                         ],
-                    ]];
-
-
-                    Log::info('$data');
-                    Log::info($data);
+                    ];
 
                     $paymentData = $driverFqcn::buildFrontData($data);
 
