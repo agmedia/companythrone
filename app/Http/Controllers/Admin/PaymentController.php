@@ -92,6 +92,10 @@ class PaymentController extends Controller
         if ( ! $request->hasAny(['invoice_no', 'provider', 'paid_at']) && $request->has(['status'])) {
             $status = $statuses->firstWhere('id', $request->integer('status'));
 
+            if (in_array($status['id'], config('settings.payments.paid_status'))) {
+                $data['paid_at'] = now();
+            }
+
             $payment->fill($data)->save();
 
             return response()->json([

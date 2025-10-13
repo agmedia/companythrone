@@ -117,21 +117,20 @@
                                     <td>{{ $p->id }}</td>
                                     <td class="text-break">{{ $p->company?->email ?? '—' }}</td>
                                     <td>
-                                    <span class="badge
-                                        @if($p->status === 'paid') bg-success
-                                        @elseif($p->status === 'pending') bg-warning
-                                        @elseif($p->status === 'failed') bg-danger
-                                        @else bg-secondary @endif">
-                                        {{ ucfirst($p->status) }}
-                                    </span>
+                                        @foreach($payment_status as $s)
+                                            @php $label = $s['title'][current_locale()] ?? $s['title']['hr']; @endphp
+                                            @if ($p->status == $s['id'])
+                                                <span class="badge bg-{{ $s['color'] }}">{{ $label }}</span>
+                                            @endif
+                                        @endforeach
                                     </td>
                                     <td class="text-nowrap">{{ number_format($p->amount, 2) }} {{ $p->currency }}</td>
-                                    <td class="text-nowrap">
+                                    <td class="text-nowrap fs-sm">
                                         {{ $p->period_start?->format('Y-m-d') ?? '—' }} — {{ $p->period_end?->format('Y-m-d') ?? '—' }}
                                     </td>
-                                    <td class="text-nowrap">{{ $p->issued_at?->format('Y-m-d H:i') ?? '—' }}</td>
-                                    <td class="text-nowrap">{{ $p->paid_at?->format('Y-m-d H:i') ?? '—' }}</td>
-                                    <td class="text-break">{{ $p->provider ?? '—' }}</td>
+                                    <td class="text-nowrap fs-sm">{{ $p->issued_at?->format('Y-m-d H:i') ?? '—' }}</td>
+                                    <td class="text-nowrap fs-sm">{{ $p->paid_at?->format('Y-m-d H:i') ?? '—' }}</td>
+                                    <td class="text-break fs-sm">{{ \Illuminate\Support\Str::take($p->provider, 27) . '...' ?? '—' }}</td>
                                 </tr>
                             @empty
                                 <tr><td colspan="8">Još nema plaćanja.</td></tr>

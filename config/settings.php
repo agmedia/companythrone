@@ -8,6 +8,7 @@ return [
     'payments' => [
         // Novi status narudžbe
         'new_status' => 1,
+        'paid_status' => [3],
         //
         'providers' => [
             'bank' => [

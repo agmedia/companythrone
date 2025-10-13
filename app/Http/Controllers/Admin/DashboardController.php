@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\Billing\Payment;
 use App\Models\Back\Billing\Subscription;
 use App\Models\Back\Catalog\Company;
+use App\Services\Settings\SettingsManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -72,12 +73,14 @@ class DashboardController extends Controller
         $latestPayments = Payment::with('company:id,email')
                                  ->latest('id')->limit(10)->get();
 
+        $payment_status = (new SettingsManager())->get('order_statuses', 'list', []);
+
         return view('admin.dashboard.index', compact(
             'companiesTotal','companiesActive','subsActive','paymentsPending','upcomingRenewals',
             'mrr','revenueThisMonth',
             'labels','paymentsCount','paymentsSum',
             'subStatusLabels','subStatusData',
-            'latestPayments'
+            'latestPayments', 'payment_status'
         ));
     }
 
