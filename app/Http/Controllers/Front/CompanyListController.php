@@ -83,9 +83,10 @@ class CompanyListController extends Controller
                                     ->where('ct.locale', '=', $locale);
                               })
                               ->where('categories.is_active', true)
-                              ->select(['categories.id', 'ct.name', 'ct.slug'])
+                              ->select(['categories.id', 'ct.name', 'ct.slug','categories.group'])
                               ->orderBy('ct.name')
                               ->get();
+
 
         return view('front.companies.index', [
             'companies'  => $companies,
@@ -130,10 +131,13 @@ class CompanyListController extends Controller
                                     ->where('ct.locale', '=', $locale);
                               })
                               ->where('cc.company_id', '=', $company->id)
-                        ->where('group', '=', 'categories')
                               ->select(['categories.id', 'ct.name',  'ct.slug'])
                               ->orderBy('ct.name')
                               ->get();
+
+
+
+
         $featured = Company::query()->where('is_published', true)->where('id', '!=', $company->id)->latest()->take(12)->get();
         // View `front.company-show` već koristi fallback pattern (t_name ?? name)
 

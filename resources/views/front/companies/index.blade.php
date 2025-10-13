@@ -52,6 +52,7 @@
                                 </div>
 
                                 {{-- Kategorija (Choices) --}}
+                                {{-- dd($categories) --}}
                                 <div>
                                     <h4 class="h6 mb-2">{{ __('company.category') }}</h4>
                                     <div class="position-relative">
@@ -67,7 +68,9 @@
                                                 aria-label="{{ __('company.category') }}">
                                             <option value="">{{ __('company.all_categories') }}</option>
                                             @foreach($categories as $c)
+                                                @if($c->group == 'categories')
                                                 <option value="{{ $c->slug }}" @selected($cat === $c->slug)>{{ $c->name }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
