@@ -130,6 +130,7 @@ class CompanyListController extends Controller
                                     ->where('ct.locale', '=', $locale);
                               })
                               ->where('cc.company_id', '=', $company->id)
+                        ->where('group', '=', 'categories')
                               ->select(['categories.id', 'ct.name',  'ct.slug'])
                               ->orderBy('ct.name')
                               ->get();
