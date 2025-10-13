@@ -26,6 +26,14 @@
     <td class="text-muted">{{ $detail->updated_at?->format('Y-m-d H:i') }}</td>
     <td class="text-end">
         <div class="d-inline-flex gap-2">
+            @role(['master','admin'])
+            <form action="{{ route('admin.users.impersonate', $detail->user->id) }}" method="POST" class="d-inline">
+                @csrf
+                <button class="btn btn-sm btn-outline-warning rounded-circle" title="Prijavi se kao korisnik">
+                    <i class="ti ti-login"></i>
+                </button>
+            </form>
+            @endrole
             <a href="{{ route('users.edit', $detail->user->id) }}" class="btn btn-sm btn-outline-primary rounded-circle" title="@lang('back/common.actions.edit')">
                 <i class="ti ti-edit"></i>
             </a>

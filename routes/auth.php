@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ImpersonateController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -11,6 +12,13 @@ use App\Livewire\Auth\{
 
 Livewire::setUpdateRoute(function ($handle) {
     return Route::post('/livewire/update', $handle);
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/users/{user}/impersonate', [ImpersonateController::class, 'start'])
+         ->name('admin.users.impersonate');
+    Route::post('/users/stop-impersonate', [ImpersonateController::class, 'stop'])
+         ->name('admin.users.stopImpersonate');
 });
 
 // Gost

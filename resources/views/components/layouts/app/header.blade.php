@@ -136,4 +136,15 @@
 
         </div>
     </div>
+
+    @if(session()->has('impersonate_original_id'))
+        <div class="alert alert-warning text-center mb-0 py-2 small">
+            {{ __('Prijavljeni ste kao drugi korisnik.') }}
+            <form action="{{ route('admin.users.stopImpersonate') }}" method="POST" class="d-inline ms-2">
+                @csrf
+                <button class="btn btn-sm btn-light">{{ __('Vrati se u admin račun') }}</button>
+            </form>
+        </div>
+    @endif
+
 </header>
