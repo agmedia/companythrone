@@ -7,7 +7,7 @@
             <i class="fi-home me-2"></i> {{ __('Dashboard') }}
         </a>
         @if (auth()->user()->hasRole('company_owner'))
-            @if (subscription_active(auth()->user()->company))
+            @if (auth()->user()->company && subscription_active(auth()->user()->company->id))
                 <a href="{{ route('account.links.index') }}"
                    class="list-group-item list-group-item-action {{ request()->routeIs('account.links.*') ? 'active' : '' }}">
                     <i class="fi-link me-2"></i> {{ __('Moji linkovi') }}
