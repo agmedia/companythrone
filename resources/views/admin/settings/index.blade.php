@@ -79,7 +79,7 @@
                                                 </div>
                                             </div>
                                         @elseif($type === 'boolean')
-                                            <div class="col-md-4 d-flex align-items-end">
+                                            <div class="col-12 d-flex align-items-end mt-4">
                                                 <div class="form-check form-switch">
                                                     <input type="hidden" name="settings[{{ $code }}][{{ $key }}]" value="0">
                                                     <input class="form-check-input" type="checkbox"
@@ -89,17 +89,21 @@
                                                 </div>
                                             </div>
                                         @elseif($type === 'number')
-                                            <div class="col-md-4">
-                                                <label class="form-label">{{ $label }}</label>
-                                                <input type="number" class="form-control"
-                                                       name="settings[{{ $code }}][{{ $key }}]"
-                                                       value="{{ old("settings.$code.$key", $val) }}"
-                                                       @if(isset($def['min'])) min="{{ $def['min'] }}" @endif
-                                                       @if(isset($def['max'])) max="{{ $def['max'] }}" @endif
-                                                       @if(isset($def['step'])) step="{{ $def['step'] }}" @endif>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <label class="form-label">{{ $label }}</label>
+                                                        <input type="number" class="form-control"
+                                                               name="settings[{{ $code }}][{{ $key }}]"
+                                                               value="{{ old("settings.$code.$key", $val) }}"
+                                                               @if(isset($def['min'])) min="{{ $def['min'] }}" @endif
+                                                               @if(isset($def['max'])) max="{{ $def['max'] }}" @endif
+                                                               @if(isset($def['step'])) step="{{ $def['step'] }}" @endif>
+                                                    </div>
+                                                </div>
                                             </div>
                                         @elseif($type === 'decimal')
-                                            <div class="col-md-4">
+                                            <div class="col-12">
                                                 <label class="form-label">{{ $label }}</label>
                                                 <input type="number" class="form-control"
                                                        name="settings[{{ $code }}][{{ $key }}]"
@@ -109,7 +113,7 @@
                                                        @if(isset($def['max'])) max="{{ $def['max'] }}" @endif>
                                             </div>
                                         @elseif($type === 'email')
-                                            <div class="col-md-6">
+                                            <div class="col-12">
                                                 <label class="form-label">{{ $label }}</label>
                                                 <input type="email" class="form-control"
                                                        name="settings[{{ $code }}][{{ $key }}]"

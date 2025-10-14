@@ -5,6 +5,7 @@ use App\Models\Back\Settings\Settings;
 use App\Models\Shared\Payment;
 use App\Models\Shared\Subscription;
 use App\Services\Front\CategoryNav;
+use App\Services\Settings\SettingsManager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -308,5 +309,16 @@ if ( ! function_exists('vat_rate')) {
         $rate = isset($active['rate']) ? (float) $active['rate'] : 25.0;
 
         return $rate > 0 ? $rate : 25.0;
+    }
+}
+
+
+if (! function_exists('app_settings')) {
+    /**
+     * Provjerava ima li tvrtka aktivnu i plaćenu pretplatu na zadani datum.
+     */
+    function app_settings(): SettingsManager
+    {
+        return new SettingsManager();
     }
 }

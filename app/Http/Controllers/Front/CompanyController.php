@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PaymentConfirmationMail;
 use App\Models\Admin\Catalog\Category;
 use App\Models\Back\Catalog\Company;
 use App\Models\Shared\Referral;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Models\Back\Settings\Settings;
@@ -146,7 +148,6 @@ class CompanyController extends Controller
                     session()->forget('referral_token');
                 }
             }
-
         });
 
         $request->session()->put(self::S_DRAFT, $company->id);
@@ -338,6 +339,17 @@ class CompanyController extends Controller
             ]);
 
             return redirect()->to(localized_route('companies.error'));
+        }
+
+        // pošalji poziv
+        Mail::to($company->email)->send(
+            new PaymentConfirmationMail($company, $validated['subscription'], $validated['payment'])
+        );
+
+        if (app_settings()->shouldSendAdminEmails()) {
+            Mail::to(config('mail.from.address'))->send(
+                new PaymentConfirmationMail($company, $validated['subscription'], $validated['payment'])
+            );
         }
 
         $request->session()->put(self::S_FINISH, [

@@ -94,9 +94,8 @@ class LinksController extends Controller
                 ['slots_payload' => json_encode([])]
             );
 
-            $sm = new SettingsManager();
-            $limit = $sm->get('company', 'auth_clicks_required');
-            $ref_limit = $sm->get('company', 'auth_referrals_required');
+            $limit = app_settings()->clicksRequired();
+            $ref_limit = app_settings()->referralsRequired();
 
             $payload = json_decode($session->slots_payload) ?? [];
 
@@ -155,8 +154,7 @@ class LinksController extends Controller
                                       ->whereDate('created_at', today())
                                       ->count();
 
-            $sm = new SettingsManager();
-            $ref_limit = $sm->get('company', 'auth_referrals_required');
+            $ref_limit = app_settings()->referralsRequired();
 
             if ($countToday >= $ref_limit) {
                 return back()->with('status', __('Dnevni limit linkova je dosegnut.'));

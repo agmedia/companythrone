@@ -215,6 +215,36 @@ class SettingsManager
     }
 
 
+    /**
+     * @param int|string|null $company_id
+     *
+     * @return int
+     */
+    public function clicksRequired(int|string|null $company_id = null): int
+    {
+        return $this->get('company', 'auth_clicks_required', 25);
+    }
+
+
+    /**
+     * @param int|string|null $company_id
+     *
+     * @return int
+     */
+    public function referralsRequired(int|string|null $company_id = null): int
+    {
+        return $this->get('company', 'auth_referrals_required', 5);
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function shouldSendAdminEmails(): bool
+    {
+        return $this->get('company', 'send_admin_emails', true) ? true : false;
+    }
+
 
 
     /* ===== helpers ===== */
