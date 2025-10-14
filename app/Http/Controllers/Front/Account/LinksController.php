@@ -8,7 +8,9 @@ use App\Models\Back\Catalog\Company;
 use App\Models\Shared\Click;
 use App\Models\Shared\DailySession;
 use App\Models\Shared\ReferralLink;
+use App\Services\Settings\SettingsManager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -19,22 +21,11 @@ class LinksController extends Controller
         $userId = auth()->id();
         $company = auth()->user()->company; // može biti null
 
-        $referrals = ReferralLink::query()
-            ->where('user_id', $userId)
-            ->latest()
-            ->get();
-
+        $referrals = ReferralLink::query()->where('user_id', $userId)->latest()->get();
         $referralCount = $referrals->count();
 
-        $links = ReferralLink::query()
-            ->where('user_id', $userId)
-            ->latest()
-            ->paginate(20);
-
-        $today = ReferralLink::query()
-            ->where('user_id', $userId)
-            ->whereDate('created_at', now()->toDateString())
-            ->count();
+        $links = ReferralLink::query()->where('user_id', $userId)->latest()->paginate(10);
+        $today = ReferralLink::query()->where('user_id', $userId)->whereDate('created_at', now()->toDateString())->count();
 
         // Session i targets samo ako postoji company
         if ($company) {
@@ -43,41 +34,45 @@ class LinksController extends Controller
                 ['slots_payload' => json_encode([])]
             );
 
-            // Izvuci payload i dekodiraj u array
-            $usedSlots = json_decode($session->slots_payload, true) ?? [];
+            $sm = new SettingsManager();
+            $limit = $sm->get('company', 'auth_clicks_required');
+            $ref_limit = $sm->get('company', 'auth_referrals_required');
 
-// Dohvati kompanije koje nisu već odabrane
+            // Izvuci payload i dekodiraj u array
+            $usedSlots = Click::query()->where('from_company_id', $company->id)->whereDay('day', now())->pluck('company_id');
+
+            // Dohvati kompanije koje nisu već odabrane
             $targets = Company::query()
                 ->where('id', '!=', $company->id)
                 ->where('is_published', 1)
+                ->where('is_link_active', 1)
                 ->whereNotIn('id', $usedSlots) // filtriraj već kliknute
-                ->inRandomOrder()
-                ->limit(25 - count($usedSlots)) // koliko još nedostaje do 25
+                //->inRandomOrder()
+                ->limit($limit - count($usedSlots)) // koliko još nedostaje do limita (25)
                 ->get(['id', 'weburl']);
 
-           /* $targets = Company::query()
-                ->where('id', '!=', $company->id)
-                ->inRandomOrder()
-                ->limit(25)
-                ->get(['id', 'weburl']); */
         } else {
-            $session = null;
-            // ako user nema company, samo daj random targete (bez isključenja vlastite)
-            $targets = Company::query()
-                ->inRandomOrder()
-                ->limit(25)
-                ->get(['id', 'weburl']);
+            return redirect()->route('front.account.dashboard');
         }
+
+        $todayClicks = Click::query()
+                            ->where('from_company_id', $company->id)
+                            ->whereDate('created_at', now()->toDateString())
+                            ->count();
+
+        //dd($targets->toArray(), $usedSlots, $company->toArray());
 
         return view('front.account.links', [
             'links'            => $links,
             'todayLinks'       => $today,
-            'limitPerDay'      => 25,
+            'limitPerDay'      => $limit,
+            'todayClicks'      => $todayClicks,
             'session'          => $session,     // može biti null → u bladeu provjeri s @isset
+            'usedSlots'        => $usedSlots,
             'targets'          => $targets,
             'referrals'        => $referrals,
             'referralCount'    => $referralCount,
-            'referralRequired' => 5,
+            'referralRequired' => $ref_limit,
         ]);
     }
 
@@ -99,7 +94,11 @@ class LinksController extends Controller
                 ['slots_payload' => json_encode([])]
             );
 
-            $payload = json_decode($session->slots_payload, true) ?? [];
+            $sm = new SettingsManager();
+            $limit = $sm->get('company', 'auth_clicks_required');
+            $ref_limit = $sm->get('company', 'auth_referrals_required');
+
+            $payload = json_decode($session->slots_payload) ?? [];
 
             if (!in_array($request->slot, $payload, true)) {
                 $payload[]                = $request->slot;
@@ -108,10 +107,10 @@ class LinksController extends Controller
 
                 $referralCount = ReferralLink::query()->where('user_id', $user->id)->count();
 
-                if ($session->completed_count >= 25) {
+                if ($session->completed_count >= $limit) {
                     $session->completed_25 = true;
 
-                    if ($referralCount >= 5) {
+                    if ($referralCount >= $ref_limit) {
                         // zaštita ako model Company ima kolonu is_link_active
                         $company->update(['is_link_active' => true]);
                     }
@@ -129,18 +128,11 @@ class LinksController extends Controller
                     // Ako tvoja tablica `clicks` ima `user_id`, možeš dodati:
                     'user_id'         => $user->id,
                 ]);
+
+                $company->increment('clicks');
             }
         } else {
-            // Nema company: preskoči session/slotove, samo evidentiraj klik bez from_company_id
-            Click::create([
-                'company_id' => $request->target_company_id,
-                'day'        => now()->toDateString(),
-                'slot'       => $request->slot,
-                'link_url'   => $request->input('url', ''),
-                'ip'         => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'user_id'    => $user->id, // preporuka: spremi tko je kliknuo
-            ]);
+            return redirect()->route('front.account.dashboard');
         }
 
         return response()->json(['success' => true]);
@@ -154,31 +146,47 @@ class LinksController extends Controller
         ]);
 
         $user = auth()->user();
+        $company = $user->company; // može biti null
         $userId = $user->id;
 
-        // dnevni limit 25
-        $countToday = ReferralLink::where('user_id', $userId)
-                                  ->whereDate('created_at', today())
-                                  ->count();
+        if ($company) {
+            // dnevni limit 25
+            $countToday = ReferralLink::where('user_id', $userId)
+                                      ->whereDate('created_at', today())
+                                      ->count();
 
-        abort_if($countToday >= 25, 429, __('Dnevni limit linkova je dosegnut.'));
+            $sm = new SettingsManager();
+            $ref_limit = $sm->get('company', 'auth_referrals_required');
 
-        $token = Str::uuid()->toString();
-        $refUrl = route('register', ['ref' => $token]); // npr. /register?ref=TOKEN
+            if ($countToday >= $ref_limit) {
+                return back()->with('status', __('Dnevni limit linkova je dosegnut.'));
+            }
 
-        $link = ReferralLink::create([
-            'user_id' => $userId,
-            'url'     => $refUrl,
-            'label'   => $request->string('label') ?: $request->string('url'),
-        ]);
+            $token = Str::uuid()->toString();
+            $refUrl = route('register', ['ref' => $token]); // npr. /register?ref=TOKEN
 
-        // pošalji poziv
-        Mail::to($request->input('url'))->send(
-            new ReferralInvitationMail($user, $refUrl)
-        );
+            $link = ReferralLink::create([
+                'user_id' => $userId,
+                'url'     => $refUrl,
+                'label'   => $request->string('label') ?: $request->string('url'),
+            ]);
 
-        // zapamti token u session (ako treba)
-        return back()->with('status', __('Pozivnica je poslana.'));
+            $company->increment('referrals_count');
+
+            if ($link && ($countToday + 1) == $ref_limit) {
+                //$company->update(['is_link_active' => true]);
+            }
+
+            // pošalji poziv
+            Mail::to($request->input('url'))->send(
+                new ReferralInvitationMail($user, $refUrl)
+            );
+
+            // zapamti token u session (ako treba)
+            return back()->with('status', __('Pozivnica je poslana.'));
+        }
+
+        return redirect()->route('front.account.dashboard');
     }
 
 }

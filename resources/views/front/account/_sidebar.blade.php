@@ -33,4 +33,11 @@
             </a>
         @endif
     </div>
+
+    @if (auth()->user()->company && auth()->user()->company->is_link_active)
+        <span class="h6 badge text-success border border-success">Link je Aktivan</span>
+    @else
+        <span class="h6 badge text-secondary border border-secondary">Link je Nektivan</span>
+    @endif
+
 </aside>

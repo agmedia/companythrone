@@ -19,7 +19,7 @@
                         <input name="label" type="text" class="form-control" placeholder="{{ __('Opis (opcionalno)') }}">
                     </div>
                     <div class="col-md-1 d-grid">
-                        <button class="btn btn-primary" @disabled($todayLinks >= $limitPerDay)>{{ __('Dodaj') }}</button>
+                        <button class="btn btn-primary" @disabled($referralCount >= $referralRequired)>{{ __('Dodaj') }}</button>
                     </div>
                     {{--<div class="col-12 text-muted small">
                         {{ __('Danas:') }} {{ $todayLinks }} / {{ $limitPerDay }}
@@ -31,7 +31,7 @@
                     <h5 class="fw-semibold">{{ __('Moje preporuke') }}</h5>
 
                     <div class="small text-muted mb-2">
-                        {{ __('Dodajte barem 5 preporuka da biste aktivirali svoj link.') }}
+                        {{ __('Dodajte barem ') . $referralRequired . __(' preporuka da biste aktivirali svoj link.)') }}
                         <br>
                         {{ __('Imate:') }} {{ $referralCount }} / {{ $referralRequired }}
                     </div>
@@ -55,20 +55,25 @@
 
 
                 <div class="mb-4 mt-5 ">
-                    <h5 class="fw-semibold">{{ __('Dnevni zadaci (25 klikova)') }}</h5>
+                    <h5 class="fw-semibold">{{ __('Dnevni zadaci') }}</h5>
+                    <div class="small text-muted mb-2">
+                        {{ __('Dodajte barem ') . $limitPerDay . __(' klikova da biste objavili svoj link.)') }}
+                        <br>
+                        {{ __('Imate:') }} {{ $todayClicks }} / {{ $limitPerDay }}
+                    </div>
 
                     <ul class="list-group mb-3">
                         @php
                             // dekodiraj slots samo ako postoji session i payload
                             $slots = [];
-                            if (!empty($session?->slots_payload)) {
-                                $slots = json_decode($session->slots_payload, true) ?: [];
+                            if (!empty($usedSlots->toArray())) {
+                                $slots = $usedSlots->toArray() ?: [];
                             }
                         @endphp
 
                         @forelse($targets as $i => $target)
                             @php
-                                $slot = $i + 1;
+                                $slot = $todayClicks + 1;
                                 $done = in_array($slot, $slots, true);
                             @endphp
 

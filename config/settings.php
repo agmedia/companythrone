@@ -84,9 +84,9 @@ return [
         ],
 
         'company' => [
-            'auth_clicks_required'   => ['type' => 'number',  'label' => 'Potreban broj dnevnih klikova', 'default' => 25, 'min'=>0, 'max'=>100, 'step'=>1],
-            'auth_click_window_days' => ['type' => 'number',  'label' => 'Potreban broj referenci za aktivaciju linka', 'default' => 5, 'min'=>1, 'max'=>30,  'step'=>1],
-            'link_active_default'    => ['type' => 'boolean', 'label' => 'Nova kompanija aktivna po defaultu', 'default' => false],
+            'auth_clicks_required'    => ['type' => 'number',  'label' => 'Potreban broj dnevnih klikova', 'default' => 25, 'min'=>0, 'max'=>100, 'step'=>1],
+            'auth_referrals_required' => ['type' => 'number',  'label' => 'Potreban broj referenci za aktivaciju linka', 'default' => 5, 'min'=>1, 'max'=>30,  'step'=>1],
+            'link_active_default'     => ['type' => 'boolean', 'label' => 'Nova kompanija aktivna po defaultu', 'default' => false],
         ],
 
     ],

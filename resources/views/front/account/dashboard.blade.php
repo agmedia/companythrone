@@ -42,13 +42,23 @@
                                     <div class="fw-semibold mt-2">
                                         {{ $todayClicks }} / {{ $limitPerDay }}
                                     </div>
-                                    <div class="small text-muted">
-                                        {{ __('Dnevni zadatak') }}
-                                    </div>
 
-                                    <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.links.index') }}">
-                                        {{ __('Pregledaj') }}
-                                    </a>
+                                    @if ($limitPerDay > $todayClicks)
+                                        <div class="small text-muted">
+                                            {{ __('Dnevni zadatak') }}
+                                        </div>
+
+                                        <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.links.index') }}">
+                                            {{ __('Pregledaj') }}
+                                        </a>
+                                    @else
+                                        <span class="badge bg-success mt-1">{{ __('Aktivirano') }}</span>
+                                        <a class="btn btn-sm btn-outline-success mt-2" href="{{ localized_route('account.links.index') }}">
+                                            {{ __('Pogledaj') }}
+                                        </a>
+                                    @endif
+
+
                                 </div>
                             </div>
                         </div>
@@ -64,15 +74,22 @@
                                     @endphp
 
                                     <div class="fw-semibold mt-2">
-                                        {{ $refCount }} / 5
-                                    </div>
-                                    <div class="small text-muted">
-                                        {{ __('Potrebno za aktivaciju') }}
+                                        {{ $refCount }} / {{ $ref_limit }}
                                     </div>
 
-                                    <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.links.index') }}">
-                                        {{ __('Dodaj preporuku') }}
-                                    </a>
+                                    @if ($ref_limit > $refCount)
+                                        <div class="small text-muted">
+                                            {{ __('Potrebno za aktivaciju') }}
+                                        </div>
+                                        <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.links.index') }}">
+                                            {{ __('Dodaj preporuku') }}
+                                        </a>
+                                    @else
+                                        <span class="badge bg-success mt-1">{{ __('Aktivirano') }}</span>
+                                        <a class="btn btn-sm btn-outline-success mt-2" href="{{ localized_route('account.links.index') }}">
+                                            {{ __('Pogledaj') }}
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>

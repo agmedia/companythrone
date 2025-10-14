@@ -24,8 +24,9 @@
                                 <th>Naziv</th>
                                 <th>Level</th>
                                 <th>Grad</th>
-                                <th>Klikova</th>
-                                <th>Aktivirano</th>
+                                <th class="text-center">Klikova</th>
+                                <th class="text-center">Referrals</th>
+                                <th class="text-center" style="width: 25%;">Tvrtka Aktivirana / Dnevni zadaci</th>
                                 <th class="text-end" style="width:120px;">{{ __('back/companies.table.actions') }}</th>
                             </tr>
                             </thead>
@@ -36,12 +37,18 @@
                                     <td>{{ $com?->t_name ?? '' }}</td> {{-- blank if no parent --}}
                                     <td>{{ $com->level ? $com->level->number : '-' }}</td>
                                     <td>{{ $com->city }}</td>
-                                    <td>{{ $com->clicks }}</td>
-                                    <td>
+                                    <td class="text-center">{{ $com->clicks }}</td>
+                                    <td class="text-center">{{ $com->referrals_count }}</td>
+                                    <td class="text-center">
                                         @if($com->is_published)
                                             <span class="badge text-bg-success">{{ __('back/common.status.active') }}</span>
                                         @else
                                             <span class="badge text-bg-danger">{{ __('back/common.status.hidden') }}</span>
+                                        @endif
+                                        @if($com->is_link_active)
+                                            <span class="badge text-bg-success">{{ __('Da') }}</span>
+                                        @else
+                                            <span class="badge text-bg-danger">{{ __('Ne') }}</span>
                                         @endif
                                     </td>
                                     <td class="text-end">
