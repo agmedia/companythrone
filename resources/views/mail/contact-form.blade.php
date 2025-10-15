@@ -75,7 +75,7 @@
             </center>
         </v:roundrect>
 <![endif]-->
-            <!--[if !mso]><!-- -->
+            <!--[if !mso]> -->
             <a href="mailto:{{ $email }}?subject={{ $replySubject }}"
                style="background-color:#c92d2d; color:#ffffff; display:inline-block; padding:12px 22px; border-radius:6px;
                       text-decoration:none; font-weight:700; font-size:16px; line-height:1; min-width:200px; text-align:center;">
