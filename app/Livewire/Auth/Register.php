@@ -40,6 +40,12 @@ class Register extends Component
 
         $validated['password'] = Hash::make($validated['password']);
 
+        /*if ( ! recaptcha_ok('register_user')) {
+            $this->addError('recaptcha-register-response', __('recaptcha failed'));
+
+            $this->redirect(route('register', absolute: false), navigate: true);
+        }*/
+
         event(new Registered(($user = User::create($validated))));
 
         // ➕ dodijeli rolu company_owner

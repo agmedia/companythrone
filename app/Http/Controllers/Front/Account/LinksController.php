@@ -177,7 +177,7 @@ class LinksController extends Controller
 
             // pošalji poziv
             Mail::to($request->input('url'))->send(
-                new ReferralInvitationMail($user, $refUrl)
+                new ReferralInvitationMail($user, $company, $refUrl)
             );
 
             // zapamti token u session (ako treba)

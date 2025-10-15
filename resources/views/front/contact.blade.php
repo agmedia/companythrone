@@ -40,15 +40,18 @@
                     <div class="position-relative z-1 my-2 mx-sm-2 m-lg-0 p-4 p-lg-5">
                         <h2 class="h4 mb-4">Kontakt obrazac!</h2>
                         <div class="mb-3">
-                            <input type="text" class="form-control form-control-lg" placeholder="Ime i prezime *" required>
+                            <input type="text" name="name" class="form-control form-control-lg" placeholder="Ime i prezime *" required>
                             <div class="invalid-feedback">Molimo unesite svoje ime i prezime!</div>
                         </div>
                         <div class="mb-3">
-                            <input type="email" class="form-control form-control-lg text-start" placeholder="Email *" required>
+                            <input type="text" name="subject" class="form-control form-control-lg" placeholder="Predmet poruke, ako postoji...">
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" name="email" class="form-control form-control-lg text-start" placeholder="Email *" required>
                             <div class="invalid-feedback">Molimo unesite važeću email adresu!</div>
                         </div>
                         <div class="mb-4">
-                            <textarea class="form-control form-control-lg" rows="5" placeholder="Vaša poruka *" required></textarea>
+                            <textarea class="form-control form-control-lg" name="message" rows="5" placeholder="Vaša poruka *" required></textarea>
                             <div class="invalid-feedback">Molimo napišite svoju poruku!</div>
                         </div>
                         <button type="submit" class="btn btn-lg btn-info w-100">Pošalji</button>

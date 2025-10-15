@@ -127,6 +127,20 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        //
+        'recaptcha_warning' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/recaptcha_warning.log'),
+            'level' => 'warning',
+        ],
+
+        'recaptcha_error' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/recaptcha_error.log'),
+            'level' => 'error',
+        ],
+
+
     ],
 
 ];

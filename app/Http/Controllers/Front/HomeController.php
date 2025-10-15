@@ -80,22 +80,21 @@ class HomeController extends Controller
         $request->validate([
             'name'    => 'required',
             'email'   => 'required|email',
-            'phone'   => 'required',
             'message' => 'required',
         ]);
 
         // Recaptcha
-        $recaptcha = (new Recaptcha())->check($request->toArray());
-
-        if ( ! $recaptcha->ok()) {
-            return back()->withErrors(['error' => 'ReCaptcha Error! Kontaktirajte administratora!']);
+        if (!recaptcha_ok('contact_form')) {
+            return back()->withErrors(['error' => 'ReCaptcha provjera nije prošla.']);
         }
 
-        $message = $request->toArray();
-
-        dispatch(function () use ($message) {
-            Mail::to(config('mail.admin'))->send(new ContactFormMessage($message));
-        });
+        Mail::to(config('mail.from.address'))
+            ->send(new ContactFormMail(
+                name: $request->string('name')->toString(),
+                email: $request->string('email')->toString(),
+                subject: $request->string('subject')->toString() ?? null,
+                messageText: $request->string('message')->toString()
+            ));
 
         return view('front.contact')->with(['success' => 'Vaša poruka je uspješno poslana.! Odgovoriti ćemo vam uskoro.']);
     }

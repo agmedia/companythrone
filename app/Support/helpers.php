@@ -322,3 +322,25 @@ if (! function_exists('app_settings')) {
         return new SettingsManager();
     }
 }
+
+
+if (!function_exists('recaptcha_ok')) {
+    /**
+     * Globalni helper za provjeru ReCaptcha V3 tokena.
+     *
+     * @param string|null $expectedAction
+     * @param array|null $data
+     * @return bool
+     */
+    function recaptcha_ok(?string $expectedAction = null, ?array $data = null): bool
+    {
+        $data ??= request()->toArray();
+        $recaptcha = (new Recaptcha())->check($data);
+
+        if (!$recaptcha) {
+            return false;
+        }
+
+        return $recaptcha->ok($expectedAction);
+    }
+}
