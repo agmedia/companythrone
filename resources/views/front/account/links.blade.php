@@ -84,7 +84,6 @@
                                 </div>
 
                                 <a href="{{ $target->weburl ?? '#' }}"
-                                   target="_blank"
                                    class="btn btn-sm {{ $done ? 'btn-success disabled' : 'btn-outline-primary task-btn' }}"
                                    data-slot="{{ $slot }}"
                                    @if(!empty($target?->id)) data-company="{{ $target->id }}" @endif>
