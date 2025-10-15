@@ -60,32 +60,27 @@
                     </div>
 
                     @php
-                        // dekodiraj slots samo ako postoji session i payload
-                        $slots = [];
-                        if (!empty($usedSlots->toArray())) {
-                            $slots = $usedSlots->toArray() ?: [];
-                        }
+                        // posjećene kompanije danas (kontroler šalje visitedCompanyIds)
+                        $visitedIds = collect($visitedCompanyIds ?? [])->map(fn($v) => (int)$v)->all();
                     @endphp
 
                     <ul class="list-group mb-3" id="tasks-list">
                         @forelse($targets as $i => $target)
                             @php
-                                // trenutačna implementacija: svi redovi dobiju isti slot (next),
-                                // no JS će ga nakon prvog klika povećavati bez refreša
-                                $slot = $todayClicks + 1;
-                                $done = in_array($slot, $slots, true);
+                                $slot = $i + 1; // samo za prikaz rednog broja
+                                $done = in_array($target->id, $visitedIds, true);
                             @endphp
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}" data-slot-badge>{{ $slot }}</span>
-                                    {{ $target->t_name ?? '—' }}
+                                    <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}">{{ $slot }}</span>
+                                    {{ parse_url($target->weburl, PHP_URL_HOST) ?? '—' }}
                                 </div>
 
                                 <a href="{{ $target->weburl ?? '#' }}"
-                                   class="btn btn-sm {{ $done ? 'btn-success disabled' : 'btn-outline-primary task-btn' }}"
-                                   data-slot="{{ $slot }}"
-                                   @if(!empty($target?->id)) data-company="{{ $target->id }}" @endif>
+                                   class="btn btn-sm {{ $done ? 'btn-success disabled' : 'btn-outline-primary' }} task-btn"
+                                   data-company="{{ $target->id }}"
+                                   @if($done) aria-disabled="true" tabindex="-1" @endif>
                                     {{ $done ? __('Odrađeno') : __('Posjeti') }}
                                 </a>
                             </li>
@@ -95,6 +90,7 @@
                             </li>
                         @endforelse
                     </ul>
+
                 </div>
             </div>
         </div>
