@@ -213,7 +213,7 @@
                             // alert(data?.message || 'Greška pri spremanju klika.');
                         }
                     } catch (err) {
-                        btn.classList.remove('disabled');z
+                        btn.classList.remove('disabled');
                         // alert('Greška mreže.');
                     }
                 });
