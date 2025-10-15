@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Click extends Model
 {
 
-    protected $fillable = ['company_id', 'from_company_id', 'day', 'slot', 'link_url', 'ip', 'user_agent','user_id'];
+    protected $fillable = ['company_id', 'from_company_id', 'day', 'slot', 'link_url', 'ip', 'user_agent'];
 
 
     public function company()

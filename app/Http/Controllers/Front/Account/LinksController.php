@@ -83,7 +83,6 @@ class LinksController extends Controller
     public function click(Request $request)
     {
         $request->validate([
-            // slot NE dolazi s fronta, računamo ga na serveru
             'target_company_id' => 'required|integer|exists:companies,id',
             'url'               => 'nullable|string|max:2048',
         ]);
@@ -99,13 +98,8 @@ class LinksController extends Controller
         $ref_limit = (int) app_settings()->referralsRequired();
 
         try {
-            // Trenutni max slot za danas
-            $maxSlot = (int) Click::where('from_company_id', $company->id)
-                ->whereDate('day', now()->toDateString())
-                ->max('slot');
-
-            // Ako želiš brojati striktno ->count(), možeš zamijeniti ovu liniju:
-            $todayCount = (int) Click::where('from_company_id', $company->id)
+            // Broj današnjih klikova
+            $todayCount = Click::where('from_company_id', $company->id)
                 ->whereDate('day', now()->toDateString())
                 ->count();
 
@@ -117,9 +111,10 @@ class LinksController extends Controller
                 ], 409);
             }
 
-            $nextSlot = $maxSlot + 1;
+            // Sljedeći slot
+            $nextSlot = $todayCount + 1;
 
-            // Osvježi/kreiraj dnevnu sesiju i payload
+            // Osvježi/kreiraj dnevnu sesiju
             $session = DailySession::firstOrCreate(
                 ['company_id' => $company->id, 'day' => now()->toDateString()],
                 ['slots_payload' => json_encode([])]
@@ -132,7 +127,7 @@ class LinksController extends Controller
             $session->slots_payload   = json_encode($payload);
             $session->completed_count = count($payload);
 
-            // Ako je dosegnut limit, aktiviraj link ako i referrals uvjet prolazi
+            // Ako je dosegnut limit i postoji dovoljan broj preporuka — aktiviraj link
             if ($session->completed_count >= $limit) {
                 $referralCount = ReferralLink::where('user_id', $user->id)->count();
                 if ($referralCount >= $ref_limit) {
@@ -143,7 +138,7 @@ class LinksController extends Controller
 
             $session->save();
 
-            // Upis klika
+            // ✅ Upis klika — BEZ user_id kolone
             Click::create([
                 'company_id'      => (int) $request->input('target_company_id'),
                 'from_company_id' => $company->id,
@@ -152,13 +147,10 @@ class LinksController extends Controller
                 'link_url'        => (string) $request->input('url', ''),
                 'ip'              => $request->ip(),
                 'user_agent'      => $request->userAgent(),
-                'user_id'         => $user->id, // obavezno ako stupac postoji
             ]);
 
-            // Statistika kompanije
             $company->increment('clicks');
 
-            // Novo stanje
             $todayClicks = Click::where('from_company_id', $company->id)
                 ->whereDate('day', now()->toDateString())
                 ->count();
@@ -188,6 +180,7 @@ class LinksController extends Controller
             ], 500);
         }
     }
+
 
     public function store(Request $request)
     {
