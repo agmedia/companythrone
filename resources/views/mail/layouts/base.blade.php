@@ -13,7 +13,7 @@
         <!-- Header -->
         <div style="background-color:#c92d2d; color:#ffffff; text-align:center; padding:25px;">
             <a href="{{ config('app.url') }}" target="_blank" style="text-decoration:none; display:inline-block;">
-                <img src="{{ asset('img/companythrone-round.png') }}" alt="{{ config('app.name') }}" style="max-height:50px; display:block; margin:0 auto;">
+                <img src="{{ asset('media/img/companythrone-round.png') }}" alt="{{ config('app.name') }}" style="max-height:50px; display:block; margin:0 auto;">
             </a>
         </div>
 
