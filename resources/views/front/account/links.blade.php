@@ -60,10 +60,11 @@
                     </div>
 
                     @php
-                        // $usedSlots može biti Collection, array ili null – sve normaliziramo u [int, int, ...]
-                        $slots = collect($usedSlots ?? [])
-                            ->map(fn($v) => (int) $v)
-                            ->all();
+                        // normaliziraj slots u niz intova
+                        $slots = [];
+                        if (!empty($usedSlots?->toArray())) {
+                            $slots = array_map('intval', $usedSlots->toArray());
+                        }
                     @endphp
 
                     <ul class="list-group mb-3" id="tasks-list">
@@ -109,13 +110,10 @@
             const clickEndpoint = "{{ localized_route('account.links.click') }}";
 
             function setTodayClicks(n) {
-                const v = Math.max(0, Math.min(parseInt(n||0,10), limitPerDay));
-                clicksEl.textContent = v;
-            }
-
-            function disableAllIfLimitReached() {
-                const v = parseInt(clicksEl.textContent, 10) || 0;
-                if (v >= limitPerDay) {
+                const val = Math.max(0, Math.min(parseInt(n || 0, 10), limitPerDay));
+                clicksEl.textContent = val;
+                // ako smo dosegli limit, ugasi sve preostale gumbe
+                if (val >= limitPerDay) {
                     document.querySelectorAll('.task-btn').forEach(b => {
                         if (!b.classList.contains('disabled')) {
                             b.classList.add('disabled');
@@ -126,12 +124,32 @@
                 }
             }
 
-            function markButtonDone(btn) {
-                btn.classList.remove('btn-outline-primary');
-                btn.classList.add('btn-success', 'disabled');
-                btn.textContent = "{{ __('Odrađeno') }}";
-                btn.setAttribute('aria-disabled', 'true');
-                btn.setAttribute('tabindex', '-1');
+            function markTaskDoneBySlot(slot) {
+                const btn = document.querySelector(`.task-btn[data-slot="${slot}"]`);
+                if (btn) {
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-success', 'disabled');
+                    btn.textContent = "{{ __('Odrađeno') }}";
+                    btn.setAttribute('aria-disabled', 'true');
+                    btn.setAttribute('tabindex', '-1');
+                }
+                const badge = document.querySelector(`[data-slot-badge="${slot}"]`);
+                if (badge) {
+                    badge.classList.remove('bg-secondary');
+                    badge.classList.add('bg-success');
+                }
+            }
+
+            // Ako backend vrati usedSlots, sinkroniziraj sve
+            function syncUIFromUsedSlots(usedSlots) {
+                if (!Array.isArray(usedSlots)) return;
+                const set = new Set(usedSlots.map(Number));
+                document.querySelectorAll('.task-btn').forEach(b => {
+                    const s = parseInt(b.dataset.slot, 10);
+                    if (set.has(s)) {
+                        markTaskDoneBySlot(s);
+                    }
+                });
             }
 
             document.querySelectorAll('.task-btn').forEach(btn => {
@@ -139,10 +157,12 @@
                     e.preventDefault();
                     if (btn.classList.contains('disabled')) return;
 
+                    const slot = parseInt(btn.dataset.slot, 10);
                     const companyId = btn.dataset.company || null;
                     const targetUrl = btn.getAttribute('href');
 
-                    btn.classList.add('disabled'); // spriječi dvoklik
+                    // spriječi dvostruki submit
+                    btn.classList.add('disabled');
 
                     try {
                         const res = await fetch(clickEndpoint, {
@@ -153,6 +173,7 @@
                                 "X-CSRF-TOKEN": csrf
                             },
                             body: JSON.stringify({
+                                slot: slot,
                                 target_company_id: companyId
                             })
                         });
@@ -160,37 +181,36 @@
                         const data = await res.json().catch(() => ({}));
 
                         if (res.ok && data && data.success) {
-                            // označi ovaj gumb kao odrađen
-                            markButtonDone(btn);
+                            // Označi ovaj slot završeno
+                            markTaskDoneBySlot(slot);
 
-                            // ažuriraj brojač iz backend-a
+                            // Ažuriraj brojač iz backend-a; ako ga nema, optimistički +1
                             if (typeof data.todayClicks !== 'undefined') {
                                 setTodayClicks(data.todayClicks);
                             } else {
-                                // fallback
                                 setTodayClicks((parseInt(clicksEl.textContent, 10) || 0) + 1);
                             }
 
-                            // opcionalno: sakrij već odrađene targete iz liste
-                            if (Array.isArray(data.visitedCompanyIds)) {
-                                // ako želiš visual refresh: sakrij li element
-                                const li = btn.closest('li');
-                                if (li) li.style.opacity = '0.5';
+                            // Ako je backend vratio sve zauzete slotove, sinkroniziraj
+                            if (Array.isArray(data.usedSlots)) {
+                                syncUIFromUsedSlots(data.usedSlots);
                             }
 
-                            // otvori link u novom tabu
+                            // Otvori link nakon uspjeha
                             if (targetUrl && targetUrl !== '#') {
                                 window.open(targetUrl, '_blank', 'noopener');
                             }
-
-                            disableAllIfLimitReached();
                         } else {
-                            // vrati u početno stanje ako nije prošlo
-                            btn.classList.remove('disabled');
-                            btn.removeAttribute('aria-disabled');
-                            btn.removeAttribute('tabindex');
+                            // Backend odbio (npr. duplikat, limit): vrati gumb u prvobitno stanje ako još nije doseglo limit
+                            if ((parseInt(clicksEl.textContent, 10) || 0) < limitPerDay) {
+                                btn.classList.remove('disabled');
+                                btn.removeAttribute('aria-disabled');
+                                btn.removeAttribute('tabindex');
+                            }
+                            // Po želji pokaži poruku: data.message
                         }
                     } catch (err) {
+                        // Mrežna greška – vrati gumb
                         btn.classList.remove('disabled');
                         btn.removeAttribute('aria-disabled');
                         btn.removeAttribute('tabindex');
@@ -200,4 +220,3 @@
         });
     </script>
 @endpush
-
