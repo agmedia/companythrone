@@ -80,7 +80,7 @@ class LinksController extends Controller
         ]);
     }
 
-    use Illuminate\Support\Facades\DB;
+
 
     public function click(Request $request)
     {
