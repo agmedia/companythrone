@@ -60,11 +60,10 @@
                     </div>
 
                     @php
-                        // normaliziraj slots u niz intova
-                        $slots = [];
-                        if (!empty($usedSlots?->toArray())) {
-                            $slots = array_map('intval', $usedSlots->toArray());
-                        }
+                        // $usedSlots može biti Collection, array ili null – sve normaliziramo u [int, int, ...]
+                        $slots = collect($usedSlots ?? [])
+                            ->map(fn($v) => (int) $v)
+                            ->all();
                     @endphp
 
                     <ul class="list-group mb-3" id="tasks-list">
