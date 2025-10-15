@@ -67,7 +67,7 @@
                     <ul class="list-group mb-3" id="tasks-list">
                         @forelse($targets as $i => $target)
                             @php
-                                $slot = $i + 1; // samo za prikaz rednog broja
+                                $slot = $i + 1; // samo redni broj za prikaz
                                 $done = in_array($target->id, $visitedIds, true);
                             @endphp
 
@@ -153,6 +153,12 @@
                             body: JSON.stringify({ target_company_id: companyId }) // 👈 bez slota!
                         });
 
+                        // 419 / 302 fallback (npr. istekla CSRF sesija / redirect)
+                        if (res.status === 419 || res.type === 'opaqueredirect') {
+                            window.location.reload();
+                            return;
+                        }
+
                         const data = await res.json().catch(() => ({}));
 
                         if (res.ok && data && data.success) {
@@ -187,4 +193,3 @@
         });
     </script>
 @endpush
-

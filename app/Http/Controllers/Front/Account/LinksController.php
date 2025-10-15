@@ -43,12 +43,12 @@ class LinksController extends Controller
             ['slots_payload' => json_encode([])]
         );
 
-        // POSJEĆENE KOMPANIJE DANAS
+        // Posjećene kompanije danas
         $visitedCompanyIds = Click::where('from_company_id', $company->id)
             ->whereDate('day', now()->toDateString())
             ->pluck('company_id');
 
-        // KORIŠTENI SLOTOVI DANAS (ako baš želiš)
+        // Korišteni slotovi danas (opcionalno, za internu upotrebu)
         $usedSlots = Click::where('from_company_id', $company->id)
             ->whereDate('day', now()->toDateString())
             ->pluck('slot');
@@ -56,6 +56,7 @@ class LinksController extends Controller
         $todayClicks = $usedSlots->count();
         $remaining   = max(0, $limit - $visitedCompanyIds->count());
 
+        // Mete koje još nisu posjećene danas
         $targets = Company::where('id', '!=', $company->id)
             ->where('is_published', 1)
             ->where('is_link_active', 1)
@@ -70,8 +71,8 @@ class LinksController extends Controller
             'limitPerDay'       => $limit,
             'todayClicks'       => $todayClicks,
             'session'           => $session,
-            'usedSlots'         => $usedSlots,           // (opcionalno)
-            'visitedCompanyIds' => $visitedCompanyIds,   // ✅ za Blade done
+            'usedSlots'         => $usedSlots,          // nije obavezno u Bladeu
+            'visitedCompanyIds' => $visitedCompanyIds,  // Blade koristi ovo za "odrađeno"
             'targets'           => $targets,
             'referrals'         => $referrals,
             'referralCount'     => $referralCount,
@@ -82,7 +83,7 @@ class LinksController extends Controller
     public function click(Request $request)
     {
         $request->validate([
-            // više NE primamo slot
+            // slot NE dolazi s fronta, računamo ga na serveru
             'target_company_id' => 'required|integer|exists:companies,id',
             'url'               => 'nullable|string|max:2048',
         ]);
@@ -98,12 +99,15 @@ class LinksController extends Controller
         $ref_limit = (int) app_settings()->referralsRequired();
 
         try {
-            // imaš li već max za današnji dan?
+            // Trenutni max slot za danas
             $maxSlot = (int) Click::where('from_company_id', $company->id)
                 ->whereDate('day', now()->toDateString())
                 ->max('slot');
 
-            $todayCount = $maxSlot > 0 ? $maxSlot : 0; // ili ponovno prebroji ->count()
+            // Ako želiš brojati striktno ->count(), možeš zamijeniti ovu liniju:
+            $todayCount = (int) Click::where('from_company_id', $company->id)
+                ->whereDate('day', now()->toDateString())
+                ->count();
 
             if ($todayCount >= $limit) {
                 return response()->json([
@@ -115,6 +119,7 @@ class LinksController extends Controller
 
             $nextSlot = $maxSlot + 1;
 
+            // Osvježi/kreiraj dnevnu sesiju i payload
             $session = DailySession::firstOrCreate(
                 ['company_id' => $company->id, 'day' => now()->toDateString()],
                 ['slots_payload' => json_encode([])]
@@ -127,6 +132,7 @@ class LinksController extends Controller
             $session->slots_payload   = json_encode($payload);
             $session->completed_count = count($payload);
 
+            // Ako je dosegnut limit, aktiviraj link ako i referrals uvjet prolazi
             if ($session->completed_count >= $limit) {
                 $referralCount = ReferralLink::where('user_id', $user->id)->count();
                 if ($referralCount >= $ref_limit) {
@@ -137,6 +143,7 @@ class LinksController extends Controller
 
             $session->save();
 
+            // Upis klika
             Click::create([
                 'company_id'      => (int) $request->input('target_company_id'),
                 'from_company_id' => $company->id,
@@ -145,11 +152,13 @@ class LinksController extends Controller
                 'link_url'        => (string) $request->input('url', ''),
                 'ip'              => $request->ip(),
                 'user_agent'      => $request->userAgent(),
-                'user_id'         => $user->id, // sada je fillable
+                'user_id'         => $user->id, // obavezno ako stupac postoji
             ]);
 
+            // Statistika kompanije
             $company->increment('clicks');
 
+            // Novo stanje
             $todayClicks = Click::where('from_company_id', $company->id)
                 ->whereDate('day', now()->toDateString())
                 ->count();
@@ -223,5 +232,3 @@ class LinksController extends Controller
         return back()->with('status', __('Pozivnica je poslana.'));
     }
 }
-
-
