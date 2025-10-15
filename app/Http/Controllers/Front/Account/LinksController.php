@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class LinksController extends Controller
 {
@@ -39,7 +40,10 @@ class LinksController extends Controller
             $ref_limit = $sm->get('company', 'auth_referrals_required');
 
             // Izvuci payload i dekodiraj u array
-            $usedSlots = Click::query()->where('from_company_id', $company->id)->whereDay('day', now())->pluck('company_id');
+            $usedSlots = Click::query()
+                ->where('from_company_id', $company->id)
+                ->whereDate('day', now()->toDateString())   // ✅ umjesto whereDay('day', now())
+                ->pluck('company_id');
 
             // Dohvati kompanije koje nisu već odabrane
             $targets = Company::query()
@@ -76,66 +80,128 @@ class LinksController extends Controller
         ]);
     }
 
+    use Illuminate\Support\Facades\DB;
+
     public function click(Request $request)
     {
         $request->validate([
-            'slot'              => 'required|integer|min:1|max:25',
+            // 'slot' => 'required|integer|min:1|max:25',   // ❌ više ne treba
             'target_company_id' => 'required|integer|exists:companies,id',
             'url'               => 'nullable|string|max:2048',
         ]);
 
         $user = auth()->user();
-        $company = $user->company; // može biti null
+        $company = $user->company;
 
-        // Ako postoji company → vodi dnevnu sesiju i slotove; inače samo zabilježi klik
-        if ($company) {
-            $session = DailySession::firstOrCreate(
+        if (!$company) {
+            return redirect()->route('front.account.dashboard');
+        }
+
+        $limit      = app_settings()->clicksRequired();
+        $ref_limit  = app_settings()->referralsRequired();
+
+        // transakcija da izbjegnemo race conditions
+        DB::beginTransaction();
+
+        try {
+            $session = DailySession::lockForUpdate()->firstOrCreate(
                 ['company_id' => $company->id, 'day' => now()->toDateString()],
                 ['slots_payload' => json_encode([])]
             );
 
-            $limit = app_settings()->clicksRequired();
-            $ref_limit = app_settings()->referralsRequired();
+            // koliki je broj klikova već upisan danas
+            $todayCount = Click::query()
+                ->where('from_company_id', $company->id)
+                ->whereDate('day', now()->toDateString())
+                ->lockForUpdate()
+                ->count();
 
-            $payload = json_decode($session->slots_payload) ?? [];
-
-            if (!in_array($request->slot, $payload, true)) {
-                $payload[]                = $request->slot;
-                $session->slots_payload   = json_encode($payload);
-                $session->completed_count = count($payload);
-
-                $referralCount = ReferralLink::query()->where('user_id', $user->id)->count();
-
-                if ($session->completed_count >= $limit) {
-                    $session->completed_25 = true;
-
-                    if ($referralCount >= $ref_limit) {
-                        // zaštita ako model Company ima kolonu is_link_active
-                        $company->update(['is_link_active' => true]);
-                    }
-                }
-                $session->save();
-
-                Click::create([
-                    'company_id'      => $request->target_company_id,
-                    'from_company_id' => $company->id, // imamo izvor
-                    'day'             => now()->toDateString(),
-                    'slot'            => $request->slot,
-                    'link_url'        => $request->input('url', ''),
-                    'ip'              => $request->ip(),
-                    'user_agent'      => $request->userAgent(),
-                    // Ako tvoja tablica `clicks` ima `user_id`, možeš dodati:
-                    'user_id'         => $user->id,
-                ]);
-
-                $company->increment('clicks');
+            if ($todayCount >= $limit) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Dnevni limit je dosegnut.'),
+                    'todayClicks' => $todayCount,
+                ], 409);
             }
-        } else {
-            return redirect()->route('front.account.dashboard');
-        }
 
-        return response()->json(['success' => true]);
+            // Ako je ova kompanija već kliknuta danas, možeš odlučiti blokirati ili dopustiti drugi klik.
+            // Sada ćemo dopustiti, jer zbrajamo ukupne klikove prema limitu.
+            $targetCompanyId = (int) $request->input('target_company_id');
+
+            // izračunaj sljedeći slot na serveru
+            $maxSlot = (int) Click::query()
+                ->where('from_company_id', $company->id)
+                ->whereDate('day', now()->toDateString())
+                ->max('slot');
+
+            $nextSlot = $maxSlot + 1; // 1-based
+
+            // osvježi session payload
+            $payload = json_decode($session->slots_payload, true) ?? [];
+            if (!in_array($nextSlot, $payload, true)) {
+                $payload[] = $nextSlot;
+            }
+            $session->slots_payload   = json_encode($payload);
+            $session->completed_count = count($payload);
+
+            // ako je ispunjen limit, eventualno aktiviraj link kompanije (ako i referrals uvjet prolazi)
+            if ($session->completed_count >= $limit) {
+                $referralCount = ReferralLink::query()->where('user_id', $user->id)->count();
+                if ($referralCount >= $ref_limit) {
+                    $company->update(['is_link_active' => true]);
+                }
+                $session->completed_25 = true;
+            }
+
+            $session->save();
+
+            // upiši klik
+            Click::create([
+                'company_id'      => $targetCompanyId,
+                'from_company_id' => $company->id,
+                'day'             => now()->toDateString(),
+                'slot'            => $nextSlot,
+                'link_url'        => $request->string('url', ''),
+                'ip'              => $request->ip(),
+                'user_agent'      => $request->userAgent(),
+                'user_id'         => $user->id,
+            ]);
+
+            $company->increment('clicks');
+
+            DB::commit();
+
+            // izračunaj trenutačno stanje
+            $todayClicks = Click::query()
+                ->where('from_company_id', $company->id)
+                ->whereDate('day', now()->toDateString())
+                ->count();
+
+            // (opcionalno) sve posjećene kompanije danas – korisno frontendu
+            $visitedTodayCompanyIds = Click::query()
+                ->where('from_company_id', $company->id)
+                ->whereDate('day', now()->toDateString())
+                ->pluck('company_id')
+                ->map(fn($v) => (int)$v)
+                ->all();
+
+            return response()->json([
+                'success'       => true,
+                'todayClicks'   => $todayClicks,
+                'nextSlot'      => $nextSlot,
+                'visitedCompanyIds' => $visitedTodayCompanyIds,
+            ]);
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
+
 
     public function store(Request $request)
     {
