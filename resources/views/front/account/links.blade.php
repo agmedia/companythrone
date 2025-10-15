@@ -51,7 +51,7 @@
                     </ul>
                 </div>
 
-                <div class="mb-4 mt-5">
+                <div class="mb-4 mt-5 ">
                     <h5 class="fw-semibold">{{ __('Dnevni zadaci') }}</h5>
                     <div class="small text-muted mb-2">
                         {{ __('Dodajte barem ') . $limitPerDay . __(' klikova da biste objavili svoj link.)') }}
@@ -60,31 +60,31 @@
                     </div>
 
                     @php
-                        // Pretvori $usedSlots u jednostavan niz intova [1,2,3...]
+                        // dekodiraj slots samo ako postoji session i payload
                         $slots = [];
-                        if (!empty($usedSlots?->toArray())) {
-                            $slots = array_map('intval', $usedSlots->toArray());
+                        if (!empty($usedSlots->toArray())) {
+                            $slots = $usedSlots->toArray() ?: [];
                         }
                     @endphp
 
                     <ul class="list-group mb-3" id="tasks-list">
                         @forelse($targets as $i => $target)
                             @php
-                                // KORISTI INDEKS PETLJE kao stabilni slot
-                                $slot = $i + 1; // 1-based
+                                // trenutačna implementacija: svi redovi dobiju isti slot (next),
+                                // no JS će ga nakon prvog klika povećavati bez refreša
+                                $slot = $todayClicks + 1;
                                 $done = in_array($slot, $slots, true);
                             @endphp
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}" data-slot-badge="{{ $slot }}">{{ $slot }}</span>
+                                    <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}" data-slot-badge>{{ $slot }}</span>
                                     {{ $target->t_name ?? '—' }}
                                 </div>
 
                                 <a href="{{ $target->weburl ?? '#' }}"
-                                   class="btn btn-sm {{ $done ? 'btn-success disabled' : 'btn-outline-primary' }} task-btn"
+                                   class="btn btn-sm {{ $done ? 'btn-success disabled' : 'btn-outline-primary task-btn' }}"
                                    data-slot="{{ $slot }}"
-                                   @if($done) aria-disabled="true" tabindex="-1" @endif
                                    @if(!empty($target?->id)) data-company="{{ $target->id }}" @endif>
                                     {{ $done ? __('Odrađeno') : __('Posjeti') }}
                                 </a>
@@ -109,47 +109,73 @@
             const csrf = "{{ csrf_token() }}";
             const clickEndpoint = "{{ localized_route('account.links.click') }}";
 
-            // Helper: označi jedan task kao "odrađen" (UI)
+            // Globalno držimo sljedeći slot kako bi svaki klik poslao NOVI broj bez refreša
+            let nextSlot = (parseInt(clicksEl.textContent, 10) || 0) + 1;
+
+            // Utility: postavi vrijednost brojača
+            function setTodayClicks(val) {
+                const n = Math.max(0, Math.min(parseInt(val || 0, 10), limitPerDay));
+                clicksEl.textContent = n;
+                nextSlot = n + 1; // sinkroniziraj nextSlot iz stvarnog brojača
+                refreshAllSlotsUI();
+            }
+
+            // Utility: optimistički +1
+            function incTodayClicksOptimistically() {
+                setTodayClicks((parseInt(clicksEl.textContent, 10) || 0) + 1);
+            }
+
+            // Osvježi sve bedževe i data-slot na nedovršenim gumbima
+            function refreshAllSlotsUI() {
+                document.querySelectorAll('[data-slot-badge]').forEach(b => {
+                    b.textContent = nextSlot;
+                    b.classList.remove('bg-success');
+                    b.classList.add('bg-secondary');
+                });
+
+                document.querySelectorAll('.task-btn').forEach(b => {
+                    if (!b.classList.contains('disabled')) {
+                        b.dataset.slot = nextSlot;
+                        b.classList.remove('btn-success');
+                        b.classList.remove('disabled');
+                        b.classList.add('btn-outline-primary');
+                        b.textContent = "{{ __('Posjeti') }}";
+                        b.removeAttribute('aria-disabled');
+                        b.removeAttribute('tabindex');
+                    }
+                });
+            }
+
+            // Označi kliknuti task kao gotov (ne dira ostale)
             function markTaskDone(btn) {
-                const slot = parseInt(btn.dataset.slot, 10);
-                // gumb
                 btn.classList.remove('btn-outline-primary');
                 btn.classList.add('btn-success', 'disabled');
                 btn.textContent = "{{ __('Odrađeno') }}";
                 btn.setAttribute('aria-disabled', 'true');
                 btn.setAttribute('tabindex', '-1');
 
-                // badge
-                const badge = document.querySelector(`[data-slot-badge="${slot}"]`);
+                // njegov bedž postaje zelen
+                const li = btn.closest('li');
+                const badge = li ? li.querySelector('[data-slot-badge]') : null;
                 if (badge) {
                     badge.classList.remove('bg-secondary');
                     badge.classList.add('bg-success');
                 }
             }
 
-            // Helper: ažuriraj brojač klikova u UI
-            function setTodayClicks(val) {
-                const n = Math.max(0, Math.min(parseInt(val || 0, 10), limitPerDay));
-                clicksEl.textContent = n;
-            }
-
-            // Optimističko povećanje (ako API ne vrati broj)
-            function incTodayClicksOptimistically() {
-                const current = parseInt(clicksEl.textContent, 10) || 0;
-                setTodayClicks(current + 1);
-            }
-
-            // Obradi klik na svaki task gumb
+            // Klik handler
             document.querySelectorAll('.task-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
-                    // spriječi navigaciju dok ne zabilježimo klik
                     e.preventDefault();
-
                     if (btn.classList.contains('disabled')) return;
 
-                    const slot = parseInt(btn.dataset.slot, 10);
+                    // dodijeli slot za ovaj klik i odmah ga "rezerviraj" za sljedeći
+                    const slotForThisClick = nextSlot;
                     const companyId = btn.dataset.company || null;
                     const targetUrl = btn.getAttribute('href');
+
+                    // optimistički: privremeno onemogući gumb da se ne dupla
+                    btn.classList.add('disabled');
 
                     try {
                         const res = await fetch(clickEndpoint, {
@@ -160,52 +186,35 @@
                                 "X-CSRF-TOKEN": csrf
                             },
                             body: JSON.stringify({
-                                slot: slot,
+                                slot: slotForThisClick,
                                 target_company_id: companyId
                             })
                         });
 
-                        // Ako API vraća JSON
                         const data = await res.json().catch(() => ({}));
-
                         if (res.ok && data && data.success) {
-                            // Označi UI
+                            // Označi ovaj task završenim
                             markTaskDone(btn);
 
-                            // Ako imamo točan broj s backend-a, koristi to; inače optimistički +1
+                            // Ažuriraj brojač (iz backend-a ako postoji, inače optimistički)
                             if (typeof data.todayClicks !== 'undefined') {
                                 setTodayClicks(data.todayClicks);
                             } else {
                                 incTodayClicksOptimistically();
                             }
 
-                            // (Opcionalno) ako želiš nakon logiranja otvoriti link:
+                            // Otvori cilj u novom tabu (ako postoji)
                             if (targetUrl && targetUrl !== '#') {
                                 window.open(targetUrl, '_blank', 'noopener');
-                            }
-
-                            // Ako backend vraća listu slotova (usedSlots), možemo dodatno uskladiti UI
-                            if (Array.isArray(data.usedSlots)) {
-                                const set = new Set(data.usedSlots.map(Number));
-                                document.querySelectorAll('.task-btn').forEach(b => {
-                                    const s = parseInt(b.dataset.slot, 10);
-                                    if (set.has(s)) {
-                                        markTaskDone(b);
-                                    }
-                                });
                             }
                         } else {
-                            // Neuspjeh – po želji prikaži poruku
+                            // Ako je odbijeno (npr. dupli slot), vrati gumb u prvobitno stanje
+                            btn.classList.remove('disabled');
                             // alert(data?.message || 'Greška pri spremanju klika.');
-                            if (targetUrl && targetUrl !== '#') {
-                                window.open(targetUrl, '_blank', 'noopener');
-                            }
                         }
                     } catch (err) {
+                        btn.classList.remove('disabled');
                         // alert('Greška mreže.');
-                        if (targetUrl && targetUrl !== '#') {
-                            window.open(targetUrl, '_blank', 'noopener');
-                        }
                     }
                 });
             });
