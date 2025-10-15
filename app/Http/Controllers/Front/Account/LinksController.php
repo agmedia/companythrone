@@ -102,7 +102,7 @@ class LinksController extends Controller
         $ref_limit = (int) app_settings()->referralsRequired();
 
         try {
-            $result = DB::transaction(function () use ($request, $user, $company, $limit, $ref_limit) {
+            $result = \Illuminate\Support\Facades\DB::transaction(function () use ($request, $user, $company, $limit, $ref_limit) {
                 // lock session (sprječava race)
                 $session = DailySession::lockForUpdate()->firstOrCreate(
                     ['company_id' => $company->id, 'day' => now()->toDateString()],
