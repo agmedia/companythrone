@@ -105,72 +105,41 @@
             const csrf = "{{ csrf_token() }}";
             const clickEndpoint = "{{ localized_route('account.links.click') }}";
 
-            // Globalno držimo sljedeći slot kako bi svaki klik poslao NOVI broj bez refreša
-            let nextSlot = (parseInt(clicksEl.textContent, 10) || 0) + 1;
-
-            // Utility: postavi vrijednost brojača
-            function setTodayClicks(val) {
-                const n = Math.max(0, Math.min(parseInt(val || 0, 10), limitPerDay));
-                clicksEl.textContent = n;
-                nextSlot = n + 1; // sinkroniziraj nextSlot iz stvarnog brojača
-                refreshAllSlotsUI();
+            function setTodayClicks(n) {
+                const v = Math.max(0, Math.min(parseInt(n||0,10), limitPerDay));
+                clicksEl.textContent = v;
             }
 
-            // Utility: optimistički +1
-            function incTodayClicksOptimistically() {
-                setTodayClicks((parseInt(clicksEl.textContent, 10) || 0) + 1);
-            }
-
-            // Osvježi sve bedževe i data-slot na nedovršenim gumbima
-            function refreshAllSlotsUI() {
-                document.querySelectorAll('[data-slot-badge]').forEach(b => {
-                    b.textContent = nextSlot;
-                    b.classList.remove('bg-success');
-                    b.classList.add('bg-secondary');
-                });
-
-                document.querySelectorAll('.task-btn').forEach(b => {
-                    if (!b.classList.contains('disabled')) {
-                        b.dataset.slot = nextSlot;
-                        b.classList.remove('btn-success');
-                        b.classList.remove('disabled');
-                        b.classList.add('btn-outline-primary');
-                        b.textContent = "{{ __('Posjeti') }}";
-                        b.removeAttribute('aria-disabled');
-                        b.removeAttribute('tabindex');
-                    }
-                });
-            }
-
-            // Označi kliknuti task kao gotov (ne dira ostale)
-            function markTaskDone(btn) {
-                btn.classList.remove('btn-outline-primary');
-                btn.classList.add('btn-success', 'disabled');
-                btn.textContent = "{{ __('Odrađeno') }}";
-                btn.setAttribute('aria-disabled', 'true');
-                btn.setAttribute('tabindex', '-1');
-
-                // njegov bedž postaje zelen
-                const li = btn.closest('li');
-                const badge = li ? li.querySelector('[data-slot-badge]') : null;
-                if (badge) {
-                    badge.classList.remove('bg-secondary');
-                    badge.classList.add('bg-success');
+            function disableAllIfLimitReached() {
+                const v = parseInt(clicksEl.textContent, 10) || 0;
+                if (v >= limitPerDay) {
+                    document.querySelectorAll('.task-btn').forEach(b => {
+                        if (!b.classList.contains('disabled')) {
+                            b.classList.add('disabled');
+                            b.setAttribute('aria-disabled','true');
+                            b.setAttribute('tabindex','-1');
+                        }
+                    });
                 }
             }
 
-            // Klik handler
+            function markDone(btn) {
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-success','disabled');
+                btn.textContent = "{{ __('Odrađeno') }}";
+                btn.setAttribute('aria-disabled','true');
+                btn.setAttribute('tabindex','-1');
+            }
+
             document.querySelectorAll('.task-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     e.preventDefault();
                     if (btn.classList.contains('disabled')) return;
 
-                    // dodijeli slot za ovaj klik i odmah ga "rezerviraj" za sljedeći
-                    const slotForThisClick = nextSlot;
-                    const companyId = btn.dataset.company || null;
+                    const companyId = btn.dataset.company;
                     const targetUrl = btn.getAttribute('href');
 
-                    // optimistički: privremeno onemogući gumb da se ne dupla
+                    // spriječi dvoklik
                     btn.classList.add('disabled');
 
                     try {
@@ -181,39 +150,41 @@
                                 "Accept": "application/json",
                                 "X-CSRF-TOKEN": csrf
                             },
-                            body: JSON.stringify({
-                                slot: slotForThisClick,
-                                target_company_id: companyId
-                            })
+                            body: JSON.stringify({ target_company_id: companyId }) // 👈 bez slota!
                         });
 
                         const data = await res.json().catch(() => ({}));
-                        if (res.ok && data && data.success) {
-                            // Označi ovaj task završenim
-                            markTaskDone(btn);
 
-                            // Ažuriraj brojač (iz backend-a ako postoji, inače optimistički)
+                        if (res.ok && data && data.success) {
+                            markDone(btn);
+
                             if (typeof data.todayClicks !== 'undefined') {
                                 setTodayClicks(data.todayClicks);
                             } else {
-                                incTodayClicksOptimistically();
+                                setTodayClicks((parseInt(clicksEl.textContent,10) || 0) + 1);
                             }
 
-                            // Otvori cilj u novom tabu (ako postoji)
                             if (targetUrl && targetUrl !== '#') {
                                 window.open(targetUrl, '_blank', 'noopener');
                             }
+
+                            disableAllIfLimitReached();
                         } else {
-                            // Ako je odbijeno (npr. dupli slot), vrati gumb u prvobitno stanje
+                            // vrati gumb ako server nije prihvatio klik
                             btn.classList.remove('disabled');
-                            // alert(data?.message || 'Greška pri spremanju klika.');
+                            btn.removeAttribute('aria-disabled');
+                            btn.removeAttribute('tabindex');
+                            console.warn('Click rejected:', data);
                         }
                     } catch (err) {
                         btn.classList.remove('disabled');
-                        // alert('Greška mreže.');
+                        btn.removeAttribute('aria-disabled');
+                        btn.removeAttribute('tabindex');
+                        console.error('Network error:', err);
                     }
                 });
             });
         });
     </script>
 @endpush
+
