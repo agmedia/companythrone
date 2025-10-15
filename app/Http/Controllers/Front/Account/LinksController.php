@@ -39,10 +39,7 @@ class LinksController extends Controller
             $ref_limit = $sm->get('company', 'auth_referrals_required');
 
             // Izvuci payload i dekodiraj u array
-            $usedSlots = Click::query()
-                ->where('from_company_id', $company->id)
-                ->whereDate('day', now()->toDateString())   // ✅ umjesto whereDay('day', now())
-                ->pluck('company_id');
+            $usedSlots = Click::query()->where('from_company_id', $company->id)->whereDay('day', now())->pluck('company_id');
 
             // Dohvati kompanije koje nisu već odabrane
             $targets = Company::query()
