@@ -224,4 +224,4 @@ class LinksController extends Controller
     }
 }
 
-}
+
