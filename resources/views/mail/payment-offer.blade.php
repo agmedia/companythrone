@@ -1,12 +1,16 @@
 @extends('mail.layouts.base')
 
 @section('content')
-    <p>{{ __('mail.greeting', ['company' => $company->name]) }}</p>
+    <p style="margin:0 0 16px 0;">
+        {{ __('mail.greeting', ['company' => e($company->name ?? '-')]) }}
+    </p>
 
-    <p>{{ __('mail.payment_offer_body', ['amount' => $amount]) }}</p>
+    <p style="margin:0 0 16px 0;">
+        {{ __('mail.payment_offer_body', ['amount' => e($amount ?? '-')]) }}
+    </p>
 
-    <p>
+    <p style="margin:0;">
         {{ __('mail.signoff') }}<br>
-        {{ __('mail.signature') }}
+        <strong>{{ __('mail.signature') }}</strong>
     </p>
 @endsection
