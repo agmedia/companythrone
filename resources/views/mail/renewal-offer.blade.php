@@ -1,8 +1,12 @@
-<p>{{ __('mail.greeting', ['company' => $company->name]) }}</p>
+@extends('mail.layouts.base')
 
-<p>{{ __('mail.renewal_offer_body', ['amount' => $amount]) }}</p>
+@section('content')
+    <p>{{ __('mail.greeting', ['company' => $company->name]) }}</p>
 
-<p>
-    {{ __('mail.signoff') }}<br>
-    {{ __('mail.signature') }}
-</p>
+    <p>{{ __('mail.renewal_offer_body', ['amount' => $amount]) }}</p>
+
+    <p>
+        {{ __('mail.signoff') }}<br>
+        {{ __('mail.signature') }}
+    </p>
+@endsection
