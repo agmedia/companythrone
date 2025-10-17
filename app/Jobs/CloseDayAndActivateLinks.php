@@ -21,7 +21,7 @@ class CloseDayAndActivateLinks implements ShouldQueue
 
         DailySession::whereDate('day', $today)->chunkById(200, function ($sessions) {
             foreach ($sessions as $s) {
-                if ($s->completed_count >= 25) {
+                if ($s->completed_count >= app_settings()->clicksRequired()) {
                     $s->update(['completed_25' => true]);
                     /** @var Company $c */
                     $c = $s->company;
