@@ -20,7 +20,7 @@ class GenerateDailySessions implements ShouldQueue
         $today = Carbon::today();
 
         // 1️⃣ Deaktiviraj sve linkove prije obrade dana
-        Company::query()->update(['is_link_active' => false]);
+        Company::where('level_id', '>', 1)->update(['is_link_active' => false]);
 
         Company::query()->where('is_published', true)->chunkById(200, function ($companies) use ($today) {
             foreach ($companies as $company) {
