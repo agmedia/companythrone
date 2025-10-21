@@ -32,7 +32,7 @@
                         </div>
                     </div>
 
-                    @if (auth()->user()->hasRole('company_owner') && subscription_active($user->company->id))
+                    @if (auth()->user()->hasRole('company_owner') && $user->company && subscription_active($user->company->id))
                         {{-- Moji linkovi (dnevni zadaci) --}}
                         <div class="col-md-4">
                             <div class="card shadow-sm h-100">
