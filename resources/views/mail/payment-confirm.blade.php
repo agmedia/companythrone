@@ -17,7 +17,7 @@
     @endphp
 
     <h2 style="margin:0 0 12px 0; font-size:22px; line-height:1.3; font-weight:700;">
-        {{ __('Potvrda o uspješnoj uplati') }}
+        {{ __('Potvrda o uspješnoj prijavi') }}
     </h2>
 
     <p style="margin:0 0 12px 0;">
