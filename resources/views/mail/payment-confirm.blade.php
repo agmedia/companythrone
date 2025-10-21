@@ -25,10 +25,22 @@
     </p>
 
     <p style="margin:0 0 16px 0;">
-        {{ __('Zahvaljujemo vam na prijavi! Vaša podaci su uspješno zaprimljeni i evidentirana u sustavu. Nakon provedene uplate vaša tvrtka će biti aktina na portalu.') }}
+        {{ __('Vaša je narudžba uspješno zaprimljena! Kako bismo je rezervirali za vas, molimo vas da izvršite uplatu u roku od 48 sati. Nažalost, bez primitka uplate u tom roku, narudžbu ćemo morati otkazati') }}
     </p>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:25px 0;">
+
+    <p style="margin:0 0 16px 0;">
+        {{ __('Molimo Vas da izvršite uplatu u iznosu od 25.00 €') }} </p>
+    <p style="margin:0 0 16px 0;">
+Primatelj ; UNITRG d.o.o.<br>
+IBAN: HR7023900011101520911<br>
+MODEL: 00 POZIV NA BROJ: {{ $invoice }}<br><br>
+
+Svrha/opis – godišnja naknada</p>
+
+
+
+    {{--   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:25px 0;">
         <tr>
             <td style="padding:8px 0; font-weight:600; width:42%; vertical-align:top;">{{ __('Tvrtka:') }}</td>
             <td style="padding:8px 0; vertical-align:top;">{{ $companyName }}</td>
@@ -57,12 +69,12 @@
                 </span>
             </td>
         </tr>
-    </table>
+    </table>--}}
 
-    <p style="margin:0 0 16px 0;">
+   {{--  <p style="margin:0 0 16px 0;">
         {{ __('Vaša pretplata ostaje aktivna do:') }}
         <strong>{{ $subEnds }}</strong>
-    </p>
+    </p>--}}
 
     <p style="margin:0 0 25px 0;">
         {{ __('Ako imate pitanja ili trebate dodatne informacije, slobodno nas kontaktirajte.') }}
