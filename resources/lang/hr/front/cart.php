@@ -154,7 +154,7 @@ return [
     'sb1' => 'Vaša kupnja je uspješno dovršena!',
     'sb2' => 'i zahvaljujemo Vam.',
     'sb3' => 'Narudžba je zapremljena, zahvaljujemo Vam na povjerenju.',
-    'sb4' => 'Rok za uplatu iznosi maksimalno 48 sati, tijekom kojih ćemo zadržati rezervaciju za robu koju ste naručili.',
+    'sb4' => 'Rok za uplatu iznosi maksimalno 48 sati, tijekom kojih ćemo zadržati rezervaciju za Vašu narudžbu.',
     'sb5' => 'Ukoliko uplatu ne zaprimimo u tom razdoblju, nažalost, bit ćemo primorani poništiti narudžbu.',
     'sb6' => 'Molimo Vas da izvršite uplatu u iznosu od ',
     'sb7' => 'IBAN',
