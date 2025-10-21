@@ -27,7 +27,7 @@
                         <h5 class="mb-2">Imate pitanja?</h5>
                         <div class="nav gap-2 fs-sm">
                             <span>Nazovi nas odmah</span>
-                            <a class="nav-link hover-effect-underline fw-semibold p-0" href="tel:+385 1 23 83 733">+385 1 23 83 733</a>
+                            <a class="nav-link hover-effect-underline fw-semibold p-0" href="tel:+385953349120">095 334 91 20</a>
                         </div>
                     </div>
                 </div>
