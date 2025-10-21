@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
+use App\Models\Back\Billing\Subscription;
 use App\Models\Back\Catalog\Company;
 use App\Models\Shared\Payment;
-use App\Models\Shared\Subscription;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
