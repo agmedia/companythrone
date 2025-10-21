@@ -25,7 +25,7 @@
     </p>
 
     <p style="margin:0 0 16px 0;">
-        {{ __('Zahvaljujemo vam na uplati! Vaša uplata za pretplatu je uspješno zaprimljena i evidentirana u sustavu.') }}
+        {{ __('Zahvaljujemo vam na prijavi! Vaša podaci su uspješno zaprimljeni i evidentirana u sustavu. Nakon provedene uplate vaša tvrtka će biti aktina na portalu.') }}
     </p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:25px 0;">
@@ -53,7 +53,7 @@
             <td style="padding:8px 0; font-weight:600; vertical-align:top;">{{ __('Status:') }}</td>
             <td style="padding:8px 0; vertical-align:top;">
                 <span style="background:#22c55e; color:#ffffff; border-radius:4px; padding:2px 8px; font-size:13px; display:inline-block;">
-                    {{ __('Plaćeno') }}
+                    {{ __('Zaprimljena narudžba') }}
                 </span>
             </td>
         </tr>
