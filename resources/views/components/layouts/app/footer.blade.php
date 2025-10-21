@@ -21,16 +21,11 @@
                     <button type="button" class="accordion-button collapsed py-3 d-sm-none" data-bs-toggle="collapse" data-bs-target="#quickLinks" aria-expanded="false" aria-controls="quickLinks">Quick links</button>
                 </h6>
                 <ul class="list-unstyled gap-3">
-                    <li>
-                        <div class="position-relative d-flex align-items-center">
-                            <i class="fi-mail fs-lg text-body me-2"></i>
-                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="mailto:contact@example.com">info@companythrone.hr</a>
-                        </div>
-                    </li>
+
                     <li>
                         <div class="position-relative d-flex align-items-center">
                             <i class="fi-phone-call fs-lg text-body me-2"></i>
-                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:+38512383733">+385 1 23 83 733</a>
+                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:+385953349120">+385 95 334 91 20</a>
                         </div>
                     </li>
                 </ul>
