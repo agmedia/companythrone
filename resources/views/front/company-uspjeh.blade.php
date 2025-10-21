@@ -12,7 +12,7 @@
                         <h1 class="h2 mb-3">{{ __('Vaša narudžba je uspješno završena') }}</h1>
 
                         @if($selectedPlan['code'] == 'bank')
-                            <p>{{ __('front/cart.sb1') }}}</p>
+                            <p>{{ __('front/cart.sb1') }}</p>
                             <p> {{ __('front/cart.sb4') }}</p>
                             <p> {{ __('front/cart.sb5') }}</p>
                             <p>{{ __('front/cart.sb6') }}  {{number_format($subscription->price, 2)}} €<br>
