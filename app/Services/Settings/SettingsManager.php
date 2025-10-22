@@ -292,6 +292,33 @@ class SettingsManager
 
 
     /**
+     * @return string
+     */
+    public function getMetaTitle(): string
+    {
+        return $this->get('site', 'meta_title', '');
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getMetaDescription(): string
+    {
+        return $this->get('site', 'meta_description', '');
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getMetaKeywords(): string
+    {
+        return $this->get('site', 'meta_keywords', '');
+    }
+
+
+    /**
      * @return int
      */
     public function frontPagination(): int

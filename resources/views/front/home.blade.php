@@ -1,5 +1,7 @@
 @extends('layouts.app')
-@section('title', __('home.title'))
+@section('title', app_settings()->getMetaTitle())
+@section('description', app_settings()->getMetaDescription())
+@section('keywords', app_settings()->getMetaKeywords())
 @section('content')
 
     <!-- Hero with search form -->

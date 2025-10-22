@@ -43,6 +43,7 @@
                                         @php
                                             $type = $def['type'] ?? 'text';
                                             $label = $def['label'] ?? ucfirst($key);
+                                            $col = $def['col'] ?? '12';
                                             $val = $values[$code][$key] ?? ($def['default'] ?? null);
                                         @endphp
 
@@ -79,19 +80,23 @@
                                                 </div>
                                             </div>
                                         @elseif($type === 'boolean')
-                                            <div class="col-12 d-flex align-items-end mt-4">
-                                                <div class="form-check form-switch">
-                                                    <input type="hidden" name="settings[{{ $code }}][{{ $key }}]" value="0">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           name="settings[{{ $code }}][{{ $key }}]" value="1"
-                                                           id="{{ $code }}-{{ $key }}" @checked(old("settings.$code.$key", (bool)$val))>
-                                                    <label class="form-check-label" for="{{ $code }}-{{ $key }}">{{ $label }}</label>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-md-{{ $col }} d-flex align-items-end mt-4">
+                                                        <div class="form-check form-switch">
+                                                            <input type="hidden" name="settings[{{ $code }}][{{ $key }}]" value="0">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   name="settings[{{ $code }}][{{ $key }}]" value="1"
+                                                                   id="{{ $code }}-{{ $key }}" @checked(old("settings.$code.$key", (bool)$val))>
+                                                            <label class="form-check-label" for="{{ $code }}-{{ $key }}">{{ $label }}</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @elseif($type === 'number')
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-3">
+                                                    <div class="col-md-{{ $col }}">
                                                         <label class="form-label">{{ $label }}</label>
                                                         <input type="number" class="form-control"
                                                                name="settings[{{ $code }}][{{ $key }}]"
@@ -105,7 +110,7 @@
                                         @elseif($type === 'decimal')
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-3">
+                                                    <div class="col-md-{{ $col }}">
                                                         <label class="form-label">{{ $label }}</label>
                                                         <input type="number" class="form-control"
                                                                name="settings[{{ $code }}][{{ $key }}]"
@@ -118,22 +123,34 @@
                                             </div>
                                         @elseif($type === 'email')
                                             <div class="col-12">
-                                                <label class="form-label">{{ $label }}</label>
-                                                <input type="email" class="form-control"
-                                                       name="settings[{{ $code }}][{{ $key }}]"
-                                                       value="{{ old("settings.$code.$key", $val) }}">
+                                                <div class="row">
+                                                    <div class="col-md-{{ $col }}">
+                                                        <label class="form-label">{{ $label }}</label>
+                                                        <input type="email" class="form-control"
+                                                               name="settings[{{ $code }}][{{ $key }}]"
+                                                               value="{{ old("settings.$code.$key", $val) }}">
+                                                    </div>
+                                                </div>
                                             </div>
                                         @elseif($type === 'textarea')
                                             <div class="col-12">
-                                                <label class="form-label">{{ $label }}</label>
-                                                <textarea name="settings[{{ $code }}][{{ $key }}]" class="form-control" rows="3">{{ old("settings.$code.$key", $val) }}</textarea>
+                                                <div class="row">
+                                                    <div class="col-md-{{ $col }}">
+                                                        <label class="form-label">{{ $label }}</label>
+                                                        <textarea name="settings[{{ $code }}][{{ $key }}]" class="form-control" rows="3">{{ old("settings.$code.$key", $val) }}</textarea>
+                                                    </div>
+                                                </div>
                                             </div>
                                         @else
-                                            <div class="col-md-6">
-                                                <label class="form-label">{{ $label }}</label>
-                                                <input type="text" class="form-control"
-                                                       name="settings[{{ $code }}][{{ $key }}]"
-                                                       value="{{ old("settings.$code.$key", $val) }}">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-md-{{ $col }}">
+                                                        <label class="form-label">{{ $label }}</label>
+                                                        <input type="text" class="form-control"
+                                                               name="settings[{{ $code }}][{{ $key }}]"
+                                                               value="{{ old("settings.$code.$key", $val) }}">
+                                                    </div>
+                                                </div>
                                             </div>
                                         @endif
                                     @endforeach
