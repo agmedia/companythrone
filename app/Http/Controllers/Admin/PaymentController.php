@@ -42,7 +42,7 @@ class PaymentController extends Controller
             $query->where('provider', 'like', '%' . $filters['provider'] . '%');
         }
 
-        $payments = $query->latest()->paginate(25)->withQueryString();
+        $payments = $query->latest()->paginate(app_settings()->adminPagination())->withQueryString();
 
         return view('admin.payments.index', [
             'payments' => $payments,

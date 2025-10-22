@@ -29,7 +29,7 @@ class LinksController extends Controller
         $referrals     = ReferralLink::where('user_id', $userId)->latest()->get();
         $referralCount = $referrals->count();
 
-        $links = ReferralLink::where('user_id', $userId)->latest()->paginate(10);
+        $links = ReferralLink::where('user_id', $userId)->latest()->paginate(app_settings()->frontPagination());
         $today = ReferralLink::where('user_id', $userId)
             ->whereDate('created_at', now()->toDateString())
             ->count();

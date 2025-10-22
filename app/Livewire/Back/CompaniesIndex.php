@@ -31,7 +31,7 @@ class CompaniesIndex extends Component
         }
 
         return view('livewire.back.companies-index', [
-            'companies' => $query->paginate(20),
+            'companies' => $query->paginate(app_settings()->adminPagination()),
         ]);
     }
 }

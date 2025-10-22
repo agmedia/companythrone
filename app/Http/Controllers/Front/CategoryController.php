@@ -98,7 +98,7 @@ class CategoryController extends Controller
 
         $companies = $companiesQuery
             ->latest('published_at')
-            ->paginate(18);
+            ->paginate(app_settings()->frontPagination());
 
         return view('front.categories.show', [
             'category'    => $category,

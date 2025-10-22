@@ -44,7 +44,7 @@ class SubscriptionController extends Controller
             $q->whereDate('next_renewal_on', '<=', $request->date('renew_to'));
         }
 
-        $subscriptions = $q->orderByDesc('id')->paginate(20)->withQueryString();
+        $subscriptions = $q->orderByDesc('id')->paginate(app_settings()->adminPagination())->withQueryString();
 
         return view('admin.subscriptions.index', compact('subscriptions'));
     }

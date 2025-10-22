@@ -35,7 +35,7 @@ class BannerController extends Controller
             $q->whereHas('translations', fn($t) => $t->where('locale',$lc)->where('title','like',"%{$term}%"));
         }
 
-        $banners = $q->orderByDesc('id')->paginate(20)->withQueryString();
+        $banners = $q->orderByDesc('id')->paginate(app_settings()->adminPagination())->withQueryString();
 
         return view('admin.banners.index', compact('banners'));
     }

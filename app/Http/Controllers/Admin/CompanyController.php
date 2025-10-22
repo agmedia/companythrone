@@ -20,7 +20,7 @@ class CompanyController extends Controller
 
     public function index()
     {
-        $companies = Company::latest()->paginate(20);
+        $companies = Company::latest()->paginate(app_settings()->adminPagination());
 
         return view('admin.catalog.companies.index', compact('companies'));
     }
