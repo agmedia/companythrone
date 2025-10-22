@@ -6,7 +6,7 @@
 
             <!-- Logo + Contacts -->
             <div class=" col-lg-3">
-                <a class="d-inline-flex align-items-center text-dark-emphasis text-decoration-none mb-4" href="index.html">
+                <a class="d-inline-flex align-items-center text-dark-emphasis text-decoration-none mb-4" href="{{ route('home') }}">
               <span class="flex-shrink-0 text-primary rtl-flip me-2">
                 <img src="{{ asset('theme1/assets/companythrone-round.svg') }}" alt="Companythrone">
               </span>
@@ -25,7 +25,7 @@
                     <li>
                         <div class="position-relative d-flex align-items-center">
                             <i class="fi-phone-call fs-lg text-body me-2"></i>
-                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:+385953349120">+385 95 334 91 20</a>
+                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:+{{ app_settings()->getPhone() }}">+{{ app_settings()->getPhone() }}</a>
                         </div>
                     </li>
                 </ul>

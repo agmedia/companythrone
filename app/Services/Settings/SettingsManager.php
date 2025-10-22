@@ -255,6 +255,60 @@ class SettingsManager
     }
 
 
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->get('site', 'title', config('app.name'));
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getSlogan(): string
+    {
+        return $this->get('site', 'slogan', '');
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->get('site', 'contact_email', config('mail.from.address'));
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getPhone(): string
+    {
+        return $this->get('site', 'contact_phone', '');
+    }
+
+
+    /**
+     * @return int
+     */
+    public function frontPagination(): int
+    {
+        return $this->get('ui', 'front_pagination', 12);
+    }
+
+
+    /**
+     * @return int
+     */
+    public function adminPagination(): int
+    {
+        return $this->get('ui', 'admin_pagination', 20);
+    }
+
+
     /* ===== helpers ===== */
 
     private function castPrice($val): float|int
