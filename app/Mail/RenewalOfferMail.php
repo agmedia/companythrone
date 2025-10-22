@@ -34,7 +34,7 @@ class RenewalOfferMail extends Mailable implements ShouldQueue
             view: 'mail.renewal-offer',
             with: [
                 'company' => $this->company,
-                'amount'  => '25,00 €',
+                'amount'  => number_format(app_settings()->getPrice(), 2) . ' €',
             ],
         );
     }

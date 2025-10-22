@@ -176,7 +176,7 @@ class CompanyController extends Controller
         // helper za PDV stopu (koristi onaj što smo dodali) ili quick inline dohvat:
         $vatRate = vat_rate(); // npr. 25.0
 
-        $net      = (float) ($planConf['price'] ?? 0);
+        $net      = (float) (app_settings()->getPrice() ?? 0);
         $gross    = round($net * (1 + $vatRate / 100), 2);
         $currency = (string) ($planConf['currency'] ?? 'EUR');
         $period   = in_array(($planConf['period'] ?? 'yearly'), ['monthly', 'yearly'], true)

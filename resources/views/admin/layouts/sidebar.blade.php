@@ -175,11 +175,11 @@
                             </a>
                         </li>
 
-                        <li class="pc-item {{ request()->routeIs('settings.languages.*') ? 'active' : '' }}">
+                        {{--<li class="pc-item {{ request()->routeIs('settings.languages.*') ? 'active' : '' }}">
                             <a class="pc-link" href="{{ route('settings.languages.index') }}">
                                 {{ __('back/nav.languages') }}
                             </a>
-                        </li>
+                        </li>--}}
 
                         <li class="pc-item {{ request()->routeIs('settings.taxes.*') ? 'active' : '' }}">
                             <a class="pc-link" href="{{ route('settings.taxes.index') }}">

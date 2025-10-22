@@ -88,6 +88,7 @@ return [
             'auth_referrals_required' => ['type' => 'number',  'label' => 'Potreban broj referenci za aktivaciju linka', 'default' => 5, 'min'=>1, 'max'=>30,  'step'=>1],
             'link_active_default'     => ['type' => 'boolean', 'label' => 'Nova kompanija aktivna po defaultu', 'default' => false],
             'send_admin_emails'     => ['type' => 'boolean', 'label' => 'Šalji email-ove administratoru?', 'default' => true],
+            'main_price_year' => ['type' => 'decimal',          'label' => 'Godišnja cijena upisa tvrtke', 'default' => ''],
         ],
 
     ],

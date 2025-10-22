@@ -34,7 +34,7 @@ class PaymentOfferMail extends Mailable implements ShouldQueue
             view: 'mail.payment-offer',
             with: [
                 'company' => $this->company,
-                'amount'  => '25,00 €',
+                'amount'  => number_format(app_settings()->getPrice(), 2) . ' €',
             ],
         // or: markdown: 'mail.payment-offer' if you prefer Markdown
         );

@@ -104,13 +104,17 @@
                                             </div>
                                         @elseif($type === 'decimal')
                                             <div class="col-12">
-                                                <label class="form-label">{{ $label }}</label>
-                                                <input type="number" class="form-control"
-                                                       name="settings[{{ $code }}][{{ $key }}]"
-                                                       value="{{ old("settings.$code.$key", $val) }}"
-                                                       step="{{ $def['step'] ?? '0.01' }}"
-                                                       @if(isset($def['min'])) min="{{ $def['min'] }}" @endif
-                                                       @if(isset($def['max'])) max="{{ $def['max'] }}" @endif>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <label class="form-label">{{ $label }}</label>
+                                                        <input type="number" class="form-control"
+                                                               name="settings[{{ $code }}][{{ $key }}]"
+                                                               value="{{ old("settings.$code.$key", $val) }}"
+                                                               step="{{ $def['step'] ?? '0.01' }}"
+                                                               @if(isset($def['min'])) min="{{ $def['min'] }}" @endif
+                                                               @if(isset($def['max'])) max="{{ $def['max'] }}" @endif>
+                                                    </div>
+                                                </div>
                                             </div>
                                         @elseif($type === 'email')
                                             <div class="col-12">

@@ -246,6 +246,14 @@ class SettingsManager
     }
 
 
+    /**
+     * @return float|int
+     */
+    public function getPrice(): float|int
+    {
+        return $this->get('company', 'main_price_year', 25);
+    }
+
 
     /* ===== helpers ===== */
 

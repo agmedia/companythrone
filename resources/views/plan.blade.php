@@ -124,7 +124,7 @@
         <h2>Dodavanje tvrtke (onboarding)</h2>
         <ul>
             <li>Obrazac: Naziv, Ulica, Broj, Mjesto, Država, E-mail, Telefon, Logotip (upload).</li>
-            <li>Nakon pregleda logotipa i podataka šalje se ponuda za uplatu (25 € godišnje). Načini plaćanja: račun, kartica.</li>
+            <li>Nakon pregleda logotipa i podataka šalje se ponuda za uplatu ({{ app_settings()->getPrice() }} € godišnje). Načini plaćanja: račun, kartica.</li>
             <li>Nakon isteka godine, aplikacija automatski šalje e-mail s novom ponudom (obnova).</li>
         </ul>
     </div>
@@ -211,7 +211,7 @@
     <div class="section" id="placanja">
         <h2>Plaćanja i obnova</h2>
         <ul>
-            <li>Godišnja pretplata <strong>25 €</strong>. Nakon uplate kreće razdoblje vidljivosti.</li>
+            <li>Godišnja pretplata <strong>{{ app_settings()->getPrice() }} €</strong>. Nakon uplate kreće razdoblje vidljivosti.</li>
             <li>Po isteku godine automatizirano <strong>slanje ponude za obnovu</strong>; nakon uplate se obnavlja razdoblje.</li>
         </ul>
     </div>

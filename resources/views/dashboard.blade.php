@@ -36,7 +36,7 @@
             <!-- Account profile content -->
             <div class="col-lg-9">
                 <h2 class="h5 mb-1">Dobrodošao, {{ auth()->user()->name ?? 'korisniče' }}</h2>
-                <p>Link vaše tvrtke postaje aktivan tek nakon što klikne svih 25 linkova.</p>
+                <p>Link vaše tvrtke postaje aktivan tek nakon što klikne svih {{ app_settings()->clicksRequired() }} linkova.</p>
                 <!-- Wallet + Account progress -->
                 <section class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3 g-xl-4 pb-5 mb-md-3">
                     <div class="col">

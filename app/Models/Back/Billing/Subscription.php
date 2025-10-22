@@ -49,7 +49,7 @@ class Subscription extends Model
 
     public static function getPrice(int|float|string $payment_price)
     {
-        $subscription_price = config('settings.payments.plans.default.price');
+        $subscription_price = app_settings()->getPrice();
 
         return $subscription_price + $payment_price;
     }
