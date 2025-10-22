@@ -16,7 +16,7 @@
         <div class="card-body">
             <form method="POST" action="{{ route('payments.update', $payment) }}" class="vstack gap-3">
                 @csrf
-                @method('PUT')
+
 
                 <div class="row g-3">
                     {{-- STATUS --}}
@@ -57,7 +57,7 @@
                         <label class="form-label">Datum plaćanja</label>
                         <input type="date"
                                name="paid_at"
-                               value="{{ old('paid_at', optional()->format('Y-m-d')) }}"
+                               value="{{ old('paid_at', optional($payment->paid_at)->format('Y-m-d')) }}"
                                class="form-control">
                     </div>
                 </div>
