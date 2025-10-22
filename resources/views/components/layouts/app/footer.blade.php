@@ -25,7 +25,7 @@
                     <li>
                         <div class="position-relative d-flex align-items-center">
                             <i class="fi-phone-call fs-lg text-body me-2"></i>
-                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:+{{ app_settings()->getPhone() }}">+{{ app_settings()->getPhone() }}</a>
+                            <a class="text-dark-emphasis text-decoration-none hover-effect-underline stretched-link" href="tel:{{ app_settings()->getPhone() }}">{{ app_settings()->getPhone() }}</a>
                         </div>
                     </li>
                 </ul>

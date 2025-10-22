@@ -27,7 +27,7 @@
                         <h5 class="mb-2">Imate pitanja?</h5>
                         <div class="nav gap-2 fs-sm">
                             <span>Nazovi nas odmah</span>
-                            <a class="nav-link hover-effect-underline fw-semibold p-0" href="tel:+{{ app_settings()->getPhone() }}">{{ app_settings()->getPhone() }}</a>
+                            <a class="nav-link hover-effect-underline fw-semibold p-0" href="tel:{{ app_settings()->getPhone() }}">{{ app_settings()->getPhone() }}</a>
                         </div>
                     </div>
                 </div>
