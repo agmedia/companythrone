@@ -103,8 +103,8 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-gift position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">SEO nagrade i rast prometa</h3>
-                                        <p class="fs-sm mb-0">Aktivne tvrtke svakodnevno dobivaju posjete (do 780 klikova dnevno) i jačaju online autoritet.</p>
+                                        <h3 class="h6 pt-2 my-2">Jači SEO uz kvalitetne backlinkove</h3>
+                                        <p class="fs-sm mb-0">Aktivne tvrtke svakodnevno mogu dobiti do 780 posjeta i jačati  on line autoritet.</p>
                                     </div>
                                 </div>
                             </div>
@@ -120,8 +120,8 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-percent position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Ekskluzivne promocije i popusti</h3>
-                                        <p class="fs-sm mb-0">Iskoristi posebne cijene za SEO pakete i dodatne promotivne usluge.</p>
+                                        <h3 class="h6 pt-2 my-2">Viša vidljivost na tražilicama</h3>
+                                        <p class="fs-sm mb-0">Objavom oglasa na portalu povećava se broj kvalitetnih poveznica prema vašoj web stranici, što rezultira boljim pozicijama na Googleu.</p>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                                             <i class="fi-heart position-relative z-2 fs-4 m-1"></i>
                                         </div>
                                         <h3 class="h6 pt-2 my-2">Preporuči i umreži svoju tvrtku</h3>
-                                        <p class="fs-sm mb-0">Pozovi barem 5 partnera i osiguraj maksimalnu dnevnu vidljivost u sustavu.</p>
+                                        <p class="fs-sm mb-0">Preporuči najmanje  5 partnera i osiguraj maksimalnu dnevnu vidljivost u sustavu.</p>
                                     </div>
                                 </div>
                             </div>
@@ -154,8 +154,8 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-pie-chart position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Fleksibilno oglašavanje i trajni linkovi</h3>
-                                        <p class="fs-sm mb-0">Osiguraj stalne aktivne linkove i dugoročno pozicioniranje u rezultatima pretrage.</p>
+                                        <h3 class="h6 pt-2 my-2">Organski rast bez dodatnih troškova</h3>
+                                        <p class="fs-sm mb-0">Svaki objavljeni oglas doprinosi rastu organskog prometa i jačanju SEO autoriteta bez ulaganja u plaćeno oglašavanje.</p>
                                     </div>
                                 </div>
                             </div>
