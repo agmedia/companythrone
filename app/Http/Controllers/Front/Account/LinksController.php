@@ -197,15 +197,15 @@ class LinksController extends Controller
             return redirect()->route('front.account.dashboard');
         }
 
-        $countToday = ReferralLink::where('user_id', $userId)
-            ->whereDate('created_at', today())
-            ->count();
+        /*  $countToday = ReferralLink::where('user_id', $userId)
+             ->whereDate('created_at', today())
+             ->count();
 
-      /*  $ref_limit = (int) app_settings()->referralsRequired();
+        $ref_limit = (int) app_settings()->referralsRequired();
 
-        if ($countToday >= $ref_limit) {
-            return back()->with('status', __('Dnevni limit linkova je dosegnut.'));
-        }*/
+         if ($countToday >= $ref_limit) {
+             return back()->with('status', __('Dnevni limit linkova je dosegnut.'));
+         }*/
 
         $token  = Str::uuid()->toString();
         $refUrl = route('register', ['ref' => $token]);
