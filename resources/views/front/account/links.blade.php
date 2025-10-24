@@ -18,7 +18,7 @@
                         <input name="label" type="text" class="form-control" placeholder="{{ __('Opis (opcionalno)') }}">
                     </div>
                     <div class="col-md-1 d-grid">
-                        <button class="btn btn-primary" @disabled($referralCount >= $referralRequired)>{{ __('Dodaj') }}</button>
+                        <button class="btn btn-primary" >{{ __('Dodaj') }}</button>
                     </div>
                     {{-- <div class="col-12 text-muted small">
                         {{ __('Danas:') }} {{ $todayLinks }} / {{ $limitPerDay }}
