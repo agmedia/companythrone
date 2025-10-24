@@ -201,11 +201,11 @@ class LinksController extends Controller
             ->whereDate('created_at', today())
             ->count();
 
-        $ref_limit = (int) app_settings()->referralsRequired();
+      /*  $ref_limit = (int) app_settings()->referralsRequired();
 
         if ($countToday >= $ref_limit) {
             return back()->with('status', __('Dnevni limit linkova je dosegnut.'));
-        }
+        }*/
 
         $token  = Str::uuid()->toString();
         $refUrl = route('register', ['ref' => $token]);
