@@ -20,7 +20,7 @@ class Company extends Model implements HasMedia
     use InteractsWithMedia, Sluggable, HasFactory;
 
     protected $fillable = [
-        'level_id', 'name', 'slug', 'oib', 'street', 'street_no', 'city', 'state', 'email', 'weburl', 'phone', 'is_published', 'is_link_active', 'referrals_count', 'published_at','user_id'
+        'level_id', 'name', 'slug', 'oib', 'street', 'street_no', 'city', 'state', 'email', 'weburl', 'phone', 'keywords', 'is_published', 'is_link_active', 'referrals_count', 'published_at','user_id'
     ];
 
     protected $casts = [
