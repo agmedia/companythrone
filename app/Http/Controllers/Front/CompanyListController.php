@@ -14,7 +14,7 @@ class CompanyListController extends Controller
      * Lista tvrtki s filtriranjem po kategoriji, pretragom i sortiranjem.
      * Oslanja se na company_translations / category_translations i aktivni locale.
      */
-    public function index(Request $request)
+    /*public function index(Request $request)
     {
         $locale = app()->getLocale();
 
@@ -95,7 +95,98 @@ class CompanyListController extends Controller
             'cat'        => $cat,
             'sort'       => $sort,
         ]);
+    }*/
+
+    public function index(Request $request)
+    {
+        $locale = app()->getLocale();
+
+        $q    = trim($request->input('q', ''));
+        $cat  = trim($request->input('category', ''));
+        $sort = trim($request->input('sort', 'newest'));
+
+        $companies = Company::query()
+            // LEFT JOIN da ne isključi tvrtke bez prijevoda
+                            ->leftJoin('company_translations as t', function ($join) use ($locale) {
+                $join->on('t.company_id', '=', 'companies.id')
+                     ->where('t.locale', '=', $locale);
+            })
+                            ->select([
+                                'companies.*',
+                                't.name as t_name',
+                                't.slug as t_slug',
+                                't.slogan',
+                                't.description',
+                            ])
+
+            // 🔍 SAMO po ključnim riječima
+                            ->when($q, function ($query) use ($q) {
+                $clean = preg_replace('/[\s,]+/', ' ', trim($q));
+
+                // ⚡ koristi FULLTEXT ako je indeks dodan
+                $query->whereRaw('MATCH (companies.keywords) AGAINST (? IN BOOLEAN MODE)', [$clean])
+                    // ako ne vrati ništa, fallback na LIKE
+                      ->orWhere('companies.keywords', 'like', '%' . $q . '%');
+            })
+
+            // 🔹 Filtar po kategoriji
+                            ->when($cat, function ($query) use ($cat, $locale) {
+                $query->join('category_company as cc', 'cc.company_id', '=', 'companies.id')
+                      ->join('category_translations as ct', function ($j) use ($locale) {
+                          $j->on('ct.category_id', '=', 'cc.category_id')
+                            ->where('ct.locale', '=', $locale);
+                      })
+                      ->where('ct.slug', '=', $cat);
+            })
+
+            // 🔹 Samo objavljene tvrtke
+                            ->where('companies.is_published', true)
+
+            // 🔹 Sortiranje
+                            ->when($sort, function ($query) use ($sort) {
+                switch ($sort) {
+                    case 'name_asc':
+                        $query->orderBy('t.name', 'asc');
+                        break;
+                    case 'name_desc':
+                        $query->orderBy('t.name', 'desc');
+                        break;
+                    case 'random':
+                        $query->inRandomOrder();
+                        break;
+                    case 'newest':
+                    default:
+                        $query->orderBy('companies.created_at', 'desc');
+                        break;
+                }
+            })
+                            ->paginate(12)
+                            ->appends([
+                                'q'        => $q,
+                                'category' => $cat,
+                                'sort'     => $sort,
+                            ]);
+
+        // 🔹 Kategorije za dropdown
+        $categories = Category::query()
+                              ->join('category_translations as ct', function ($j) use ($locale) {
+                                  $j->on('ct.category_id', '=', 'categories.id')
+                                    ->where('ct.locale', '=', $locale);
+                              })
+                              ->where('categories.is_active', true)
+                              ->select(['categories.id', 'ct.name', 'ct.slug', 'categories.group'])
+                              ->orderBy('ct.name')
+                              ->get();
+
+        return view('front.companies.index', [
+            'companies'  => $companies,
+            'categories' => $categories,
+            'q'          => $q,
+            'cat'        => $cat,
+            'sort'       => $sort,
+        ]);
     }
+
 
 
     /**
@@ -131,21 +222,18 @@ class CompanyListController extends Controller
                                     ->where('ct.locale', '=', $locale);
                               })
                               ->where('cc.company_id', '=', $company->id)
-                              ->select(['categories.id', 'ct.name',  'ct.slug'])
+                              ->select(['categories.id', 'ct.name', 'ct.slug'])
                               ->orderBy('ct.name')
                               ->get();
 
-
-
-
         $featured = Company::query()->where('is_published', true)->where('id', '!=', $company->id)->latest()->take(12)->get();
-        // View `front.company-show` već koristi fallback pattern (t_name ?? name)
 
+        // View `front.company-show` već koristi fallback pattern (t_name ?? name)
 
         return view('front.company-show', [
             'company'    => $company,
             'categories' => $categories,
-            'featured' => $featured,
+            'featured'   => $featured,
         ]);
     }
 }
