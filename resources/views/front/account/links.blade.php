@@ -73,12 +73,12 @@
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}">{{ $slot }}</span>
-                                    {{ parse_url($target->weburl, PHP_URL_HOST) ?? '—' }}
+                                    <h3> <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}">{{ $slot }}</span></h3>
+                                    {{-- parse_url($target->weburl, PHP_URL_HOST) ?? '—' --}}
                                 </div>
 
                                 <a href="{{ $target->weburl ?? '#' }}"
-                                   class="btn btn-sm {{ $done ? 'btn-success disabled' : 'btn-outline-primary' }} task-btn"
+                                   class="btn btn-lg {{ $done ? 'btn-success disabled' : 'btn-outline-primary' }} task-btn"
                                    data-company="{{ $target->id }}"
                                    @if($done) aria-disabled="true" tabindex="-1" @endif>
                                     {{ $done ? __('Odrađeno') : __('Posjeti') }}
