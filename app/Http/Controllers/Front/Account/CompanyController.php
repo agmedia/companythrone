@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Front\Account;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Catalog\Company;
+use App\Models\Shared\Referral;
+use App\Models\Shared\ReferralLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
@@ -23,8 +25,9 @@ class CompanyController extends Controller
 
     public function update(Request $request)
     {
+        $user    = auth()->user();
         $company = auth()->user()->company;
-        if (! $company) {
+        if ( ! $company) {
             abort(404, __('Tvrtka nije pronađena.'));
         }
 
@@ -46,7 +49,7 @@ class CompanyController extends Controller
 
         // Validacija keywords — ručno jer Laravel ne zna za broj riječi po zarezima
         $keywords = null;
-        if (! empty($validated['keywords'])) {
+        if ( ! empty($validated['keywords'])) {
             $parts = array_filter(array_map('trim', explode(',', $validated['keywords'])));
 
             if (count($parts) > 5) {
@@ -88,7 +91,7 @@ class CompanyController extends Controller
                 $t      = $company->translation($locale) ?? $company->translations()->make(['locale' => $locale]);
 
                 $t->name = $validated['name'];
-                if (! empty($validated['description'])) {
+                if ( ! empty($validated['description'])) {
                     $t->description = $validated['description'];
                 }
 
@@ -104,12 +107,36 @@ class CompanyController extends Controller
                 }
                 $company->save();
             }
+
+            if ($user->hasReferralCode() && ! $user->isReferralCodeUsed()) {
+                $token = $user->hasReferralCode();
+                $link  = ReferralLink::query()
+                                     ->where('url', 'like', "%$token%")
+                                     ->first();
+
+                if ($link && $link->user?->company) {
+                    // referrer kompanija
+                    $refCompany = $link->user->company;
+
+                    // nova kompanija level = referrer level + 1
+                    $company->level = ($refCompany->level ?? 1) + 1;
+                    $company->save();
+
+                    // opcionalno: zabilježi tko ga je pozvao
+                    Referral::query()->create([
+                        'referrer_company_id' => $refCompany->id,
+                        'referred_company_id' => $company->id,
+                    ]);
+
+                    $user->detail()->update(['referral_code_used' => 1]);
+                }
+            }
         });
 
         if ($request->boolean('remove_logo')) {
             $company->clearMediaCollection('logo');
         } elseif ($request->hasFile('logo_file')) {
-            if (! $request->file('logo_file')->isValid()) {
+            if ( ! $request->file('logo_file')->isValid()) {
                 return back()->withErrors(['logo_file' => __('Neispravan upload datoteke (provjeri veličinu i tip).')])->withInput();
             }
             $company->addMediaFromRequest('logo_file')->toMediaCollection('logo');
@@ -119,6 +146,5 @@ class CompanyController extends Controller
             ->route('account.company.edit', app()->getLocale())
             ->with('status', __('Podaci o tvrtki su uspješno ažurirani.'));
     }
-
 
 }

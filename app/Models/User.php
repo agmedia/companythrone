@@ -76,4 +76,16 @@ class User extends Authenticatable
         return $this->hasOne(UserDetail::class);
     }
 
+
+    public function hasReferralCode()
+    {
+        return $this->referral_code ? true : false;
+    }
+
+
+    public function isReferralCodeUsed()
+    {
+        return $this->referral_code_used ? true : false;
+    }
+
 }

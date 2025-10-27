@@ -50,7 +50,7 @@ class Register extends Component
 
         // ➕ dodijeli rolu company_owner
         if (method_exists($user, 'assignRole')) {
-            UserDetail::create([
+            $details = UserDetail::create([
                 'user_id' => $user->id,
                 'fname'   => $user->name,
                 'role'    => 'customer',
@@ -66,6 +66,8 @@ class Register extends Component
 
         if ($request->has('ref')) {
             session(['referral_token' => $request->input('ref')]);
+
+            $details->update(['referral_code' => $request->input('ref'), 'referral_code_used' => 0]);
         }
 
         Auth::login($user);

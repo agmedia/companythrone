@@ -120,8 +120,8 @@ class CompanyController extends Controller
             $user->removeRole('customer');
 
             // referral link
-            if (session()->has('referral_token')) {
-                $token = session('referral_token');
+            if (session()->has('referral_token') || $user->hasReferralCode() && ! $user->isReferralCodeUsed()) {
+                $token = session('referral_token') ?? $user->hasReferralCode();
 
                 $link = ReferralLink::query()
                                     ->where('url', 'like', "%$token%")
@@ -140,6 +140,8 @@ class CompanyController extends Controller
                         'referrer_company_id' => $refCompany->id,
                         'referred_company_id' => $company->id,
                     ]);
+
+                    $user->detail()->update(['referral_code_used' => 1]);
 
                     // povećaj klikove
                     $link->increment('clicks');
@@ -265,7 +267,7 @@ class CompanyController extends Controller
 
                 if ($driverFqcn && class_exists($driverFqcn) && method_exists($driverFqcn, 'frontBlade')) {
                     // merge default config + DB data (iz SettingsManagera)
-                    $provider                   = collect($payments)->where('code', $selectedPlan['code'])->first();
+                    $provider = collect($payments)->where('code', $selectedPlan['code'])->first();
                     // umjesto: $data = $subscription->with('company')->get()->toArray();
                     $subscription->load('company');
 
@@ -377,12 +379,12 @@ class CompanyController extends Controller
         $sessionData = $request->session()->get(self::S_FINISH);
 
         // Raspakiraj svaki element pojedinačno (ako postoji)
-        $status       = $sessionData['status']       ?? null;
-        $company      = $sessionData['company']      ?? null;
+        $status       = $sessionData['status'] ?? null;
+        $company      = $sessionData['company'] ?? null;
         $subscription = $sessionData['subscription'] ?? null;
-        $payment      = $sessionData['payment']      ?? null;
+        $payment      = $sessionData['payment'] ?? null;
         $selectedPlan = $sessionData['selectedPlan'] ?? null;
-        $qr           = $sessionData['qr']           ?? null;
+        $qr           = $sessionData['qr'] ?? null;
 
         // Vrati view s kompletnim setom podataka
         return view('front.company-uspjeh', compact(
@@ -396,10 +398,9 @@ class CompanyController extends Controller
     }
 
 
-
     public function error(Request $request)
     {
-      //ß dd($request->session()->get(self::S_FINISH));
+        //ß dd($request->session()->get(self::S_FINISH));
 
         return view('front.company-greska');
     }
@@ -421,6 +422,7 @@ class CompanyController extends Controller
             'field'  => $field,
         ]);
     }
+
 
     /* ================= Helpers ================= */
 
