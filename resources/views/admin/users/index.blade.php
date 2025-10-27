@@ -59,7 +59,7 @@
                             </thead>
                             <tbody>
                             @forelse($users as $detail)
-                                @include('admin.users.partials.row', ['detail' => $detail])
+                                @include('admin.users.partials.row', ['detail' => $detail, 'role' => $role])
                             @empty
                                 <tr>
                                     <td colspan="8" class="text-center text-muted py-5">{{ __('back/common.no_results') }}</td>

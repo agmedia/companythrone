@@ -22,6 +22,19 @@
         @else
             <span class="badge bg-danger-subtle">{{ __('back/common.status.hidden') }}</span>
         @endif
+            @if($role === 'customer')
+                @if($detail->referral_code)
+                    <span class="badge bg-success">R</span>
+                @else
+                    <span class="badge bg-secondary-subtle">R</span>
+                @endif
+                @if($detail->referral_code_used)
+                    <i class="fa fa-check text-success"></i>
+                @else
+                    <i class="fa fa-exclamation-triangle text-warning"></i>
+                @endif
+            @endif
+
     </td>
     <td class="text-muted">{{ $detail->updated_at?->format('Y-m-d H:i') }}</td>
     <td class="text-end">
