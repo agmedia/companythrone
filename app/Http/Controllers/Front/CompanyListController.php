@@ -118,16 +118,31 @@ class CompanyListController extends Controller
                                 't.slogan',
                                 't.description',
                             ])
+                            ->when($q, function ($query) use ($q) {
+                                $like = '%' . str_replace('%', '\%', $q) . '%';
+                                $clean = preg_replace('/[\s,]+/', ' ', trim($q));
+
+                                $query->where(function ($q2) use ($like) {
+                                    $q2->where('t.name', 'like', $like)
+                                       ->orWhere('companies.oib', 'like', $like)
+                                       /*->orWhere('companies.city', 'like', $like)
+                                       ->orWhere('companies.state', 'like', $like)*/;
+                                });
+
+                                $query->orWhereRaw('MATCH (companies.keywords) AGAINST (? IN BOOLEAN MODE)', [$clean])
+                                    // ako ne vrati ništa, fallback na LIKE
+                                      ->orWhere('companies.keywords', 'like', '%' . $q . '%');
+                            })
 
             // 🔍 SAMO po ključnim riječima
-                            ->when($q, function ($query) use ($q) {
+                            /*->when($q, function ($query) use ($q) {
                 $clean = preg_replace('/[\s,]+/', ' ', trim($q));
 
                 // ⚡ koristi FULLTEXT ako je indeks dodan
                 $query->whereRaw('MATCH (companies.keywords) AGAINST (? IN BOOLEAN MODE)', [$clean])
                     // ako ne vrati ništa, fallback na LIKE
                       ->orWhere('companies.keywords', 'like', '%' . $q . '%');
-            })
+            })*/
 
             // 🔹 Filtar po kategoriji
                             ->when($cat, function ($query) use ($cat, $locale) {
