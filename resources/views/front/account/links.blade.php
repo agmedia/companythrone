@@ -44,7 +44,9 @@
                         @forelse($referrals as $ref)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div class="text-truncate me-3">
-                                    <div class="fw-semibold">{{ $ref->label ?? __('Bez naziva') }} - {{ $ref->title ?? __('NIje upisano') }} - {{ $ref->phone ?? __('Nije upisano') }} </div>
+                                    <div class="fw-normal">Kontakt osoba: {{ $ref->title ?? __('NIje upisano') }} </div>
+                                    <div class="fw-normal">Kontakt telefon: {{ $ref->phone ?? __('Nije upisano') }} </div>
+                                    <div class="fw-normal">Komentar: {{ $ref->label ?? __('Bez naziva') }}  </div>
                                     <a href="{{ $ref->url }}" target="_blank" class="small">{{ $ref->url }}</a>
                                 </div>
                                 <div class="text-muted">
