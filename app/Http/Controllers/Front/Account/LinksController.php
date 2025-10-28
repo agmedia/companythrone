@@ -16,13 +16,14 @@ use Illuminate\Support\Str;
 
 class LinksController extends Controller
 {
+
     public function index()
     {
         $user    = auth()->user();
         $userId  = $user->id;
         $company = $user->company;
 
-        if (!$company) {
+        if ( ! $company) {
             return redirect()->route('front.account.dashboard');
         }
 
@@ -31,8 +32,8 @@ class LinksController extends Controller
 
         $links = ReferralLink::where('user_id', $userId)->latest()->paginate(app_settings()->frontPagination());
         $today = ReferralLink::where('user_id', $userId)
-            ->whereDate('created_at', now()->toDateString())
-            ->count();
+                             ->whereDate('created_at', now()->toDateString())
+                             ->count();
 
         $sm        = new SettingsManager();
         $limit     = (int) $sm->get('company', 'auth_clicks_required');
@@ -45,25 +46,25 @@ class LinksController extends Controller
 
         // Posjećene kompanije danas
         $visitedCompanyIds = Click::where('from_company_id', $company->id)
-            ->whereDate('day', now()->toDateString())
-            ->pluck('company_id');
+                                  ->whereDate('day', now()->toDateString())
+                                  ->pluck('company_id');
 
         // Korišteni slotovi danas (opcionalno, za internu upotrebu)
         $usedSlots = Click::where('from_company_id', $company->id)
-            ->whereDate('day', now()->toDateString())
-            ->pluck('slot');
+                          ->whereDate('day', now()->toDateString())
+                          ->pluck('slot');
 
         $todayClicks = $usedSlots->count();
         $remaining   = max(0, $limit - $visitedCompanyIds->count());
 
         // Mete koje još nisu posjećene danas
         $targets = Company::where('id', '!=', $company->id)
-            ->where('is_published', 1)
-            ->where('is_link_active', 1)
-            ->whereNotIn('id', $visitedCompanyIds)
+                          ->where('is_published', 1)
+                          ->where('is_link_active', 1)
+                          ->whereNotIn('id', $visitedCompanyIds)
             // ->inRandomOrder()
-            ->limit($remaining)
-            ->get(['id', 'weburl']); // makni t_name ako ne postoji
+                          ->limit($remaining)
+                          ->get(['id', 'weburl']); // makni t_name ako ne postoji
 
         return view('front.account.links', [
             'links'             => $links,
@@ -80,6 +81,7 @@ class LinksController extends Controller
         ]);
     }
 
+
     public function click(Request $request)
     {
         $request->validate([
@@ -90,7 +92,7 @@ class LinksController extends Controller
         $user    = auth()->user();
         $company = $user->company;
 
-        if (!$company) {
+        if ( ! $company) {
             return redirect()->route('front.account.dashboard');
         }
 
@@ -100,8 +102,8 @@ class LinksController extends Controller
         try {
             // Broj današnjih klikova
             $todayCount = Click::where('from_company_id', $company->id)
-                ->whereDate('day', now()->toDateString())
-                ->count();
+                               ->whereDate('day', now()->toDateString())
+                               ->count();
 
             if ($todayCount >= $limit) {
                 return response()->json([
@@ -121,7 +123,7 @@ class LinksController extends Controller
             );
 
             $payload = json_decode($session->slots_payload, true) ?? [];
-            if (!in_array($nextSlot, $payload, true)) {
+            if ( ! in_array($nextSlot, $payload, true)) {
                 $payload[] = $nextSlot;
             }
             $session->slots_payload   = json_encode($payload);
@@ -152,14 +154,14 @@ class LinksController extends Controller
             $company->increment('clicks');
 
             $todayClicks = Click::where('from_company_id', $company->id)
-                ->whereDate('day', now()->toDateString())
-                ->count();
+                                ->whereDate('day', now()->toDateString())
+                                ->count();
 
             $visitedTodayCompanyIds = Click::where('from_company_id', $company->id)
-                ->whereDate('day', now()->toDateString())
-                ->pluck('company_id')
-                ->map(fn($v) => (int) $v)
-                ->all();
+                                           ->whereDate('day', now()->toDateString())
+                                           ->pluck('company_id')
+                                           ->map(fn($v) => (int) $v)
+                                           ->all();
 
             return response()->json([
                 'success'           => true,
@@ -186,14 +188,16 @@ class LinksController extends Controller
     {
         $request->validate([
             'url'   => ['required', 'email', 'max:255'],
-            'label' => ['nullable','string','max:120'],
+            'title' => ['required', 'string', 'max:120'],
+            'phone' => ['required', 'string', 'max:30'],
+            'label' => ['nullable', 'string', 'max:120'],
         ]);
 
         $user    = auth()->user();
         $company = $user->company;
         $userId  = $user->id;
 
-        if (!$company) {
+        if ( ! $company) {
             return redirect()->route('front.account.dashboard');
         }
 
@@ -214,6 +218,8 @@ class LinksController extends Controller
             'user_id' => $userId,
             'url'     => $refUrl,
             'label'   => $request->string('label') ?: $request->string('url'),
+            'title'   => $request->string('title'),
+            'phone'   => $request->string('phone'),
         ]);
 
         $company->increment('referrals_count');

@@ -11,11 +11,17 @@
 
                 <form method="post" action="{{ localized_route('account.links.store') }}" class="row g-2 mb-3">
                     @csrf
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <input name="url" type="email" class="form-control" placeholder="{{ __('Email osobe koju želiš pozvati') }}" required>
                     </div>
-                    <div class="col-md-3">
-                        <input name="label" type="text" class="form-control" placeholder="{{ __('Opis (opcionalno)') }}">
+                    <div class="col-md-5">
+                        <input name="title" type="text" class="form-control" placeholder="{{ __('Ime i prezime, naziv') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <input name="phone" type="text" class="form-control" placeholder="{{ __('Broj telefona, mobitela') }}">
+                    </div>
+                    <div class="col-md-5">
+                        <input name="label" type="text" class="form-control" placeholder="{{ __('Kratki opis ili komentar. (opcionalno)') }}">
                     </div>
                     <div class="col-md-1 d-grid">
                         <button class="btn btn-primary" >{{ __('Dodaj') }}</button>
@@ -41,8 +47,13 @@
                                     <div class="fw-semibold">{{ $ref->label ?? __('Bez naziva') }}</div>
                                     <a href="{{ $ref->url }}" target="_blank" class="small">{{ $ref->url }}</a>
                                 </div>
-                                <div class="text-muted small">
-                                    {{ __('Klikovi:') }} {{ $ref->clicks }}
+                                <div class="text-muted">
+                                    <span class="small">{{ __('Iskorišten:') }}</span>
+                                    @if($ref->clicks)
+                                        <i class="fi-check-shield text-success"></i>
+                                    @else
+                                        <i class="fi-arrow-down text-warning"></i>
+                                    @endif
                                 </div>
                             </li>
                         @empty
