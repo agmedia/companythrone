@@ -27,8 +27,9 @@ class LinksController extends Controller
             return redirect()->route('front.account.dashboard');
         }
 
-        $referrals     = ReferralLink::where('user_id', $userId)->latest()->get();
-        $referralCount = $referrals->count();
+        $referrals           = ReferralLink::where('user_id', $userId)->latest()->get();
+        $referralCount       = $referrals/*->where('clicks', '>=', 1)*/ ->count();
+        $referralActiveCount = $referrals->where('clicks', '>=', 1)->count();
 
         $links = ReferralLink::where('user_id', $userId)->latest()->paginate(app_settings()->frontPagination());
         $today = ReferralLink::where('user_id', $userId)
@@ -67,17 +68,18 @@ class LinksController extends Controller
                           ->get(['id', 'weburl']); // makni t_name ako ne postoji
 
         return view('front.account.links', [
-            'links'             => $links,
-            'todayLinks'        => $today,
-            'limitPerDay'       => $limit,
-            'todayClicks'       => $todayClicks,
-            'session'           => $session,
-            'usedSlots'         => $usedSlots,          // nije obavezno u Bladeu
-            'visitedCompanyIds' => $visitedCompanyIds,  // Blade koristi ovo za "odrađeno"
-            'targets'           => $targets,
-            'referrals'         => $referrals,
-            'referralCount'     => $referralCount,
-            'referralRequired'  => $ref_limit,
+            'links'               => $links,
+            'todayLinks'          => $today,
+            'limitPerDay'         => $limit,
+            'todayClicks'         => $todayClicks,
+            'session'             => $session,
+            'usedSlots'           => $usedSlots,          // nije obavezno u Bladeu
+            'visitedCompanyIds'   => $visitedCompanyIds,  // Blade koristi ovo za "odrađeno"
+            'targets'             => $targets,
+            'referrals'           => $referrals,
+            'referralCount'       => $referralCount,
+            'referralActiveCount' => $referralActiveCount,
+            'referralRequired'    => $ref_limit,
         ]);
     }
 

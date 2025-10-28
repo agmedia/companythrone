@@ -66,43 +66,51 @@
 
                 <div class="mb-4 mt-5 ">
                     <h5 class="fw-semibold">{{ __('Dnevni zadaci') }}</h5>
-                    <div class="small text-muted mb-2">
-                        {{ __('Dodajte barem ') . $limitPerDay . __(' klikova da biste objavili svoj link.)') }}
-                        <br>
-                        {{ __('Imate:') }} <span id="today-clicks">{{ $todayClicks }}</span> / {{ $limitPerDay }}
-                    </div>
 
-                    @php
-                        // posjećene kompanije danas (kontroler šalje visitedCompanyIds)
-                        $visitedIds = collect($visitedCompanyIds ?? [])->map(fn($v) => (int)$v)->all();
-                    @endphp
+                    @if ($referralActiveCount > 5)
+                        <div class="small text-muted mb-2">
+                            {{ __('Dodajte barem ') . $limitPerDay . __(' klikova da biste objavili svoj link.)') }}
+                            <br>
+                            {{ __('Imate:') }} <span id="today-clicks">{{ $todayClicks }}</span> / {{ $limitPerDay }}
+                        </div>
 
-                    <ul class="list-group mb-3" id="tasks-list">
-                        @forelse($targets as $i => $target)
-                            @php
-                                $slot = $i + 1; // samo redni broj za prikaz
-                                $done = in_array($target->id, $visitedIds, true);
-                            @endphp
+                        @php
+                            // posjećene kompanije danas (kontroler šalje visitedCompanyIds)
+                            $visitedIds = collect($visitedCompanyIds ?? [])->map(fn($v) => (int)$v)->all();
+                        @endphp
 
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h3> <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}">{{ $slot }}</span></h3>
-                                    {{-- parse_url($target->weburl, PHP_URL_HOST) ?? '—' --}}
-                                </div>
+                        <ul class="list-group mb-3" id="tasks-list">
+                            @forelse($targets as $i => $target)
+                                @php
+                                    $slot = $i + 1; // samo redni broj za prikaz
+                                    $done = in_array($target->id, $visitedIds, true);
+                                @endphp
 
-                                <a href="{{ $target->weburl ?? '#' }}"
-                                   class="btn btn-lg {{ $done ? 'btn-success disabled' : 'btn-outline-primary' }} task-btn"
-                                   data-company="{{ $target->id }}"
-                                   @if($done) aria-disabled="true" tabindex="-1" @endif>
-                                    {{ $done ? __('Odrađeno') : __('Posjeti') }}
-                                </a>
-                            </li>
-                        @empty
-                            <li class="list-group-item text-muted">
-                                {{ __('Trenutno nema dostupnih ciljeva.') }}
-                            </li>
-                        @endforelse
-                    </ul>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h3> <span class="badge me-2 {{ $done ? 'bg-success' : 'bg-secondary' }}">{{ $slot }}</span></h3>
+                                        {{-- parse_url($target->weburl, PHP_URL_HOST) ?? '—' --}}
+                                    </div>
+
+                                    <a href="{{ $target->weburl ?? '#' }}"
+                                       class="btn btn-lg {{ $done ? 'btn-success disabled' : 'btn-outline-primary' }} task-btn"
+                                       data-company="{{ $target->id }}"
+                                       @if($done) aria-disabled="true" tabindex="-1" @endif>
+                                        {{ $done ? __('Odrađeno') : __('Posjeti') }}
+                                    </a>
+                                </li>
+                            @empty
+                                <li class="list-group-item text-muted">
+                                    {{ __('Trenutno nema dostupnih ciljeva.') }}
+                                </li>
+                            @endforelse
+                        </ul>
+                    @else
+                        <div class="small text-muted mb-2">
+                            {{ __('Aktivirajte barem ') . $referralRequired . __(' linkova da biste objavili svoj link.)') }}
+                            <br>
+                        </div>
+                    @endif
 
                 </div>
             </div>
