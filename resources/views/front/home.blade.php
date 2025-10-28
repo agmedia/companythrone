@@ -5,49 +5,126 @@
 @section('content')
 
     <!-- Hero with search form -->
-    <section class="position-relative  overflow-hidden py-5" style="background-color: #30536b;">
+
+
+    <section class="position-relative overflow-hidden py-5" style="background-color:#30536b;">
         <div class="container position-relative z-2 pb-2 py-sm-4 py-md-5 my-xxl-4">
-            <div class="mx-auto py-lg-4 py-xl-5" style="max-width: 630px">
-                <h1 class="display-5 text-white text-center pb-2 pb-md-0 mb-4 mb-md-5">{{ __('home.headline') }}</h1>
+            <div class="mx-auto py-lg-4 py-xl-5" style="max-width:700px">
+                <h1 class="display-5 text-white text-center pb-2 pb-md-0 mb-4 mb-md-5">
+                    {{ __('home.headline') }}
+                </h1>
 
-                <!-- Search form -->
-                <form class="bg-white border rounded-4 p-2 mb-4 mb-md-5" method="get" action="{{ localized_route('companies.index') }}" data-bs-theme="light" novalidate>
-                    <div class="d-flex flex-column flex-md-row gap-3 p-1">
-                        <div class="d-flex flex-column flex-sm-row w-100 gap-2 gap-sm-3">
-                            <div class="position-relative w-100">
-                                <i class="fi-search position-absolute top-50 start-0 translate-middle-y fs-xl text-secondary-emphasis ms-2"></i>
-                                <input type="search" class="form-control form-control-lg form-icon-start border-0 rounded-0 pe-0" placeholder="{{ __('company.search_placeholder') }}" id="q"
-                                       name="q"
-                                       value="" required>
+                {{-- FORMA: transparentna, bijeli “card” je unutra --}}
+                <form method="get"
+                      action="{{ localized_route('companies.index') }}"
+                      data-bs-theme="light"
+                      novalidate>
 
-
-
-
+                    {{-- BIJELI CARD --}}
+                    <div class="bg-white border rounded-4 shadow-sm p-1 p-md-2 mb-0">
+                        <div class="row g-3 align-items-stretch">
+                            <div class="col">
+                                <div class="position-relative">
+                                    <i class="fi-search position-absolute top-50 start-0 translate-middle-y fs-xl text-secondary-emphasis ms-2"></i>
+                                    <input type="search"
+                                           class="form-control form-control-lg form-icon-start border-0"
+                                           id="q"
+                                           name="q"
+                                           placeholder="{{ __('company.search_placeholder') }}"
+                                           autocomplete="off"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-lg btn-primary h-100 px-4">
+                                    {{ __('home.search_companies') }}
+                                </button>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-lg btn-primary">{{ __('home.search_companies') }}</button>
                     </div>
+
+                    {{-- SEGMENTED KONTROLA: ispod bijelog carda, ali i dalje u <form> --}}
+                    <div class="d-flex justify-content-center mt-3">
+                        <div class="btn-group" role="group" aria-label="Način pretrage">
+                            <input type="radio" class="btn-check" name="mode" id="modeName" value="name" checked>
+                            <label class="btn btn-outline-light rounded-pill px-3 mx-2" for="modeName">Po nazivu</label>
+
+                            <input type="radio" class="btn-check" inputmode="numeric" maxlength="11"  pattern="\d{11}" name="mode" id="modeOib" value="oib">
+                            <label class="btn btn-outline-light rounded-pill px-3 mx-2" for="modeOib">Po OIB-u</label>
+
+                            <input type="radio" class="btn-check" name="mode" id="modeTag" value="tag">
+                            <label class="btn btn-outline-light rounded-pill px-3 mx-2" for="modeTag">Po tagu</label>
+                        </div>
+                    </div>
+
                 </form>
-
-                <!-- Popular searches -->
-              {{--   <div class="d-flex flex-wrap justify-content-center gap-2 pt-2 pt-md-0">
-                    @if(isset($cats) && $cats->count())
-                        @foreach($cats->take(6) as $cat)
-                            <a href="{{ localized_route('categories.show', $cat) }}" class="btn btn-outline-light rounded-pill mt-1 me-1">
-                                {{ $cat->name }}
-                            </a>
-                        @endforeach
-                    @endif
-
-                </div> --}}
             </div>
         </div>
+
         <div class="position-absolute top-50 start-50 translate-middle">
-            <div class="d-xxl-none" style="width: 1780px"></div>
-            <div class="d-none d-xxl-block" style="width: 2157px"></div>
+            <div class="d-xxl-none" style="width:1780px"></div>
+            <div class="d-none d-xxl-block" style="width:2157px"></div>
             <img src="{{ asset('theme1/images/hero4.png') }}" alt="Image">
         </div>
     </section>
+
+    @push('styles')
+        <style>
+            /* suptilniji izgled segmented kontrole */
+            .btn-group .btn {
+                --bs-btn-color:#fff;
+                --bs-btn-border-color:rgba(255,255,255,.6);
+            }
+            .btn-group .btn:hover { border-color:#fff; }
+            .btn-group .btn-check:checked + .btn {
+                color:#0b2440; background:#fff; border-color:#fff;
+            }
+            /* ljepši fokus na inputu unutar carda */
+            .form-control:focus {
+                box-shadow: none; border-color: transparent;
+            }
+        </style>
+    @endpush
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const q = document.getElementById('q');
+                const radios = document.querySelectorAll('input[name="mode"]');
+
+                const placeholders = {
+                    name: 'Pretraži po nazivu tvrtke…',
+                    oib:  'Unesi OIB (11 znamenki)…',
+                    tag:  'Pretraži po tagu (npr. marketing, građevina)…'
+                };
+
+                const setByMode = (mode) => {
+                    q.placeholder = placeholders[mode] || placeholders.name;
+
+                    // inputmode/pattern se mijenjaju samo za OIB
+                    if (mode === 'oib') {
+                        q.setAttribute('inputmode', 'numeric');
+                        q.setAttribute('pattern', '\\\\d{11}');
+                        q.maxLength = 11;
+                    } else {
+                        q.removeAttribute('inputmode');
+                        q.removeAttribute('pattern');
+                        q.removeAttribute('maxLength');
+                    }
+                };
+
+                // init
+                const checked = document.querySelector('input[name="mode"]:checked');
+                setByMode(checked ? checked.value : 'name');
+
+                radios.forEach(r => r.addEventListener('change', e => setByMode(e.target.value)));
+            });
+        </script>
+    @endpush
+
+
+
+
     @if($banners->isNotEmpty())
         <section class="container pt-2 pt-sm-3 pt-md-4 pt-lg-5 pb-0 my-xxl-3">
             <div class="position-relative mb-0">
@@ -111,7 +188,7 @@
 
 
 
-    <!-- Popular projects near you -->
+    <!-- Popular projects near  you -->
     <section class="container pt-0 pt-sm-3 pt-md-4 pt-lg-5 pb-5 my-xxl-3">
         <div class="row align-items-center">
 
@@ -237,6 +314,7 @@
                     </p>
                 </div>
             </div>
+
 
             <!-- Pagination (Bullets) -->
             <div class="swiper-pagination position-static mt-3"></div>
