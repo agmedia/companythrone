@@ -218,8 +218,8 @@ class LinksController extends Controller
             'user_id' => $userId,
             'url'     => $refUrl,
             'label'   => $request->string('label') ?: $request->string('url'),
-            'title'   => $request->string('title'),
-            'phone'   => $request->string('phone'),
+            'title'   => $request->input('title'),
+            'phone'   => $request->input('phone'),
         ]);
 
         $company->increment('referrals_count');
