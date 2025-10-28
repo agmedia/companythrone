@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ReferralLink extends Model
 {
 
-    protected $fillable = ['user_id', 'url', 'label', 'clicks'];
+    protected $fillable = ['user_id', 'url', 'label', 'title', 'phone', 'clicks'];
 
 
     public function clicks()

@@ -217,7 +217,7 @@ class LinksController extends Controller
         $link = ReferralLink::create([
             'user_id' => $userId,
             'url'     => $refUrl,
-            'label'   => $request->string('label') ?: $request->string('url'),
+            'label'   => $request->input('label'),
             'title'   => $request->input('title'),
             'phone'   => $request->input('phone'),
         ]);
