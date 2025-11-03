@@ -15,7 +15,7 @@
                         <input name="url" type="email" class="form-control" placeholder="{{ __('Email osobe koju želiš pozvati') }}" required>
                     </div>
                     <div class="col-md-5">
-                        <input name="title" type="text" class="form-control" placeholder="{{ __('Ime i prezime, naziv') }}">
+                        <input name="title" type="text" class="form-control" placeholder="{{ __('Ime i prezime, naziv tvrtke') }}">
                     </div>
                     <div class="col-md-6">
                         <input name="phone" type="text" class="form-control" placeholder="{{ __('Broj telefona, mobitela') }}">
