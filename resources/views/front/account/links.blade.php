@@ -9,6 +9,27 @@
 
                 <h1 class="h4 mb-3">{{ __('Moji linkovi') }}</h1>
 
+                {{-- Flash poruke --}}
+                @if (session('status'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Zatvori') }}"></button>
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ __('Provjerite unesene podatke i pokušajte ponovno.') }}
+                        <ul class="mb-0 mt-2">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Zatvori') }}"></button>
+                    </div>
+                @endif
+
+
                 <form method="post" action="{{ localized_route('account.links.store') }}" class="row g-2 mb-3">
                     @csrf
                     <div class="col-md-6">

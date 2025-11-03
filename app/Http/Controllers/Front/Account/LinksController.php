@@ -230,6 +230,6 @@ class LinksController extends Controller
             new ReferralInvitationMail($user, $company, $refUrl)
         );
 
-        return back()->with('status', __('Pozivnica je poslana.'));
+        return back()->with('success', __('Pozivnica je poslana na :email.', ['email' => $request->input('url')]));
     }
 }
