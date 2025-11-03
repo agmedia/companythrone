@@ -11,10 +11,10 @@
     <div style="max-width:620px; margin:0 auto; background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06);">
 
         <!-- Header -->
-        <div style="background-color:#fff; color:#000; text-align:center; padding:25px;">
-            <a href="{{ config('app.url') }}" target="_blank" style="text-decoration:none; display:inline-block;">
-                <img src="{{ asset('media/img/companythrone-round.jpg') }}" alt="{{ config('app.name') }}" style="max-height:80px; display:block; margin:0 auto;">
-            </a>
+        <div style="background-color:#fff; color:#000; font-weight:bold; padding:25px;font-size: 30px">
+
+              Companythrone
+
         </div>
 
         <!-- Body -->
