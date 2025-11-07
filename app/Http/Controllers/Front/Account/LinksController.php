@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class LinksController extends Controller
 {
@@ -189,7 +190,7 @@ class LinksController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'url'   => ['required', 'email', 'max:255'],
+            'url'   => ['required', 'email', 'max:255'], // e-mail primatelja
             'title' => ['required', 'string', 'max:120'],
             'phone' => ['required', 'string', 'max:30'],
             'label' => ['nullable', 'string', 'max:120'],
@@ -199,23 +200,32 @@ class LinksController extends Controller
         $company = $user->company;
         $userId  = $user->id;
 
-        if ( ! $company) {
+        if (! $company) {
             return redirect()->route('front.account.dashboard');
         }
 
-        /*  $countToday = ReferralLink::where('user_id', $userId)
-             ->whereDate('created_at', today())
-             ->count();
+        // Normaliziraj e-mail (spriječi duplikate zbog velikih/malih slova, razmaka)
+        $inviteEmail = mb_strtolower(trim($request->input('url')));
 
-        $ref_limit = (int) app_settings()->referralsRequired();
+        // Ključ u cacheu: jedinstven po korisniku i e-mailu
+        $cacheKey = 'ref_invite:' . $userId . ':' . sha1($inviteEmail);
 
-         if ($countToday >= $ref_limit) {
-             return back()->with('status', __('Dnevni limit linkova je dosegnut.'));
-         }*/
+        // Trajanje “već poslano” zaštite (promijeni po potrebi)
+        $ttl = now()->addDays(30);
 
+        // Atomarna provjera: ako je ključ već postavljen -> već poslano
+        if (! Cache::add($cacheKey, true, $ttl)) {
+            return back()->with('status', __('Na ovaj e-mail je pozivnica već poslana.'));
+        }
+
+        // Ako želiš i “tvrđu” zaštitu unutar istog request-ciklusa/race conditiona:
+        // Cache::lock("lock:{$cacheKey}", 5)->block(5); // opcionalno, ako koristiš redis locks
+
+        // Generiraj token i referral URL
         $token  = Str::uuid()->toString();
         $refUrl = route('register', ['ref' => $token]);
 
+        // Spremi referral zapis (u tvojoj shemi url = referral URL)
         $link = ReferralLink::create([
             'user_id' => $userId,
             'url'     => $refUrl,
@@ -226,10 +236,17 @@ class LinksController extends Controller
 
         $company->increment('referrals_count');
 
-        Mail::to($request->input('url'))->send(
-            new ReferralInvitationMail($user, $company, $refUrl)
-        );
+        try {
+            Mail::to($inviteEmail)->send(
+                new ReferralInvitationMail($user, $company, $refUrl)
+            );
+        } catch (\Throwable $e) {
+            // Ako slanje maila padne, makni cache ključ da korisnik može probati ponovno
+            Cache::forget($cacheKey);
+            throw $e; // ili: return back()->withErrors(['url' => __('Slanje e-pošte nije uspjelo. Pokušajte ponovno.')]);
+        }
 
-        return back()->with('success', __('Pozivnica je poslana na :email.', ['email' => $request->input('url')]));
+        return back()->with('success', __('Pozivnica je poslana na :email.', ['email' => $inviteEmail]));
     }
+
 }
