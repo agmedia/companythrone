@@ -16,6 +16,13 @@
                     </div>
                 @endif
 
+                @if (session('status'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Zatvori') }}"></button>
+                    </div>
+                @endif
+
 
                 <form method="post" action="{{ localized_route('account.links.store') }}" class="row g-2 mb-3">
                     @csrf
