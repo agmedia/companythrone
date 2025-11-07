@@ -19,24 +19,38 @@
 
                 <form method="post" action="{{ localized_route('account.links.store') }}" class="row g-2 mb-3">
                     @csrf
+
                     <div class="col-md-6">
                         <input name="url" type="email" class="form-control" placeholder="{{ __('Email osobe koju želiš pozvati') }}" required>
+                        @error('url')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
+
                     <div class="col-md-5">
                         <input name="title" type="text" class="form-control" placeholder="{{ __('Ime i prezime, naziv tvrtke') }}" required>
+                        @error('title')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
+
                     <div class="col-md-6">
                         <input name="phone" type="text" class="form-control" placeholder="{{ __('Broj telefona, mobitela') }}" required>
+                        @error('phone')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
+
                     <div class="col-md-5">
                         <input name="label" type="text" class="form-control" placeholder="{{ __('Kratki opis ili komentar. (opcionalno)') }}">
+                        @error('label')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
+
                     <div class="col-md-1 d-grid">
-                        <button class="btn btn-primary" >{{ __('Dodaj') }}</button>
+                        <button class="btn btn-primary">{{ __('Dodaj') }}</button>
                     </div>
-                    {{-- <div class="col-12 text-muted small">
-                        {{ __('Danas:') }} {{ $todayLinks }} / {{ $limitPerDay }}
-                    </div> --}}
                 </form>
 
                 <div class="mt-5">
