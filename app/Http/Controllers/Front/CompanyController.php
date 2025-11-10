@@ -32,17 +32,16 @@ class CompanyController extends Controller
     /** STEP 1: FORM (GET /add-company) */
     public function create(Request $request)
     {
-        // Ako postoje flashani errori/old, produlji ih još jedan request (preživi refresh)
+        // Produlji flash SAMO ako stvarno imamo validacijske podatke u sessionu.
         if ($request->session()->has('errors') || $request->session()->has('_old_input')) {
-            // Možeš reflashati sve, ili samo konkretne ključeve:
-            // $request->session()->keep(['errors', '_old_input']);
-            $request->session()->reflash();
+            $request->session()->keep(['errors', '_old_input']);
         }
 
         $company = $this->currentDraft();
 
         return view('front.company-create', compact('company'));
     }
+
 
 
     /** STEP 1: SAVE DRAFT (POST /add-company) */
