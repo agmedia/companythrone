@@ -70,7 +70,7 @@ class CompanyController extends Controller
             $keywords = implode(',', $parts);
         }
 
-        DB::transaction(function () use ($company, $validated, $keywords) {
+        DB::transaction(function () use ($company, $validated, $keywords, $user) {
 
             $company->fill([
                 'oib'         => $validated['oib'],
@@ -108,7 +108,7 @@ class CompanyController extends Controller
                 $company->save();
             }
 
-            if ($user->hasReferralCode() && ! $user->isReferralCodeUsed()) {
+            if ($user && $user->hasReferralCode() && ! $user->isReferralCodeUsed()) {
                 $token = $user->hasReferralCode();
                 $link  = ReferralLink::query()
                                      ->where('url', 'like', "%$token%")
