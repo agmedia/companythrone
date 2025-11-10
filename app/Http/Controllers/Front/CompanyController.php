@@ -41,12 +41,24 @@ class CompanyController extends Controller
     /** STEP 1: SAVE DRAFT (POST /add-company) */
     public function store(Request $request)
     {
-        // ⚠️ prilagodi po stvarnim inputima u company-create.blade.php
+        if (! auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        $user    = auth()->user();
+        $company = $this->currentDraft() ?? new Company();
+
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'oib'         => ['nullable', 'string', 'max:20'],
-            'email'       => ['required', 'email', 'max:255'],
-            'weburl'      => ['nullable', 'url', 'max:255'],
+            'email'       => [
+                'required', 'email', 'max:255',
+                Rule::unique('companies', 'email')->ignore($company->id),
+            ],
+            'weburl'      => [
+                'nullable', 'url', 'max:255',
+                Rule::unique('companies', 'weburl')->ignore($company->id),
+            ],
             'street'      => ['required', 'string', 'max:255'],
             'street_no'   => ['required', 'string', 'max:50'],
             'city'        => ['required', 'string', 'max:120'],
@@ -54,14 +66,24 @@ class CompanyController extends Controller
             'phone'       => ['nullable', 'string', 'max:50'],
             'description' => ['nullable', 'string'],
             'logo_file'   => ['nullable', 'image', 'max:2048'],
+        ], [
+            // email
+            'email.required' => 'E-mail adresa je obavezna.',
+            'email.email'    => 'Unesite ispravnu e-mail adresu.',
+            'email.unique'   => 'Ova e-mail adresa je već registrirana.',
+
+            // weburl
+            'weburl.url'     => 'Web adresa mora biti ispravan URL (npr. https://example.com).',
+            'weburl.unique'  => 'Ova web adresa je već povezana s drugom kompanijom.',
+
+            // ostala polja
+            'name.required'      => 'Naziv tvrtke je obavezan.',
+            'street.required'    => 'Ulica je obavezna.',
+            'street_no.required' => 'Kućni broj je obavezan.',
+            'city.required'      => 'Grad je obavezan.',
+            'logo_file.image'    => 'Datoteka mora biti slika (jpg, png, gif...).',
+            'logo_file.max'      => 'Logo ne smije biti veći od 2 MB.',
         ]);
-
-        $company = $this->currentDraft() ?? new Company();
-        $user    = auth()->user();
-
-        if ( ! auth()->check()) {
-            return redirect()->route('login');
-        }
 
         DB::transaction(function () use (&$company, $data, $request, $user) {
             // osnovna polja
@@ -74,10 +96,11 @@ class CompanyController extends Controller
                 'street_no'      => $data['street_no'] ?? null,
                 'city'           => $data['city'] ?? null,
                 'state'          => $data['state'] ?? null,
-                'description'    => htmlspecialchars(trim($data['description'])) ?? null,
+                // ako renderaš kroz Blade {{ }} već je escaped — po želji može ostati raw:
+                'description'    => isset($data['description']) ? htmlspecialchars(trim($data['description'])) : null,
                 'is_published'   => false, // draft
                 'is_link_active' => false,
-                'user_id'        => $user->id,  // ✅ set from the session user
+                'user_id'        => $user->id,
                 'level_id'       => 1,
             ]);
 
@@ -87,7 +110,7 @@ class CompanyController extends Controller
                 $t       = $company->translation($locale) ?? $company->translations()->make(['locale' => $locale]);
                 $t->name = $data['name'];
 
-                if ($data['description']) {
+                if (!empty($data['description'])) {
                     $t->description = $data['description'];
                 }
 
@@ -96,15 +119,16 @@ class CompanyController extends Controller
                 }
 
                 $company->save();
+
                 // LOGO upload (nakon $company->save())
                 if ($request->hasFile('logo_file')) {
                     $file = $request->file('logo_file');
-                    if ( ! $file->isValid()) {
+                    if (! $file->isValid()) {
                         throw new \RuntimeException('Neispravan upload datoteke.');
                     }
-                    // Ako u modelu imaš ->singleFile() za 'logo', stari će se automatski zamijeniti.
                     $company->addMediaFromRequest('logo_file')->toMediaCollection('logo');
                 }
+
                 $company->translations()->save($t);
             } else {
                 // ako je ime na baznom modelu
@@ -113,29 +137,38 @@ class CompanyController extends Controller
                     $company->slug = Str::slug($company->name) ?: (string) $company->id;
                 }
                 $company->save();
+
+                // LOGO upload i u ovoj grani
+                if ($request->hasFile('logo_file')) {
+                    $file = $request->file('logo_file');
+                    if (! $file->isValid()) {
+                        throw new \RuntimeException('Neispravan upload datoteke.');
+                    }
+                    $company->addMediaFromRequest('logo_file')->toMediaCollection('logo');
+                }
             }
 
+            // role i detalji korisnika
             $user->assignRole('company_owner');
             $user->detail()->update(['role' => 'company_owner']);
             $user->removeRole('customer');
 
             // referral link
-            if (session()->has('referral_token') || $user->hasReferralCode() && ! $user->isReferralCodeUsed()) {
+            if (session()->has('referral_token') || ($user->hasReferralCode() && ! $user->isReferralCodeUsed())) {
                 $token = session('referral_token') ?? $user->hasReferralCode();
 
                 $link = ReferralLink::query()
-                                    ->where('url', 'like', "%$token%")
-                                    ->first();
+                    ->where('url', 'like', "%$token%")
+                    ->first();
 
                 if ($link && $link->user?->company) {
-                    // referrer kompanija
                     $refCompany = $link->user->company;
 
                     // nova kompanija level = referrer level + 1
                     $company->level = ($refCompany->level ?? 1) + 1;
                     $company->save();
 
-                    // opcionalno: zabilježi tko ga je pozvao
+                    // zabilježi referral vezu
                     Referral::query()->create([
                         'referrer_company_id' => $refCompany->id,
                         'referred_company_id' => $company->id,
@@ -143,10 +176,7 @@ class CompanyController extends Controller
 
                     $user->detail()->update(['referral_code_used' => 1]);
 
-                    // povećaj klikove
                     $link->increment('clicks');
-
-                    // izbriši token da se ne koristi više puta
                     session()->forget('referral_token');
                 }
             }
@@ -156,6 +186,7 @@ class CompanyController extends Controller
 
         return redirect()->to(localized_route('companies.payment'));
     }
+
 
 
     /** STEP 2: CHOOSE PAYMENT (GET /add-payment) */
@@ -409,13 +440,15 @@ class CompanyController extends Controller
     public function checkUnique(Request $request)
     {
         $field = $request->input('field');
-        $value = trim($request->input('value'));
+        $value = trim((string) $request->input('value'));
+        abort_unless(in_array($field, ['email', 'weburl'], true), 400);
 
-        abort_unless(in_array($field, ['email', 'weburl']), 400);
+        $currentId = optional($this->currentDraft())->id;
 
         $exists = Company::query()
-                         ->where($field, $value)
-                         ->exists();
+            ->where($field, $value)
+            ->when($currentId, fn($q) => $q->where('id', '<>', $currentId))
+            ->exists();
 
         return response()->json([
             'exists' => $exists,
