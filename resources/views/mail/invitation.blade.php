@@ -4,17 +4,28 @@
 
 @section('content')
     <h2 style="margin:0 0 12px 0; font-size:22px; line-height:1.3; font-weight:700;">
-        {{ __('Pozivnica od :name', ['name' => $user->name]) }}
+        {{ __('Pozivnica' }}
     </h2>
 
-    <p style="margin:0 0 12px 0;">{{ __('Pozdrav!') }}</p>
+    <p style="margin:0 0 12px 0;">{{ __('Poštovani!') }}</p>
 
     <p style="margin:0 0 16px 0;">
-        {{ __(':name te poziva da se pridružiš platformi :app.', [
-            'name' => $user->name,
-            'app' => config('app.name')
+        {{ __(':name  iz tvrtke  :company_name Vas poziva da se upišete na platformu  :app.', [
+      'name' => trim(($user->detail->fname ?? '') . ' ' . ($user->detail->lname ?? '')) ? : $user->name,
+            'app' => config('app.name'),
+            'company_name' => $company->name
         ]) }}
     </p>
+
+    <p>Pretraga po – Nazivu, OIB-u, ključnim riječima</p>
+
+    <p> Novi kontakti – ostvari kontakte sa novim kupcima i dobavljačima</p>
+
+    <p>Jednostavno pokretanje</p>
+
+    <p>Bolja vidljivost  na tražilicama</p>
+
+    <p>Ostvari do 780 posjeta na svoju web stranicu</p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:25px 0;">
         <tr>
