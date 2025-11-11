@@ -4,7 +4,7 @@ return [
     // Subjekti
     'payment_offer_subject'  => 'Ponuda za pretplatu – :company',
     'renewal_offer_subject'  => 'Ponuda za obnovu – :company',
-    'payment_confirm_subject'  => 'Zahvala za pretplatu – :company',
+    'payment_confirm_subject'  => 'Uspješna registracija',
 
     // Zajednički dijelovi poruke
     'greeting' => 'Pozdrav :company,',
