@@ -13,7 +13,7 @@
         {{ __(':name  iz tvrtke  :company_name Vas poziva da se upišete na platformu  :app.', [
             'name' => trim(($user->detail->fname ?? '') . ' ' . ($user->detail->lname ?? '')) ? : $user->name,
             'app' => config('app.name'),
-            'company_name' => $company->name
+            'company_name' => e($company->t_name ?? $company->name ?? '-')
         ]) }}
     </p>
 
