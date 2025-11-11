@@ -4,14 +4,14 @@
 
 @section('content')
     <h2 style="margin:0 0 12px 0; font-size:22px; line-height:1.3; font-weight:700;">
-        {{ __('Pozivnica' }}
+        {{ __('Pozivnica') }}
     </h2>
 
     <p style="margin:0 0 12px 0;">{{ __('Poštovani!') }}</p>
 
     <p style="margin:0 0 16px 0;">
         {{ __(':name  iz tvrtke  :company_name Vas poziva da se upišete na platformu  :app.', [
-      'name' => trim(($user->detail->fname ?? '') . ' ' . ($user->detail->lname ?? '')) ? : $user->name,
+            'name' => trim(($user->detail->fname ?? '') . ' ' . ($user->detail->lname ?? '')) ? : $user->name,
             'app' => config('app.name'),
             'company_name' => $company->name
         ]) }}
