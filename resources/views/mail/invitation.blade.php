@@ -16,51 +16,32 @@
             'company_name' => e($company->t_name ?? $company->name ?? '-')
         ]) }}
     </p>
+    <p><strong>Prednosti korištenja platforme:</strong></p>
 
-    <p>Pretraga po – Nazivu, OIB-u, ključnim riječima</p>
+    <ul>
+    <li><strong>Napredna pretraga</strong> – pronalaženje tvrtki po nazivu, OIB-u ili ključnim riječima </li>
 
-    <p> Novi kontakti – ostvari kontakte sa novim kupcima i dobavljačima</p>
 
-    <p>Jednostavno pokretanje</p>
 
-    <p>Bolja vidljivost  na tražilicama</p>
+        <li><strong> Napredna pretraga</strong> – pronalaženje tvrtki po nazivu, OIB-u ili ključnim riječima</li>
 
-    <p>Ostvari do 780 posjeta na svoju web stranicu</p>
+                <li><strong> Novi kontakti</strong> – ostvarite kontakte  s novim kupcima i dobavljačima</li>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:25px 0;">
-        <tr>
-            <td style="padding:6px 0; font-weight:600; width:42%; vertical-align:top;">
-                {{ __('Tvrtka pošiljatelja:') }}
-            </td>
-            <td style="padding:6px 0; vertical-align:top;">
-                {{ e($company->t_name ?? $company->name ?? '-') }}
-            </td>
-        </tr>
+                        <li><strong>Jednostavno pokretanje</strong> – brza i jednostavna  registracija</li>
 
-        @if(!empty($company->weburl))
-            <tr>
-                <td style="padding:6px 0; font-weight:600; width:42%; vertical-align:top;">
-                    {{ __('Web stranica:') }}
-                </td>
-                <td style="padding:6px 0; vertical-align:top; word-break:break-all;">
-                    <a href="{{ $company->weburl }}" target="_blank" style="color:#c92d2d; text-decoration:none;">
-                        {{ $company->weburl }}
-                    </a>
-                </td>
-            </tr>
-        @endif
+                                <li><strong> Bolja vidljivost</strong> – poboljšana pozicioniranost na tražilicama</li>
 
-        @if(!empty($company->description))
-            <tr>
-                <td style="padding:6px 0; font-weight:600; width:42%; vertical-align:top;">
-                    {{ __('Opis tvrtke:') }}
-                </td>
-                <td style="padding:6px 0; vertical-align:top;">
-                    {{ \Illuminate\Support\Str::limit(strip_tags($company->description), 200) }}
-                </td>
-            </tr>
-        @endif
-    </table>
+                                        <li><strong> Povećani promet</strong> – ostvarite do 780 posjeta na svoju web stranicu</li>
+
+
+
+
+
+    </ul>
+
+
+    <p>Radujemo se Vašem sudjelovanju!</p>
+
 
     <p style="margin:0 0 16px 0;">
         {{ __('Klikni na gumb ispod kako bi se registrirao putem pozivnice:') }}
