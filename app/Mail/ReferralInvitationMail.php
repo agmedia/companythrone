@@ -20,7 +20,7 @@ class ReferralInvitationMail extends Mailable
     {
         return new Envelope(
             from: new Address('info@companythrone.com', 'Companythrone'),
-            subject: __('Pozivnica od :name', ['name' => $this->user->name])
+            subject: __('Pozivnica Companythrone')
         );
     }
 
