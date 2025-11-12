@@ -23,7 +23,7 @@
 
 
 
-        <li><strong> Napredna pretraga</strong> – pronalaženje tvrtki po nazivu, OIB-u ili ključnim riječima</li>
+
 
                 <li><strong> Novi kontakti</strong> – ostvarite kontakte  s novim kupcima i dobavljačima</li>
 
