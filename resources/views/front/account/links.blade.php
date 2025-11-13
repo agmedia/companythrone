@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('Moji linkovi'))
+@section('title', __('Moje preporuke'))
 @section('content')
     <div class="container py-4">
         <div class="row">
