@@ -98,7 +98,7 @@
 
                     @if ($referralActiveCount > 5)
                         <div class="small text-muted mb-2">
-                            {{ __('Kada naj manje ') . $limitPerDay . __(' tvrtki prihvati preporuku koju ste poslali bit će aktivan link na Vašu stranicu.)') }}
+                            {{ __('Dodajte barem ') . $limitPerDay . __(' klikova da biste objavili svoj link.)') }}
                             <br>
                             {{ __('Imate:') }} <span id="today-clicks">{{ $todayClicks }}</span> / {{ $limitPerDay }}
                         </div>
@@ -136,7 +136,7 @@
                         </ul>
                     @else
                         <div class="small text-muted mb-2">
-                            {{ __('Aktivirajte barem ') . $referralRequired . __(' linkova da biste objavili svoj link.)') }}
+                            {{ __('Kada naj manje ') . $referralRequired . __(' tvrtki prihvati preporuku koju ste poslali bit će aktivan link na Vašu stranicu.)') }}
                             <br>
                         </div>
                     @endif
