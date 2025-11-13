@@ -57,6 +57,7 @@ return [
         'site'    => ['label' => 'Stranica', 'icon' => 'ti ti-world', 'i18n' => false],
         'ui'      => ['label' => 'UI', 'icon' => 'ti ti-layout', 'i18n' => false],
         'company' => ['label' => 'Basic Info', 'icon' => 'ti ti-building', 'i18n' => false],
+        'slider' => ['label' => 'Home hero', 'icon' => 'ti ti-photo', 'i18n' => false],
     ],
 
     /**
@@ -92,6 +93,12 @@ return [
             'link_active_default'     => ['type' => 'boolean', 'label' => 'Nova kompanija aktivna po defaultu', 'default' => false],
             'send_admin_emails'       => ['type' => 'boolean', 'label' => 'Šalji email-ove administratoru?', 'default' => true],
             'main_price_year'         => ['type' => 'decimal', 'label' => 'Godišnja cijena upisa tvrtke', 'default' => '', 'col' => 3],
+        ],
+        'slider' => [
+            'title'         => ['type' => 'text', 'label' => 'Naslov bannera', 'default' => '', 'col' => 6],
+            'image'        => ['type' => 'file-input', 'label' => 'Banner', 'default' => '', 'col' => 12],
+
+
         ],
 
     ],

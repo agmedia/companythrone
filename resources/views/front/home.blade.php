@@ -11,7 +11,7 @@
         <div class="container position-relative z-2 pb-2 py-sm-4 py-md-5 my-xxl-4">
             <div class="mx-auto py-lg-4 py-xl-5" style="max-width:700px">
                 <h1 class="display-5 text-white text-center pb-2 pb-md-0 mb-4 mb-md-5">
-                    {{ __('home.headline') }}
+                    {{ app_settings()->getHeroTitle()  }}
                 </h1>
 
                 {{-- FORMA: transparentna, bijeli “card” je unutra --}}
@@ -61,10 +61,19 @@
             </div>
         </div>
 
+        @php
+            $settings = app(\App\Services\Settings\SettingsManager::class);
+            $banner = $settings->get('slider', 'image');
+        @endphp
+
         <div class="position-absolute top-50 start-50 translate-middle">
             <div class="d-xxl-none" style="width:1780px"></div>
             <div class="d-none d-xxl-block" style="width:2157px"></div>
-            <img src="{{ asset('theme1/images/hero4.png') }}" alt="Image">
+
+            @if($banner)
+                <img src="{{ asset('storage/' . $banner) }}" alt="{{ app_settings()->getHeroTitle()  }}">
+            @endif
+
         </div>
     </section>
 

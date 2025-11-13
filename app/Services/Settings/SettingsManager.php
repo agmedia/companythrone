@@ -317,6 +317,11 @@ class SettingsManager
         return $this->get('site', 'meta_keywords', '');
     }
 
+    public function getHeroTitle(): string
+    {
+        return $this->get('slider', 'title', '');
+    }
+
 
     /**
      * @return int

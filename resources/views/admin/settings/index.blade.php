@@ -5,7 +5,7 @@
 @section('content')
     <div class="row g-3">
         <div class="col-12 col-lg-10">
-            <form action="{{ route('app.settings.update') }}" method="POST" class="card">
+            <form action="{{ route('app.settings.update') }}" method="POST" enctype="multipart/form-data" class="card">
                 @csrf
 
                 <div class="card-header d-flex align-items-center justify-content-between">
@@ -141,6 +141,23 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        @elseif($type === 'file-input')
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-md-{{ $col }}">
+                                                        <label class="form-label">{{ $label }}</label>
+                                                        <input type="file" class="form-control"
+                                                               name="settings[{{ $code }}][{{ $key }}]">
+
+                                                        @if(!empty($val))
+                                                            <div class="mt-2">
+                                                                <img src="{{ asset('storage/' . $val) }}" style="max-height: 150px;">
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         @else
                                             <div class="col-12">
                                                 <div class="row">
