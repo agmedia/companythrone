@@ -10,7 +10,7 @@
             @if (auth()->user()->company && subscription_active(auth()->user()->company->id))
                 <a href="{{ route('account.links.index') }}"
                    class="list-group-item list-group-item-action {{ request()->routeIs('account.links.*') ? 'active' : '' }}">
-                    <i class="fi-link me-2"></i> {{ __('Moji linkovi') }}
+                    <i class="fi-link me-2"></i> {{ __('Moje preporuke') }}
                 </a>
             @endif
             <a href="{{ route('account.subscriptions') }}"

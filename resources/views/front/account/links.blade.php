@@ -7,7 +7,7 @@
 
             <div class="col-lg-9">
 
-                <h1 class="h4 mb-3">{{ __('Moji linkovi') }}</h1>
+                <h1 class="h4 mb-3">{{ __('Moje preporuke') }}</h1>
 
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -64,7 +64,7 @@
                     <h5 class="fw-semibold">{{ __('Moje preporuke') }}</h5>
 
                     <div class="small text-muted mb-2">
-                        {{ __('Dodajte barem ') . $referralRequired . __(' preporuka da biste aktivirali svoj link.)') }}
+                        {{ __('Dodajte naj manje ') . $referralRequired . __(' preporuka kako bi bila aktivna poveznica na Vašu web stranicu.)') }}
                         <br>
                         {{ __('Imate:') }} {{ $referralCount }} / {{ $referralRequired }}
                     </div>
@@ -98,7 +98,7 @@
 
                     @if ($referralActiveCount > 5)
                         <div class="small text-muted mb-2">
-                            {{ __('Dodajte barem ') . $limitPerDay . __(' klikova da biste objavili svoj link.)') }}
+                            {{ __('Kada naj manje ') . $limitPerDay . __(' tvrtki prihvati preporuku koju ste poslali bit će aktivan link na Vašu stranicu.)') }}
                             <br>
                             {{ __('Imate:') }} <span id="today-clicks">{{ $todayClicks }}</span> / {{ $limitPerDay }}
                         </div>
