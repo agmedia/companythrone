@@ -7,7 +7,7 @@
 
             <div class="col-lg-9">
 
-                <h1 class="h4 mb-3">{{ __('Moje preporuke') }}</h1>
+                <h1 class="h4 mb-3">{{ __('Preporuči Companythrone') }}</h1>
 
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
