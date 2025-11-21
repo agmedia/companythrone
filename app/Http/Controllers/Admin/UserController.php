@@ -85,12 +85,17 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'role'     => ['required', 'in:master,admin,editor,company_owner,customer'],
+            'daily_reminder_opt_out' => ['sometimes', 'boolean'],
         ]);
 
         $user->update([
             'name'     => $validated['name'],
             'email'    => $validated['email']
         ]);
+
+        // ✔️ Ovdje spremamo isključivanje podsjetnika
+        $user->daily_reminder_opt_out = $request->boolean('daily_reminder_opt_out');
+        $user->save();
 
         $user->detail()->updateOrCreate(
             ['user_id' => $user->id],

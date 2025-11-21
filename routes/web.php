@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\Settings\Local\TaxPageController;
 use App\Http\Controllers\Api\V1\Settings\TaxController as ApiTaxController;
 use App\Http\Controllers\Admin\Settings\Local\OrderStatusPageController;
 use App\Http\Controllers\Api\V1\Settings\OrderStatusController as ApiOrderStatusController;
+use App\Http\Controllers\ReminderController;
 
 use App\Http\Controllers\Admin\{BannerEventController,
     CompanyController as AdminCompanyController,
@@ -251,6 +252,10 @@ Route::get('/plan', function () {
 /**
  *
  */
+
+
+Route::get('/unsubscribe-reminder/{user}/{token}', [ReminderController::class, 'unsubscribe'])
+    ->name('unsubscribe.reminder');
 
 // Signed redirect (izvan LL)
 Route::get('/r/{from}/{to}/{slot}', [ClickRedirectController::class, 'go'])

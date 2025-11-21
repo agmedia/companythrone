@@ -9,6 +9,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Shared\Click;
+
+
+
 
 class User extends Authenticatable
 {
@@ -75,6 +79,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserDetail::class);
     }
+
+    public function clicks()
+    {
+        return $this->hasManyThrough(
+            Click::class,    // krajnji model (clicks)
+            Company::class,  // međumodel (companies)
+            'user_id',       // FK na companies: companies.user_id -> users.id
+            'from_company_id', // FK na clicks: clicks.from_company_id -> companies.id
+            'id',            // lokalni ključ na users: users.id
+            'id'             // lokalni ključ na companies: companies.id
+        );
+    }
+
 
 
     public function hasReferralCode()

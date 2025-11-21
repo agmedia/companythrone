@@ -14,6 +14,19 @@
                 <h5 class="mb-0">{{ $isEdit ? 'Uredi korisnika' : 'Dodaj korisnika' }}</h5>
             </div>
             <div class="card-body row g-3">
+
+                <div class="mb-3">
+                    <label class="form-label">Isključi podsjetnike za ovog korisnika</label><br>
+
+                    <input type="hidden" name="daily_reminder_opt_out" value="0">
+
+                    <input type="checkbox"
+                           name="daily_reminder_opt_out"
+                           value="1"
+                           @if(isset($user) && $user->daily_reminder_opt_out) checked @endif
+                    >
+                    <span>Ne šalji podsjetnike ovom korisniku</span>
+                </div>
                 <div class="col-md-6">
                     <label class="form-label">Ime</label>
                     <input type="text" name="name" class="form-control" value="{{ old('name',$user->name ?? '') }}" required>
