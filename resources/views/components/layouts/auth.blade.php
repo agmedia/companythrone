@@ -90,8 +90,6 @@
                     <div class="mx-auto" style="max-width: 790px">
                         <div class="row row-cols-1 row-cols-sm-2 g-3 g-md-4 g-lg-3 g-xl-4">
 
-
-
                             <!-- SEO nagrade -->
                             <div class="col">
                                 <div class="card h-100 bg-transparent border-0">
