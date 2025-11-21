@@ -31,7 +31,7 @@
 
                                 <li><strong> Bolja vidljivost</strong> – poboljšana pozicioniranost na tražilicama</li>
 
-                                        <li><strong> Povećani promet</strong> – ostvarite do 780 posjeta na svoju web stranicu</li>
+                                        <li><strong> Povećani promet</strong> – ostvarite do 780 posjeta dnevno na svoju web stranicu</li>
 
 
 
