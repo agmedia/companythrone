@@ -6,6 +6,26 @@
             <div class="card">
                 <div class="card-header align-items-center justify-content-between d-flex">
                     <h5 class="mb-1">{{ __('back/companies.title') }}</h5>
+
+                    <form method="GET" action="{{ route('catalog.companies.index') }}" class="d-flex align-items-center me-3">
+
+                        <input type="text"
+                               name="search"
+                               value="{{ request('search') }}"
+                               class="form-control form-control-sm"
+                               placeholder="Pretraži po nazivu ili OIB-u">
+
+                        <button class="btn btn-sm btn-secondary ms-2">
+                            <i class="ti ti-search"></i>
+                        </button>
+
+                        @if(request('search'))
+                            <a href="{{ route('catalog.companies.index') }}"
+                               class="btn btn-sm btn-outline-danger ms-2" title="Resetiraj pretragu">
+                                <i class="ti ti-x"></i>
+                            </a>
+                        @endif
+                    </form>
                     <a href="{{ route('catalog.companies.create') }}" class="btn btn-primary">
                         <i class="ti ti-plus"></i> {{ __('back/common.actions.new') }}
                     </a>

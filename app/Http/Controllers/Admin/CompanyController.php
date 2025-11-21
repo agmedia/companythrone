@@ -18,9 +18,27 @@ class CompanyController extends Controller
         return view('admin.dashboard');
     }*/
 
-    public function index()
+    public function index(Request $request)
     {
-        $companies = Company::latest()->paginate(app_settings()->adminPagination());
+        $query = Company::query()->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                // Search in translations (t_name ili name)
+                $q->whereHas('translations', function ($t) use ($search) {
+                    $t->where('name', 'LIKE', "%{$search}%");   // ako je t_name u translations
+                    // ili ->where('name', 'LIKE', "%{$search}%");
+                });
+
+                // Search OIB in main table
+                $q->orWhere('oib', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $companies = $query->paginate(app_settings()->adminPagination());
 
         return view('admin.catalog.companies.index', compact('companies'));
     }
