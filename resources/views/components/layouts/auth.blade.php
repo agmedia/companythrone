@@ -103,8 +103,10 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-gift position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Jači SEO uz kvalitetne backlinkove</h3>
-                                        <p class="fs-sm mb-0">Aktivne tvrtke svakodnevno mogu dobiti do 780 posjeta i jačati  on line autoritet.</p>
+                                        <h3 class="h6 pt-2 my-2">Jačanje online prisutnosti</h3>
+                                        <p class="fs-sm mb-0">Aktivne tvrtke mogu ostvariti veću vidljivost i izgraditi svoj online
+                                            autoritet. Kvalitetne poveznice  jedan su od ključnih čimbenika koji
+                                            tražilice cijene pri rangiranju.</p>
                                     </div>
                                 </div>
                             </div>
@@ -120,8 +122,10 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-percent position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Viša vidljivost na tražilicama</h3>
-                                        <p class="fs-sm mb-0">Objavom oglasa na portalu povećava se broj kvalitetnih poveznica prema vašoj web stranici, što rezultira boljim pozicijama na Googleu.</p>
+                                        <h3 class="h6 pt-2 my-2">Povećana vidljivost u rezultatima pretraživanja</h3>
+                                        <p class="fs-sm mb-0">Objavom logotipa  stječete vrijedne poveznice prema svojoj web stranici. To
+                                            je čimbenik koji može doprinijeti poboljšanju vašeg položaja u rezultatima
+                                            pretraživanja</p>
                                     </div>
                                 </div>
                             </div>
@@ -137,8 +141,9 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-heart position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Preporuči i umreži svoju tvrtku</h3>
-                                        <p class="fs-sm mb-0">Preporuči najmanje  5 partnera i osiguraj maksimalnu dnevnu vidljivost u sustavu.</p>
+                                        <h3 class="h6 pt-2 my-2">Proširite krug poslovnih partnera</h3>
+                                        <p class="fs-sm mb-0">Proširite svoj broj  kontakata preporučujući poslovne partnere. Ova značajka
+                                            povećava vašu vidljivost unutar poslovne zajednice.</p>
                                     </div>
                                 </div>
                             </div>
@@ -154,8 +159,9 @@
                                             <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
                                             <i class="fi-pie-chart position-relative z-2 fs-4 m-1"></i>
                                         </div>
-                                        <h3 class="h6 pt-2 my-2">Organski rast bez dodatnih troškova</h3>
-                                        <p class="fs-sm mb-0">Svaki objavljeni oglas doprinosi rastu organskog prometa i jačanju SEO autoriteta bez ulaganja u plaćeno oglašavanje.</p>
+                                        <h3 class="h6 pt-2 my-2">Prirodan rast prometa</h3>
+                                        <p class="fs-sm mb-0">Objavljeni logo pridonosi privlačenju novih posjetitelja na vašu stranicu na
+                                            prirodan način, potičući održivi rast.</p>
                                     </div>
                                 </div>
                             </div>
