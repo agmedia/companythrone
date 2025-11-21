@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="mb-4 mt-5 ">
-                    <h5 class="fw-semibold">{{ __('Dnevni zadaci') }}</h5>
+                    <h5 class="fw-semibold">{{ __('Trenutne preporuke') }}</h5>
 
                     @if ($referralActiveCount > 5)
                         <div class="small text-muted mb-2">

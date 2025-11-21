@@ -37,7 +37,7 @@
                         <div class="col-md-4">
                             <div class="card shadow-sm h-100">
                                 <div class="card-body d-flex flex-column">
-                                    <div class="text-muted small">{{ __('Moji linkovi') }}</div>
+                                    <div class="text-muted small">{{ __('Istraži stranice') }}</div>
 
                                     <div class="fw-semibold mt-2">
                                         {{ $todayClicks }} / {{ $limitPerDay }}
@@ -45,7 +45,7 @@
 
                                     @if ($limitPerDay > $todayClicks)
                                         <div class="small text-muted">
-                                            {{ __('Dnevni zadatak') }}
+                                            {{ __('Trenutne preporuke') }}
                                         </div>
 
                                         <a class="btn btn-sm btn-outline-primary mt-3" href="{{ localized_route('account.links.index') }}">
