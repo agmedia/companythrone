@@ -46,7 +46,7 @@
                                     </label>
                                     <input id="oib" name="oib"
                                            value="{{ old('oib', $company->oib ?? '') }}"
-                                           class="form-control form-control-lg @error('oib') is-invalid @enderror">
+                                           class="form-control form-control-lg @error('oib') is-invalid @enderror"  required>
                                     @error('oib')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
