@@ -151,7 +151,7 @@ return [
     'povratak_na_placanje' =>'Povratak na plaćanje',
     'prihvati' => 'Prije kupnje potrebno je prihvatiti Opće uvjete korištenja i privatnosti',
     'vasa_narudzba_txt' => 'Vaša narudžba je uspješno dovršena!',
-    'sb1' => 'Vaša kupnja je uspješno dovršena!',
+    'sb1' => 'Vaša narudžba je uspješno završena!',
     'sb2' => 'i zahvaljujemo Vam.',
     'sb3' => 'Narudžba je zapremljena, zahvaljujemo Vam na povjerenju.',
     'sb4' => 'Rok za uplatu iznosi maksimalno 48 sati, tijekom kojih ćemo zadržati rezervaciju za Vašu narudžbu.',
