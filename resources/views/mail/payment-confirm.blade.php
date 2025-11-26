@@ -40,36 +40,13 @@ Svrha/opis – godišnja naknada</p>
 
 
 
-    {{--   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:25px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin:25px 0;">
         <tr>
             <td style="padding:8px 0; font-weight:600; width:42%; vertical-align:top;">{{ __('Tvrtka:') }}</td>
             <td style="padding:8px 0; vertical-align:top;">{{ $companyName }}</td>
         </tr>
-        <tr>
-            <td style="padding:8px 0; font-weight:600; vertical-align:top;">{{ __('Iznos uplate:') }}</td>
-            <td style="padding:8px 0; vertical-align:top;">{{ $displayAmount }} @if($currency) {{ $currency }} @endif</td>
-        </tr>
-        <tr>
-            <td style="padding:8px 0; font-weight:600; vertical-align:top;">{{ __('Valuta:') }}</td>
-            <td style="padding:8px 0; vertical-align:top;">{{ $currency ?: '—' }}</td>
-        </tr>
-        <tr>
-            <td style="padding:8px 0; font-weight:600; vertical-align:top;">{{ __('Datum uplate:') }}</td>
-            <td style="padding:8px 0; vertical-align:top;">{{ $paidAt }}</td>
-        </tr>
-        <tr>
-            <td style="padding:8px 0; font-weight:600; vertical-align:top;">{{ __('Broj računa:') }}</td>
-            <td style="padding:8px 0; vertical-align:top; word-break:break-all;">{{ $invoice }}</td>
-        </tr>
-        <tr>
-            <td style="padding:8px 0; font-weight:600; vertical-align:top;">{{ __('Status:') }}</td>
-            <td style="padding:8px 0; vertical-align:top;">
-                <span style="background:#22c55e; color:#ffffff; border-radius:4px; padding:2px 8px; font-size:13px; display:inline-block;">
-                    {{ __('Zaprimljena narudžba') }}
-                </span>
-            </td>
-        </tr>
-    </table>--}}
+
+    </table>
 
    {{--  <p style="margin:0 0 16px 0;">
         {{ __('Vaša pretplata ostaje aktivna do:') }}
