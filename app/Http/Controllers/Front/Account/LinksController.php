@@ -232,6 +232,7 @@ class LinksController extends Controller
             'url'     => $refUrl,
             'label'   => $request->input('label'),
             'title'   => $request->input('title'),
+            'tvrtka'   => $request->input('tvrtka'),
             'phone'   => $request->input('phone'),
         ]);
 

@@ -55,6 +55,10 @@
 
 @include('components.layouts.app.footer')
 
+<div class="gtranslate_wrapper"></div>
+<script>window.gtranslateSettings = {"default_language":"hr","languages":["hr","en"],"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right"}</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+
 <!-- Back to top button -->
 <div class="floating-buttons position-fixed top-50 end-0 z-sticky me-3 me-xl-4 pb-4">
     <a class="btn-scroll-top btn btn-sm bg-body border-0 rounded-pill shadow animate-slide-end" href="#top">

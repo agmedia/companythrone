@@ -183,6 +183,9 @@
 
 <!-- Bootstrap + Theme scripts -->
 <script src="{{ asset('theme1/assets/theme.js') }}"></script>
+<div class="gtranslate_wrapper"></div>
+<script>window.gtranslateSettings = {"default_language":"hr","languages":["hr","en"],"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right"}</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
 
 @livewireScripts
 

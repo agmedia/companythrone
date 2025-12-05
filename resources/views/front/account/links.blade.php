@@ -34,8 +34,16 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-5">
-                        <input name="title" type="text" class="form-control" placeholder="{{ __('Ime i prezime, naziv tvrtke') }}" required>
+                    <div class="col-md-6">
+                        <input name="title" type="text" class="form-control" placeholder="{{ __('Ime i prezime') }}" required>
+                        @error('title')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <input name="tvrtka" type="text" class="form-control" placeholder="{{ __('Naziv tvrtke') }}" required>
                         @error('title')
                         <div class="text-danger small">{{ $message }}</div>
                         @enderror
@@ -48,14 +56,14 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <input name="label" type="text" class="form-control" placeholder="{{ __('Kratki opis ili komentar. (opcionalno)') }}">
                         @error('label')
                         <div class="text-danger small">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="col-md-1 d-grid">
+                    <div class="col-md-6 d-grid">
                         <button class="btn btn-primary">{{ __('Dodaj') }}</button>
                     </div>
                 </form>
@@ -74,6 +82,7 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div class="text-truncate me-3">
                                     <div class="fw-normal">Kontakt osoba: {{ $ref->title ?? __('NIje upisano') }} </div>
+                                    <div class="fw-normal">Naziv tvrtke: {{ $ref->tvrtka ?? __('NIje upisano') }} </div>
                                     <div class="fw-normal">Kontakt telefon: {{ $ref->phone ?? __('Nije upisano') }} </div>
                                     <div class="fw-normal">Komentar: {{ $ref->label ?? __('Bez naziva') }}  </div>
                                     <a href="{{ $ref->url }}" target="_blank" class="small">{{ $ref->url }}</a>
