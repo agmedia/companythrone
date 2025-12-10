@@ -28,7 +28,7 @@
                     <span>Ne šalji podsjetnike ovom korisniku</span>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Ime</label>
+                    <label class="form-label">KOrisničko ime</label>
                     <input type="text" name="name" class="form-control" value="{{ old('name',$user->name ?? '') }}" required>
                 </div>
                 <div class="col-md-6">
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">Ime (fname)</label>
+                    <label class="form-label">Ime</label>
                     <input type="text" name="fname" class="form-control" value="{{ old('fname',$user->detail->fname ?? '') }}">
                 </div>
                 <div class="col-md-4">
