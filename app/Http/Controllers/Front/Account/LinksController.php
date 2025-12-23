@@ -215,9 +215,9 @@ class LinksController extends Controller
         $ttl = now()->addDays(30);
 
         // Atomarna provjera: ako je ključ već postavljen -> već poslano
-        if (! Cache::add($cacheKey, true, $ttl)) {
+      /*  if (! Cache::add($cacheKey, true, $ttl)) {
             return back()->with('status', __('Na ovaj e-mail je pozivnica već poslana.'));
-        }
+        }*/
 
         // Ako želiš i “tvrđu” zaštitu unutar istog request-ciklusa/race conditiona:
         // Cache::lock("lock:{$cacheKey}", 5)->block(5); // opcionalno, ako koristiš redis locks
